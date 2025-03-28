@@ -31,7 +31,7 @@ function SignIn() {
           />
         </div>
         <div className='flex flex-row justify-between items-center'>
-          <div className='flex items-center space-x-2 -mt-2 md:-mt-4'>
+          <div className='flex items-center space-x-2 -mt-2 md:-mt-4 cursor-pointer'>
             <Checkbox id='logged-in' />
             <label
               htmlFor='logged-in'
@@ -45,6 +45,10 @@ function SignIn() {
         </div>
         <Button className='text-base font-semibold md:h-[70px] h-[50px] mt-4'>
           Make Payment
+        </Button>
+        <Button variant={'outline'} className='text-xs md:h-[70px] h-[50px]'>
+          Don&apos;t have an account ?{''}
+          <span className='font-semibold text-base'>Sign up</span>
         </Button>
       </AuthCard>
     </div>
