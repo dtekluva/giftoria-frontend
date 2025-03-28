@@ -1,4 +1,6 @@
 import AuthCard from '@/components/custom/auth-card';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React from 'react';
@@ -24,9 +26,26 @@ function SignIn() {
           <Input
             type='email'
             id='email'
+            isPassword
             placeholder='Please enter your password'
           />
         </div>
+        <div className='flex flex-row justify-between items-center'>
+          <div className='flex items-center space-x-2 -mt-2 md:-mt-4'>
+            <Checkbox id='logged-in' />
+            <label
+              htmlFor='logged-in'
+              className='text-xs text-muted-foreground'>
+              Keep me logged in
+            </label>
+          </div>
+          <button className='text-[#990099] text-xs font-semibold'>
+            Reset Password
+          </button>
+        </div>
+        <Button className='text-base font-semibold md:h-[70px] h-[50px] mt-4'>
+          Make Payment
+        </Button>
       </AuthCard>
     </div>
   );
