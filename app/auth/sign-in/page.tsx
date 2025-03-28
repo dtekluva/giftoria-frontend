@@ -1,10 +1,17 @@
+import AuthCard from '@/components/custom/auth-card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import React from 'react';
 
 function SignIn() {
   return (
-    <div>
-      <h1 className='md:text-[40px] text-xl font-semibold'>Sign In</h1>
-      <div className='flex flex-col gap-4 md:mt-10 mt-5 bg-white md:py-[60px] md:px-10 py-8 px-5'></div>
+    <div className='w-full'>
+      <AuthCard title='Sign In'>
+        <div>
+          <Label htmlFor='email'>Email</Label>
+          <Input type='email' id='email' placeholder='Email' />
+        </div>
+      </AuthCard>
     </div>
   );
 }
