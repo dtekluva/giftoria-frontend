@@ -6,7 +6,7 @@ import Image from 'next/image';
 export default function Home() {
   return (
     <div>
-      <div className='relative md:bg-[url(/assets/hero-desktop-bg.png)] bg-[url(/assets/hero-mobile-bg.png)] bg-cover bg-no-repeat bg-center'>
+      <section className='relative md:bg-[url(/assets/hero-desktop-bg.png)] bg-[url(/assets/hero-mobile-bg.png)] bg-cover bg-no-repeat bg-center'>
         <div className='bg-[#160032]/70 flex flex-col pt-20 md:pt-32 px-4 md:px-10 md:pb-[164px] pb-20'>
           <div className='md:hidden flex relative bg-white z-50 rounded-full max-w-[80%] mx-auto overflow-hidden'>
             <Input
@@ -29,28 +29,37 @@ export default function Home() {
             Send a gift
           </Button>
         </div>
-      </div>
-      <div>
+      </section>
+      <section>
         <h2 className='px-4 md:px-[60px] mt-6 md:mt-[60px] text-center text-base md:text-[40px] font-semibold'>
           Explore our collections of Gift cards
         </h2>
-        <div className='grid md:mt-10 mt-3 gap-5 md:grid-cols-4 md:px-[50px] container mx-auto max-w-fit px-5'>
+        <div className='grid md:mt-10 mt-3 gap-5 grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] md:px-[50px] container mx-auto px-5'>
           {Array.from({ length: 8 }).map((_, index) => (
             <div
               key={index}
-              className='py-5 px-5 items-center justify-center w-[320px] h-[245px] bg-[#fff] rounded-[30px] border-[0.3px] border-[#D9D9D9] '>
+              className='p-5 border-[0.3px] border-[#D9D9D9] rounded-[30px]'>
               <Image
-                className='mt-7'
                 src={'https://placehold.co/280x140.png'}
                 width={280}
+                className='w-full'
                 height={140}
                 alt=''
               />
-              <p className='text-black text-2xl text-left'>Zara gift card</p>
+              <div className=' border-black mt-6'>
+                <p className='text-black text-base text-left font-normal'>
+                  Zara gift card
+                </p>
+              </div>
             </div>
           ))}
         </div>
-      </div>
+        <div className='flex justify-center mt-7 md:mt-10 px-20'>
+          <Button className='w-full max-w-[340px] h-12 text-sm md:text-xl font-semibold'>
+            Shop gift card
+          </Button>
+        </div>
+      </section>
     </div>
   );
 }
