@@ -29,6 +29,11 @@ export default function Home() {
           </Button>
         </div>
       </div>
+      <div>
+        <h2 className='px-4 md:px-[60px] mt-6 md:mt-[60px] text-center text-base md:text-[40px] font-semibold'>
+          Explore our collections of Gift cards
+        </h2>
+      </div>
     </div>
   );
 }
