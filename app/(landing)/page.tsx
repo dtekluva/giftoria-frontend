@@ -1,6 +1,7 @@
 import SearchIcon from '@/components/icon/search-icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -33,6 +34,22 @@ export default function Home() {
         <h2 className='px-4 md:px-[60px] mt-6 md:mt-[60px] text-center text-base md:text-[40px] font-semibold'>
           Explore our collections of Gift cards
         </h2>
+        <div className='grid md:mt-10 mt-3 gap-5 md:grid-cols-4 md:px-[50px] container mx-auto max-w-fit px-5'>
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={index}
+              className='py-5 px-5 items-center justify-center w-[320px] h-[245px] bg-[#fff] rounded-[30px] border-[0.3px] border-[#D9D9D9] '>
+              <Image
+                className='mt-7'
+                src={'https://placehold.co/280x140.png'}
+                width={280}
+                height={140}
+                alt=''
+              />
+              <p className='text-black text-2xl text-left'>Zara gift card</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
