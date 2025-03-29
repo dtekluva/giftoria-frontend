@@ -6,11 +6,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import Link from 'next/link';
 import UserIcon from '../icon/user-icon';
 import ShoppingCartIcon from '../icon/shopping-cart-icon';
+import MobileLogoIcon from '../icon/mobile-logo';
 
 function NavBar() {
   return (
     <div className='px-[30px] py-6 md:px-[50px] gap-8  flex flex-row items-center md:justify-between absolute w-full z-50'>
-      <LogoIcon width={80} height={30} />
+      <LogoIcon width={80} height={30} className='hidden md:block' />
+      <MobileLogoIcon className='block md:hidden' />
       <div className='flex items-center md:justify-end flex-1 md:flex-none justify-between'>
         <ul className='text-xs md:text-sm flex items-center gap-3 md:gap-6 self-center max-w-fit mx-auto text-white font-medium'>
           <li>Gift Cards</li>
