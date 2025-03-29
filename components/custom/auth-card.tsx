@@ -8,7 +8,7 @@ function AuthCard({
   title: string;
 }) {
   return (
-    <div className='max-w-[630px] mx-auto'>
+    <div className='max-w-[630px] mx-auto max-h-[820px] overflow-y-auto'>
       <h1 className='md:text-[40px] text-xl font-semibold text-center'>
         {title}
       </h1>

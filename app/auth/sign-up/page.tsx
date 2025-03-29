@@ -48,22 +48,21 @@ function CreateAccount() {
         <div className='flex flex-row justify-between items-center'>
           <div className='flex items-center space-x-2 -mt-2 md:-mt-4 cursor-pointer'>
             <Checkbox id='logged-in' />
-            <label
-              htmlFor='logged-in'
-              className='text-xs text-muted-foreground'>
-              Keep me logged in
+            <label htmlFor='logged-in' className='text-xs font-dm-sans'>
+              Notify me of new deals and offers from your Partners
             </label>
           </div>
-          <button className='text-[#990099] text-xs font-semibold'>
-            Reset Password
-          </button>
         </div>
+        <p className='text-xs font-dm-sans'>
+          By creating an account, you agree to the Giftoria terms and
+          conditions. John Lewis will process your personal data as set out in
+          our privacy notice
+        </p>
         <Button className='text-base font-semibold md:h-[70px] h-[50px] mt-4'>
-          Make Payment
+          Create Account
         </Button>
         <Button variant={'outline'} className='text-xs md:h-[70px] h-[50px]'>
-          Don&apos;t have an account ?{''}
-          <span className='font-semibold text-base'>Sign up</span>
+          <span className='font-semibold text-base'>Skip</span>
         </Button>
       </AuthCard>
     </div>
