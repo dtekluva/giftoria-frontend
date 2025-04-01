@@ -24,7 +24,7 @@ export default function Home() {
           <h1 className='mt-12 md:mt-14 text-white text-center text-2xl md:text-4xl lg:text-6xl font-semibold'>
             Gifting done with style
           </h1>
-          <p className='mt-2 md:mt-6 lg:mt-8 text-white text-center text-xs md:text-xl lg:text-2xl leading-5 md:leading-8 lg:leading-10 font-semibold'>
+          <p className='mt-2 md:mt-6 lg:mt-8 text-white text-center text-xs md:text-xl lg:text-2xl leading-5 md:leading-8 lg:leading-10 font-semibold font-dm-sans'>
             Give a gift that let them pick what they truly love.
             <br />
             Simple, Flexible, and always the perfect choice
@@ -50,7 +50,7 @@ export default function Home() {
               <Image
                 src={'https://placehold.co/280x140.png'}
                 width={280}
-                className='w-full'
+                className='w-full h-[140px]'
                 height={140}
                 alt=''
               />
@@ -83,10 +83,10 @@ export default function Home() {
               className='bg-gradient-to-r from-[#FF0066] rounded-[20px] overflow-hidden to-[#D9D9D9] p-[0.8px]'>
               <div className='bg-primary rounded-[20px] md:px-6 px-5 py-[30px]'>
                 <MailIcon />
-                <p className='md:text-2xl lg:text-3xl text-2xl font-bold text-white mt-1'>
+                <p className='md:text-2xl lg:text-3xl text-2xl font-bold text-white mt-1 font-montserrat'>
                   Choose
                 </p>
-                <p className='text-white mt-1.5 text-sm md:text-base lg:text-lg'>
+                <p className='text-white mt-1.5 text-sm md:text-base  font-dm-sans'>
                   Browse and select a gift card from top brands.
                 </p>
               </div>
@@ -130,7 +130,7 @@ export default function Home() {
             src={'/assets/modern-waiter-desktop.png'}
             height={600}
             width={810}
-            className='w-full lg:max-h-[600px] h-full object-fill'
+            className='w-full lg:max-h-[600px] h-full object-center'
             alt='modern waiter'
           />
         </div>
@@ -159,7 +159,9 @@ export default function Home() {
           ].map((item, index) => (
             <div key={index} className='font-montserrat flex-1'>
               <div className='p-3 bg-white rounded-full w-fit'>
-                <div className='bg-[#F6F3FB] p-3 rounded-full'>{item.icon}</div>
+                <div className='bg-secondary-transparent p-3 rounded-full'>
+                  {item.icon}
+                </div>
               </div>
               <h4 className='text-base md:text-2xl font-semibold mt-3'>
                 {item.title}
@@ -167,6 +169,24 @@ export default function Home() {
               <p className='mt-4 leading-6 font-dm-sans text-gray-500'>
                 {item.description}
               </p>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section>
+        <h2 className='text-center py-8 lg:py-[60px] text-2xl md:text-3xl lg:text-[40px] font-bold'>
+          Frequently Asked Questions
+        </h2>
+        <div className='px-4 md:px-[40px] lg:px-[70px] md:space-y-[12px] space-y-[6px]'>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className='py-2 px-3 md:py-4 md:px-3xl lg:px-[50px] border rounded-[10px]'>
+              <div className='bg-secondary-transparent rounded-[10px] p-3 md:py-6 md:px-[30px]'>
+                <p className='font-dm-sans font-medium'>
+                  How does Giftoria work?
+                </p>
+              </div>
             </div>
           ))}
         </div>
