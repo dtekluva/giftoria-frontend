@@ -1,24 +1,22 @@
-import React from 'react';
-import LogoIcon from '../icon/logo';
-import { Input } from '../ui/input';
 import { SearchIcon } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import Link from 'next/link';
-import UserIcon from '../icon/user-icon';
-import ShoppingCartIcon from '../icon/shopping-cart-icon';
+import LogoIcon from '../icon/logo';
 import MobileLogoIcon from '../icon/mobile-logo';
+import ShoppingCartIcon from '../icon/shopping-cart-icon';
+import UserIcon from '../icon/user-icon';
+import { Input } from '../ui/input';
 
 function NavBar() {
   return (
-    <div className='px-[30px] py-6 md:px-[50px] gap-8  flex flex-row items-center md:justify-between absolute w-full z-50'>
-      <LogoIcon width={80} height={30} className='hidden md:block' />
-      <MobileLogoIcon className='block md:hidden' />
-      <div className='flex items-center md:justify-end flex-1 md:flex-none justify-between'>
-        <ul className='text-xs md:text-sm flex items-center gap-3 md:gap-6 self-center max-w-fit mx-auto text-white font-medium'>
+    <div className='px-[30px] py-6 lg:px-[50px] gap-8  flex flex-row items-center lg:justify-between absolute w-full z-50'>
+      <LogoIcon width={80} height={30} className='hidden lg:block' />
+      <MobileLogoIcon className='block lg:hidden' />
+      <div className='flex items-center lg:justify-end flex-1 lg:flex-none justify-between'>
+        <ul className='text-xs lg:text-sm flex items-center gap-3 lg:gap-6 self-center max-w-fit mx-auto text-white font-medium'>
           <li>Gift Cards</li>
           <li>Card Balance</li>
         </ul>
-        <div className='hidden md:flex flex-1 grow items-stretch bg-white rounded-[30px] overflow-hidden md:ml-[111px] min-w-[278px]'>
+        <div className='hidden lg:flex flex-1 grow items-stretch bg-white rounded-[30px] overflow-hidden lg:ml-[111px] min-w-[278px]'>
           <Input
             className='max-h-11 border-none w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
             placeholder='Search gift card.....'
@@ -27,10 +25,10 @@ function NavBar() {
             <SearchIcon className='text-white' />
           </div>
         </div>
-        <div className='flex flex-row gap-3 md:gap-8 ml-7'>
+        <div className='flex flex-row gap-3 lg:gap-8 ml-7'>
           <div className='flex flex-row gap-3 items-end'>
             <Link
-              className='text-white text-sm font-semibold hidden md:block'
+              className='text-white text-sm font-semibold hidden lg:block'
               href={'/auth/sign-up'}>
               Sign up
             </Link>

@@ -1,9 +1,15 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Montserrat_Alternates } from 'next/font/google';
+import { DM_Sans, Montserrat_Alternates, Montserrat } from 'next/font/google';
 import './globals.css';
 
 const montSerrat = Montserrat_Alternates({
   variable: '--font-sans',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+});
+
+const montSerratDefault = Montserrat({
+  variable: '--font-montserrat',
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
 });
@@ -27,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${montSerrat.variable} ${dmSans.variable} font-sans antialiased`}>
+        className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
