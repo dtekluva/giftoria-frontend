@@ -1,4 +1,7 @@
+import CardTickIcon from '@/components/icon/card-tick-icon';
+import GlobeIcon from '@/components/icon/global-icon';
 import MailIcon from '@/components/icon/mail-icon';
+import MoneyRemoveIcon from '@/components/icon/money-remove-icon';
 import SearchIcon from '@/components/icon/search-icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -132,7 +135,42 @@ export default function Home() {
           />
         </div>
       </section>
-      <section className='px-6 bg-secondary-transparent py-[50px]'></section>
+      <section className='px-6 bg-secondary-transparent py-[50px]'>
+        <div className='container mx-auto space-y-7 md:space-y-0 md:flex gap-[65px]'>
+          {[
+            {
+              icon: <MoneyRemoveIcon />,
+              title: 'No Gift Card? No Problem',
+              description:
+                'We’ll design and customize an e-gift card for your business on our platform at no extra cost.',
+            },
+            {
+              icon: <GlobeIcon />,
+              title: 'Expand Your Reach',
+              description:
+                'Offer digital gift cards and redeem them seamlessly in-store',
+            },
+            {
+              icon: <CardTickIcon />,
+              title: 'Buy Digital Gift Cards with Ease',
+              description:
+                'Offer digital gift cards and redeem them seamlessly in-store',
+            },
+          ].map((item, index) => (
+            <div key={index} className='font-montserrat flex-1'>
+              <div className='p-3 bg-white rounded-full w-fit'>
+                <div className='bg-[#F6F3FB] p-3 rounded-full'>{item.icon}</div>
+              </div>
+              <h4 className='text-base md:text-2xl font-semibold mt-3'>
+                {item.title}
+              </h4>
+              <p className='mt-4 leading-6 font-dm-sans text-gray-500'>
+                {item.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
