@@ -14,7 +14,7 @@ const FAQ = ({
   };
 
   return (
-    <div className='px-4 md:px-[40px] md:space-y-[12px] space-y-[6px]'>
+    <div className='px-4 md:space-y-[12px] space-y-[6px]'>
       {questions.map((item, index) => (
         <div
           key={index}

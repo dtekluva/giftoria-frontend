@@ -1,8 +1,10 @@
 import FAQ from '@/components/custom/faq';
 import CardTickIcon from '@/components/icon/card-tick-icon';
 import GlobeIcon from '@/components/icon/global-icon';
+import LocalMailIcon from '@/components/icon/local-mail-icon';
 import MailIcon from '@/components/icon/mail-icon';
 import MoneyRemoveIcon from '@/components/icon/money-remove-icon';
+import ReceiveIcon from '@/components/icon/receive-icon';
 import SearchIcon from '@/components/icon/search-icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -73,22 +75,40 @@ export default function Home() {
           </Button>
         </div>
       </section>
-      <section className='md:mt-20 bg-primary mt-10 pt-[1.25rem] md:pt-[3.75rem]'>
+      <section className='md:mt-20 bg-primary mt-10 pt-[1.25rem] md:pt-[3.75rem] '>
         <h3 className='text-white text-xl md:text-2xl lg:text-[2.5rem] text-center font-semibold'>
           How it works
         </h3>
         <div className='mt-7 grid lg:gap-[5.625rem] gap-6 mx-auto md:grid-cols-3 container px-4'>
-          {Array.from({ length: 3 }).map((_, index) => (
+          {[
+            {
+              icon: <LocalMailIcon />,
+              title: 'Choose',
+              description: 'Browse and select a gift card from top brands.',
+            },
+            {
+              icon: <MailIcon />,
+              title: 'Send',
+              description:
+                'complete the purchase.  Add a personal message, enter their email, and send',
+            },
+            {
+              icon: <ReceiveIcon />,
+              title: 'Receive',
+              description:
+                'The recipient clicks "Receive" in their email to view the gift card and redeems it in-store',
+            },
+          ].map((item, index) => (
             <div
               key={index}
-              className='bg-gradient-to-r from-[#FF0066] rounded-[1.25rem] overflow-hidden to-[#D9D9D9] p-[0.05rem]'>
-              <div className='bg-primary rounded-[1.25rem] md:px-6 px-5 py-[1.875rem]'>
-                <MailIcon />
+              className='bg-gradient-to-r max-w-[360px] from-[#FF0066] rounded-[1.25rem] overflow-hidden to-[#D9D9D9] p-[0.05rem]'>
+              <div className='bg-primary rounded-[1.25rem] h-full md:px-6 px-5 py-[1.875rem]'>
+                {item.icon}
                 <p className='md:text-xl lg:text-3xl font-bold text-white mt-1 font-montserrat'>
-                  Choose
+                  {item.title}
                 </p>
                 <p className='text-white mt-[0.375rem] text-sm md:text-sm font-dm-sans'>
-                  Browse and select a gift card from top brands.
+                  {item.description}
                 </p>
               </div>
             </div>
@@ -99,45 +119,48 @@ export default function Home() {
             className='w-full max-w-[21.25rem] 
             h-[2.5rem] md:h-[3rem] lg:h-[3.9375rem] 
             text-sm md:text-base lg:text-xl 
-            font-semibold'>
+            font-semibold hover:bg-primary'>
             Shop gift card
           </Button>
         </div>
       </section>
-      <section className='md:flex'>
-        <div className='px-[1.875rem] md:px-[3.125rem] py-10 flex-1 self-center'>
-          <div className=' max-w-[33.875rem] mx-auto'>
-            <h3 className='text-2xl lg:text-4xl font-bold text-primary-text leading-[1.875rem] md:leading-[2.5rem]'>
-              Grow Your Business with Giftoria
-            </h3>
-            <p className='mt-6 text-xs md:text-sm lg:text-base font-dm-sans'>
-              Giftee makes gifting effortless—not just for customers but for
-              businesses too! By joining our merchant network, you unlock a new
-              revenue stream, attract more customers, and simplify gift card
-              transactions
-            </p>
-            <Button
-              className='w-full md:w-auto 
+      <section className='relative'>
+        <section className='md:flex container mx-auto gap-4'>
+          <div className='md:px-0 py-10 flex-1 self-center'>
+            <div className='max-w-[33.875rem] px-[1.875rem] md:px-0'>
+              <h3 className='text-2xl lg:text-4xl font-bold text-primary-text leading-[1.875rem] md:leading-[2.5rem] lg:leading-[50px]'>
+                Grow Your Business with Giftoria
+              </h3>
+              <p className='mt-6 text-xs md:text-sm lg:text-base font-dm-sans'>
+                Giftee makes gifting effortless—not just for customers but for
+                businesses too! By joining our merchant network, you unlock a
+                new revenue stream, attract more customers, and simplify gift
+                card transactions
+              </p>
+              <Button
+                className='w-full md:w-auto 
             h-[2.5rem] md:h-[3rem] lg:h-[3.9375rem] 
             px-6 md:px-8 lg:px-10
             text-sm md:text-base lg:text-xl 
             font-semibold mt-8'>
-              Become a Merchant
-            </Button>
+                Become a Merchant
+              </Button>
+            </div>
           </div>
-        </div>
-        <div className='flex-1'>
-          <Image
-            src={'/assets/modern-waiter-desktop.png'}
-            height={500}
-            width={810}
-            className='w-full lg:max-h-[37.5rem] h-full object-center aspect-[1.35]'
-            alt='modern waiter'
-          />
-        </div>
+
+          <div className='flex-1'>
+            <Image
+              src={'/assets/modern-waiter-desktop.png'}
+              height={600}
+              width={810}
+              className='w-full lg:max-h-[37.5rem] max-h-[390px] h-full object-fill'
+              alt='modern waiter'
+            />
+          </div>
+        </section>
       </section>
       <section className='px-6 bg-secondary-transparent py-[3.125rem]'>
-        <div className='container mx-auto space-y-7 md:space-y-0 md:flex gap-[4.0625rem]'>
+        <div className='container mx-auto space-y-7 md:space-y-0 md:flex gap-[4.0625rem] flex-wrap'>
           {[
             {
               icon: <MoneyRemoveIcon />,
@@ -187,7 +210,7 @@ export default function Home() {
         </div>
       </section>
       <section className='container mx-auto'>
-        <h2 className='text-center py-8 lg:py-[3.75rem] text-2xl md:text-3xl lg:text-[2.5rem] font-bold'>
+        <h2 className='text-center py-8 lg:py-[3.75rem] px-2 text-2xl md:text-3xl lg:text-[2.5rem] font-bold'>
           Frequently Asked Questions
         </h2>
         <FAQ
@@ -200,7 +223,6 @@ export default function Home() {
           ]}
         />
       </section>
-      <section className='mt-10'></section>
     </div>
   );
 }
