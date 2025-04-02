@@ -1,3 +1,4 @@
+import FAQ from '@/components/custom/faq';
 import CardTickIcon from '@/components/icon/card-tick-icon';
 import GlobeIcon from '@/components/icon/global-icon';
 import MailIcon from '@/components/icon/mail-icon';
@@ -73,7 +74,7 @@ export default function Home() {
         </div>
       </section>
       <section className='md:mt-20 bg-primary mt-10 pt-[20px] md:pt-[60px]'>
-        <h3 className='text-white text-xl md:text-[32px] lg:text-[40px] text-center font-semibold'>
+        <h3 className='text-white text-xl md:text-2xl lg:text-[40px] text-center font-semibold'>
           How it works
         </h3>
         <div className='mt-7 grid lg:gap-[90px] gap-6 mx-auto md:grid-cols-3 container px-4'>
@@ -83,10 +84,10 @@ export default function Home() {
               className='bg-gradient-to-r from-[#FF0066] rounded-[20px] overflow-hidden to-[#D9D9D9] p-[0.8px]'>
               <div className='bg-primary rounded-[20px] md:px-6 px-5 py-[30px]'>
                 <MailIcon />
-                <p className='md:text-2xl lg:text-3xl text-2xl font-bold text-white mt-1 font-montserrat'>
+                <p className='md:text-xl lg:text-3xl font-bold text-white mt-1 font-montserrat'>
                   Choose
                 </p>
-                <p className='text-white mt-1.5 text-sm md:text-base  font-dm-sans'>
+                <p className='text-white mt-1.5 text-sm md:text-sm font-dm-sans'>
                   Browse and select a gift card from top brands.
                 </p>
               </div>
@@ -103,10 +104,10 @@ export default function Home() {
           </Button>
         </div>
       </section>
-      <section className='md:flex items-center'>
-        <div className='px-[30px] md:px-[50px] py-10 flex-1'>
+      <section className='md:flex'>
+        <div className='px-[30px] md:px-[50px] py-10 flex-1 self-center'>
           <div className=' max-w-[542px] mx-auto'>
-            <h3 className='text-2xl md:text-3xl lg:text-4xl font-bold text-primary-text leading-[30px] md:leading-[40px]'>
+            <h3 className='text-2xl lg:text-4xl font-bold text-primary-text leading-[30px] md:leading-[40px]'>
               Grow Your Business with Giftoria
             </h3>
             <p className='mt-6 text-xs md:text-sm lg:text-base font-dm-sans'>
@@ -128,9 +129,9 @@ export default function Home() {
         <div className='flex-1'>
           <Image
             src={'/assets/modern-waiter-desktop.png'}
-            height={600}
+            height={500}
             width={810}
-            className='w-full lg:max-h-[600px] h-full object-center'
+            className='w-full lg:max-h-[600px] h-full object-center aspect-[1.35]'
             alt='modern waiter'
           />
         </div>
@@ -158,15 +159,15 @@ export default function Home() {
             },
           ].map((item, index) => (
             <div key={index} className='font-montserrat flex-1'>
-              <div className='p-3 bg-white rounded-full w-fit'>
-                <div className='bg-secondary-transparent p-3 rounded-full'>
+              <div className='p-2 lg:p-3 bg-white rounded-full w-fit'>
+                <div className='bg-secondary-transparent p-2 lg:p-3 rounded-full'>
                   {item.icon}
                 </div>
               </div>
-              <h4 className='text-base md:text-2xl font-semibold mt-3'>
+              <h4 className='text-base lg:text-2xl font-semibold mt-3'>
                 {item.title}
               </h4>
-              <p className='mt-4 leading-6 font-dm-sans text-gray-500'>
+              <p className='mt-2 leading-6 font-dm-sans text-gray-500 text-sm  lg:text-lg'>
                 {item.description}
               </p>
             </div>
@@ -177,20 +178,17 @@ export default function Home() {
         <h2 className='text-center py-8 lg:py-[60px] text-2xl md:text-3xl lg:text-[40px] font-bold'>
           Frequently Asked Questions
         </h2>
-        <div className='px-4 md:px-[40px] lg:px-[70px] md:space-y-[12px] space-y-[6px]'>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div
-              key={index}
-              className='py-2 px-3 md:py-4 md:px-3xl lg:px-[50px] border rounded-[10px]'>
-              <div className='bg-secondary-transparent rounded-[10px] p-3 md:py-6 md:px-[30px]'>
-                <p className='font-dm-sans font-medium'>
-                  How does Giftoria work?
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <FAQ
+          questions={[
+            {
+              question: 'What is Giftee?',
+              answer:
+                'Giftee is a digital gift card platform that allows users to purchase and send gift cards from various brands to their friends and family.',
+            },
+          ]}
+        />
       </section>
+      <section className='mt-10'></section>
     </div>
   );
 }
