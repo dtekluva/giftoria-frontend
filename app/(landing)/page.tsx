@@ -56,7 +56,7 @@ export default function Home() {
                 alt=''
               />
               <div className=' border-black mt-6'>
-                <p className='text-black text-base md:text-lg lg:text-xl text-left font-normal font-montserrat'>
+                <p className='text-black text-base text-left font-normal font-montserrat'>
                   Zara gift card
                 </p>
               </div>
@@ -142,20 +142,32 @@ export default function Home() {
             {
               icon: <MoneyRemoveIcon />,
               title: 'No Gift Card? No Problem',
-              description:
-                'We’ll design and customize an e-gift card for your business on our platform at no extra cost.',
-            },
-            {
-              icon: <GlobeIcon />,
-              title: 'Expand Your Reach',
-              description:
-                'Offer digital gift cards and redeem them seamlessly in-store',
+              description: (
+                <span>
+                  We’ll design and customize an e-gift card for your <br />{' '}
+                  business on our platform at no extra cost.
+                </span>
+              ),
             },
             {
               icon: <CardTickIcon />,
               title: 'Buy Digital Gift Cards with Ease',
-              description:
-                'Offer digital gift cards and redeem them seamlessly in-store',
+              description: (
+                <span>
+                  Offer digital gift cards and redeem <br /> them seamlessly
+                  in-store
+                </span>
+              ),
+            },
+            {
+              icon: <GlobeIcon />,
+              title: 'Expand Your Reach',
+              description: (
+                <span>
+                  Get discovered by more customers looking for <br /> the
+                  perfect gift.
+                </span>
+              ),
             },
           ].map((item, index) => (
             <div key={index} className='font-montserrat flex-1'>
@@ -164,10 +176,10 @@ export default function Home() {
                   {item.icon}
                 </div>
               </div>
-              <h4 className='text-base lg:text-2xl font-semibold mt-3'>
+              <h4 className='text-base text-[#101828] lg:text-2xl font-semibold mt-3'>
                 {item.title}
               </h4>
-              <p className='mt-2 leading-6 font-dm-sans text-gray-500 text-sm  lg:text-lg'>
+              <p className='mt-2 leading-6 text-gray-500 text-sm  lg:text-base font-roboto'>
                 {item.description}
               </p>
             </div>
