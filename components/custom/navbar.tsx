@@ -1,3 +1,5 @@
+'use client';
+import { useState, useEffect } from 'react';
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
 import LogoIcon from '../icon/logo';
@@ -7,9 +9,25 @@ import UserIcon from '../icon/user-icon';
 import { Input } from '../ui/input';
 
 function NavBar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className='px-[30px] py-6 lg:px-[50px] absolute w-full z-50'>
-      <div className=' gap-8  flex flex-row items-center lg:justify-between container mx-auto'>
+    <div
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
+        isScrolled ? 'bg-primary shadow-md' : 'bg-transparent'
+      }`}>
+      <div className='px-[30px] py-6 lg:px-[50px] flex flex-row items-center lg:justify-between container mx-auto'>
         <LogoIcon width={80} height={30} className='hidden lg:block' />
         <MobileLogoIcon className='block lg:hidden' />
         <div className='flex items-center lg:justify-end flex-1 lg:flex-none justify-between'>
@@ -36,10 +54,6 @@ function NavBar() {
               <UserIcon />
             </div>
             <ShoppingCartIcon />
-            {/* <Popover>
-          <PopoverTrigger>Open</PopoverTrigger>
-          <PopoverContent>Place content for the popover here.</PopoverContent>
-        </Popover> */}
           </div>
         </div>
       </div>
