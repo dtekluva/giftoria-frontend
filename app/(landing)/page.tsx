@@ -15,12 +15,12 @@ export default function Home() {
     <div>
       <section className='relative md:bg-[url(/assets/hero-desktop-bg.png)] bg-[url(/assets/hero-mobile-bg.png)] bg-cover bg-no-repeat bg-center'>
         <div className='bg-[#160032]/70 flex flex-col pt-20 md:pt-32 px-4 md:px-10 md:pb-[10.25rem] pb-20'>
-          <div className='md:hidden flex relative bg-white z-50 rounded-full max-w-[80%] mx-auto overflow-hidden'>
+          <div className='lg:hidden flex relative bg-white z-50 rounded-full overflow-hidden max-w-[70%] mx-auto w-full'>
             <Input
-              className='h-[2.75rem] border-none w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 flex-1'
+              className='h-[2.75rem] md:h-[2.75rem] border-none w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 flex-1'
               placeholder='Search gift card.....'
             />
-            <div className='bg-[#990099] rounded-full py-[0.625rem] px-4 ml-auto'>
+            <div className='bg-[#990099] rounded-full py-[0.625rem] px-4 flex justify-center items-center ml-auto'>
               <SearchIcon className='text-white' />
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function Home() {
           ].map((item, index) => (
             <div
               key={index}
-              className='bg-gradient-to-r max-w-[360px] from-[#FF0066] rounded-[1.25rem] overflow-hidden to-[#D9D9D9] p-[0.05rem]'>
+              className='bg-gradient-to-r from-[#FF0066] rounded-[1.25rem] overflow-hidden to-[#D9D9D9] p-[0.05rem]'>
               <div className='bg-primary rounded-[1.25rem] h-full md:px-6 px-5 py-[1.875rem]'>
                 {item.icon}
                 <p className='md:text-xl lg:text-3xl font-bold text-white mt-1 font-montserrat'>
