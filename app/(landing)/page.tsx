@@ -45,15 +45,15 @@ export default function Home() {
         <h2 className='px-4 md:px-[2.5rem] lg:px-[3.75rem] mt-6 md:mt-[2.5rem] lg:mt-[3.75rem] text-center text-base md:text-[2rem] lg:text-[2.5rem] font-semibold'>
           Explore our collections of Gift cards
         </h2>
-        <div className='grid md:mt-10 mt-3 gap-5 grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(17.5rem,1fr))] md:px-[3.125rem] container mx-auto px-5'>
+        <div className='grid md:mt-10 mt-3 gap-5 sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]  md:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] md:px-[3.125rem] container mx-auto px-5'>
           {Array.from({ length: 8 }).map((_, index) => (
             <div
               key={index}
-              className='p-5 border-[0.01875rem] border-[#D9D9D9] rounded-[1.875rem]'>
+              className='p-5 border-[0.01875rem] border-[#D9D9D9] rounded-[1.875rem] max-w-[320px] mx-auto w-full'>
               <Image
                 src={'https://placehold.co/280x140.png'}
                 width={280}
-                className='w-full h-[8.75rem]'
+                className='w-full'
                 height={140}
                 alt=''
               />
@@ -79,7 +79,7 @@ export default function Home() {
         <h3 className='text-white text-xl md:text-2xl lg:text-[2.5rem] text-center font-semibold'>
           How it works
         </h3>
-        <div className='mt-7 grid lg:gap-[5.625rem] gap-6 mx-auto md:grid-cols-3 container px-4'>
+        <div className='mt-7 grid lg:gap-[4rem] md:gap-4 mx-auto md:grid-cols-3 container px-4 lg:px-8'>
           {[
             {
               icon: <LocalMailIcon />,
@@ -126,7 +126,7 @@ export default function Home() {
       </section>
       <section className='relative'>
         <section className='md:flex container mx-auto gap-4'>
-          <div className='md:px-0 py-10 flex-1 self-center'>
+          <div className='md:px-4 lg:px-8 py-10 flex-1 self-center'>
             <div className='max-w-[33.875rem] px-[1.875rem] md:px-0'>
               <h3 className='text-2xl lg:text-4xl font-bold text-primary-text leading-[1.875rem] md:leading-[2.5rem] lg:leading-[50px]'>
                 Grow Your Business with Giftoria

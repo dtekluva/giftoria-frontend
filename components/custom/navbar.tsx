@@ -7,9 +7,13 @@ import MobileLogoIcon from '../icon/mobile-logo';
 import ShoppingCartIcon from '../icon/shopping-cart-icon';
 import UserIcon from '../icon/user-icon';
 import { Input } from '../ui/input';
+import { usePathname } from 'next/navigation';
 
 function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  console.log('pathname', pathname);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,15 +28,17 @@ function NavBar() {
 
   return (
     <div
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
-        isScrolled ? 'bg-primary shadow-md' : 'bg-transparent'
-      }`}>
+      className={`fixed top-0 w-full z-[99999] transition-colors duration-300 ${
+        isScrolled ? 'bg-primary shadow-md' : ''
+      } ${pathname != '/' ? 'bg-primary relative shadow-md' : ''}`}>
       <div className='px-[30px] py-6 lg:px-[50px] flex flex-row items-center lg:justify-between container mx-auto'>
         <LogoIcon width={80} height={30} className='hidden lg:block' />
         <MobileLogoIcon className='block lg:hidden' />
         <div className='flex items-center lg:justify-end flex-1 lg:flex-none justify-between'>
           <ul className='text-xs lg:text-sm flex items-center gap-3 lg:gap-6 self-center max-w-fit mx-auto text-white font-medium'>
-            <li>Gift Cards</li>
+            <li>
+              <Link href={'/gift-card'}>Gift Cards</Link>
+            </li>
             <li>Card Balance</li>
           </ul>
           <div className='hidden lg:flex flex-1 grow items-stretch bg-white rounded-[30px] overflow-hidden lg:ml-[111px] min-w-[278px]'>
