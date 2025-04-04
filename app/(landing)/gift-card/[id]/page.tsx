@@ -1,0 +1,145 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import Image from 'next/image';
+import React from 'react';
+
+function GiftCardDetails() {
+  return (
+    <div className='mx-auto container md:px-14 px-4 py-3 md:py-7 lg:px-20'>
+      <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
+        <Image
+          src={'https://placehold.co/500x300.png'}
+          width={500}
+          className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
+          height={300}
+          alt=''
+        />
+        <p className='lg:leading-[40px] md:leading-[20px] leading-[18px] lg:text-xl md:text-sm text-xs max-w-[585px]'>
+          Looking for the perfect gift? Whether it’s fashion, electronics, home
+          essentials, beauty products, or more, you’ll find it all with our
+          exclusive gift cards! Looking for the perfect gift? Whether it’s
+          fashion
+        </p>
+      </div>
+      <div className='md:grid grid-cols-2 md:gap-20 lg:gap-[120px]'>
+        <div>
+          <h1 className='text-[#160032] text-base md:text-2xl font-semibold md:font-bold md:mt-20 mt-7'>
+            Recepient Information
+          </h1>
+          <div className='font-dm-sans mt-4 space-y-7 md:mt-10'>
+            <div className='space-y-2'>
+              <Label htmlFor='value'>Value</Label>
+              <Input
+                id='value'
+                placeholder='Input gift card worth'
+                className='md:h-12'
+              />{' '}
+              <div className='flex flex-row flex-wrap mt-4 md:mt-6 gap-3 cursor-pointer'>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className='p-3 rounded-sm border transition-transform duration-300 hover:scale-105 hover:border-primary'>
+                    <p>{(index + 1) * 10000}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='receipt_name'>Receipt Name</Label>
+              <Input
+                id='receipt_name'
+                placeholder='Who are you sending the gift to?'
+                className='md:h-12'
+              />{' '}
+            </div>
+            <div className='flex gap-3'>
+              <div className='space-y-2 flex-1'>
+                <Label htmlFor='receipt_email'>Receipt Email</Label>
+                <Input
+                  id='receipt_email'
+                  placeholder='receipt@gmail.com'
+                  className='md:h-12'
+                />{' '}
+              </div>
+              <div className='space-y-2 flex-1'>
+                <Label htmlFor='receipt_phone_number'>
+                  Receipt Phone Number
+                </Label>
+                <Input
+                  id='receipt_phone_number'
+                  placeholder='09131200194'
+                  className='md:h-12'
+                />{' '}
+              </div>
+            </div>
+            <Button
+              className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl'
+              variant={'outline'}>
+              Add to cart and continue shoppping
+            </Button>
+          </div>
+        </div>
+        <div>
+          <h1 className='text-[#160032] text-base md:text-2xl font-semibold md:font-bold md:mt-20 mt-7'>
+            Personalize Gift
+          </h1>
+          <div className='font-dm-sans mt-4 space-y-7 md:mt-10'>
+            <div className='space-y-2'>
+              <Label htmlFor='value'>Value</Label>
+              <Input
+                id='value'
+                placeholder='Input gift card worth'
+                className='md:h-12'
+              />{' '}
+              <div className='flex flex-row flex-wrap mt-4 md:mt-6 gap-3 cursor-pointer'>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className='p-3 rounded-sm border transition-transform duration-300 hover:scale-105 hover:border-primary'>
+                    <p>{(index + 1) * 10000}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='receipt_name'>Receipt Name</Label>
+              <Input
+                id='receipt_name'
+                placeholder='Who are you sending the gift to?'
+                className='md:h-12'
+              />{' '}
+            </div>
+            <div className='flex gap-3'>
+              <div className='space-y-2 flex-1'>
+                <Label htmlFor='receipt_email'>Receipt Email</Label>
+                <Input
+                  id='receipt_email'
+                  placeholder='receipt@gmail.com'
+                  className='md:h-12'
+                />{' '}
+              </div>
+              <div className='space-y-2 flex-1'>
+                <Label htmlFor='receipt_phone_number'>
+                  Receipt Phone Number
+                </Label>
+                <Input
+                  id='receipt_phone_number'
+                  placeholder='09131200194'
+                  className='md:h-12'
+                />{' '}
+              </div>
+            </div>
+            <Button
+              className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl'
+              variant={'outline'}>
+              Add to cart and continue shoppping
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default GiftCardDetails;
