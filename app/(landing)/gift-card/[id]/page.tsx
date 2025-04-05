@@ -1,7 +1,10 @@
 import AddingShoppingIcon from '@/components/icon/add-shopping-icon';
+import AIIcon from '@/components/icon/ai-icon';
+import SendIcon from '@/components/icon/send-icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 import React from 'react';
 
@@ -109,7 +112,17 @@ function GiftCardDetails() {
             </div>
             <div className='space-y-2'>
               <Label htmlFor='receipt_name'>Personalized Message</Label>
-              <Input />{' '}
+              <Textarea className='min-h-[74px] md:min-h-[126px] resize-none' />{' '}
+            </div>
+            <div className='bg-[#F6F3FB] py-3 flex flex-row gap-2 md:gap-5 items-center md:py-4 md:px-6 px-3 -mt-3 rounded-[10px]'>
+              <AIIcon />
+              <div className='flex-1'>
+                <p className='text-sm text-[#675E8B]'>
+                  Need inspiration?
+                  <br /> Let our AI help craft the perfect message for you!
+                </p>
+              </div>
+              <SendIcon />
             </div>
             <Button className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl mt-auto'>
               Proceed to make payment
