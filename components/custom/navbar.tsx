@@ -32,8 +32,10 @@ function NavBar() {
         isScrolled ? 'bg-primary shadow-md' : ''
       } ${pathname != '/' ? 'bg-primary relative shadow-md' : ''}`}>
       <div className='px-[30px] py-6 lg:px-[50px] flex flex-row items-center lg:justify-between container mx-auto'>
-        <LogoIcon width={80} height={30} className='hidden lg:block' />
-        <MobileLogoIcon className='block lg:hidden' />
+        <Link href={'/'}>
+          <LogoIcon width={80} height={30} className='hidden lg:block' />
+          <MobileLogoIcon className='block lg:hidden' />
+        </Link>
         <div className='flex items-center lg:justify-end flex-1 lg:flex-none justify-between'>
           <ul className='text-xs lg:text-sm flex items-center gap-3 lg:gap-6 self-center max-w-fit mx-auto text-white font-medium'>
             <li>
