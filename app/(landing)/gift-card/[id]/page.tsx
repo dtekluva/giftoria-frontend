@@ -107,6 +107,10 @@ function GiftCardDetails() {
                 />{' '}
               </div>
             </div>
+            <div className='space-y-2'>
+              <Label htmlFor='receipt_name'>Personalized Message</Label>
+              <Input />{' '}
+            </div>
             <Button className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl mt-auto'>
               Proceed to make payment
             </Button>
