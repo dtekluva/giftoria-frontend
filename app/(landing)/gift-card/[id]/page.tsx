@@ -7,7 +7,7 @@ import React from 'react';
 
 function GiftCardDetails() {
   return (
-    <div className='mx-auto container md:px-14 px-4 py-3 md:py-7 lg:px-20'>
+    <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
       <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
         <Image
           src={'https://placehold.co/500x300.png'}
@@ -23,7 +23,7 @@ function GiftCardDetails() {
           fashion
         </p>
       </div>
-      <div className='md:grid grid-cols-2 md:gap-20 lg:gap-[120px]'>
+      <div className='lg:grid grid-cols-2 md:gap-20 lg:gap-[120px]'>
         <div>
           <h1 className='text-[#160032] text-base md:text-2xl font-semibold md:font-bold md:mt-20 mt-7'>
             Recepient Information
@@ -89,7 +89,7 @@ function GiftCardDetails() {
           <div className='font-dm-sans mt-4 space-y-7 md:mt-10 flex flex-col flex-1'>
             <div className='flex gap-3'>
               <div className='space-y-2 flex-1'>
-                <Label htmlFor='receipt_email'>Receipt Email</Label>
+                <Label htmlFor='receipt_email'>Who is it for?</Label>
                 <Input
                   id='receipt_email'
                   placeholder='receipt@gmail.com'
@@ -98,7 +98,7 @@ function GiftCardDetails() {
               </div>
               <div className='space-y-2 flex-1'>
                 <Label htmlFor='receipt_phone_number'>
-                  Receipt Phone Number
+                  What is the occassion
                 </Label>
                 <Input
                   id='receipt_phone_number'
