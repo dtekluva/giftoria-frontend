@@ -1,5 +1,6 @@
 import FilterSearchIcon from '@/components/icon/filter-search-icon';
 import { SearchIcon } from 'lucide-react';
+import Image from 'next/image';
 import React from 'react';
 
 function OrderSummary() {
@@ -20,6 +21,24 @@ function OrderSummary() {
           </div>
         </div>
       </div>
+      <ul className='mt-4 md:mt-6'>
+        <li>
+          <div className='flex items-center gap-4 font-montserrat'>
+            <Image
+              src={'https://placehold.co/160x100.png'}
+              width={160}
+              height={100}
+              alt=''
+            />
+            <div>
+              <p className='text-sm font-medium'>Zara gift card</p>
+              <p className='text-[8px] md:text-xs font-dm-sans mt-4'>
+                Inyang Kpongete
+              </p>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   );
 }
