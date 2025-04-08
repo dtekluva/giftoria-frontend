@@ -66,7 +66,7 @@ function OrderSummary() {
             </div>
             <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
               <div className='px-3 md:py-5 py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
-                <p className='text-[6px] md:text-[10px]'>
+                <article className='text-[6px] md:text-[10px]'>
                   Today is all about celebrating you! I hope your day is filled
                   with love, laughter, and unforgettable moments. You deserve
                   all the happiness in the world, and I’m so grateful to have
@@ -77,7 +77,7 @@ function OrderSummary() {
                   indulgence, a long-awaited item, or a fun experience, I hope
                   it brings a smile to your face—just like you always bring to
                   those around you!
-                </p>
+                </article>
               </div>
               <div className='md:flex-none flex-1 text-end'>
                 <p className='font-dm-sans text-sm font-medium'>
@@ -98,9 +98,9 @@ function OrderSummary() {
         </div>
       </div>
       <div>
-        <h3 className='font-bold lg:text-2xl md:text-xl text-base pt-[30px] md:pt-10'>
+        <h2 className='font-bold lg:text-2xl md:text-xl text-base pt-[30px] md:pt-10'>
           Choose payment Method
-        </h3>
+        </h2>
         <RadioGroup
           defaultValue={paymentService[0].name}
           className='mt-5 md:mt-7 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,270px))] gap-4'>
@@ -110,7 +110,7 @@ function OrderSummary() {
               className='border border-[#E2E6EE] rounded-[12px] p-4 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
               <div className='flex items-start gap-4'>
                 <RadioGroupItem value={item.name} id={`payment-${index}`} />
-                <p className='text-sm md:text-base font-bold'>{item.name}</p>
+                <h4 className='text-sm md:text-base font-bold'>{item.name}</h4>
               </div>
               <Label htmlFor={`payment-${index}`} className='flex-1'>
                 <div className='flex items-center space-x-4'>
