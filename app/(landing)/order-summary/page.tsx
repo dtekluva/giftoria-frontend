@@ -1,12 +1,11 @@
+import Clipboard from '@/components/custom/clipboard';
 import FilterSearchIcon from '@/components/icon/filter-search-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
-import { SearchIcon } from 'lucide-react';
-import Image from 'next/image';
-import React from 'react';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import CopyIcon from '@/components/icon/copy-icon';
+import { SearchIcon } from 'lucide-react';
+import Image from 'next/image';
 
 const paymentService = [
   {
@@ -127,7 +126,7 @@ function OrderSummary() {
           <div className='border border-[#E2E6EE] rounded-[12px] p-4 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
             <p className='text-sm md:text-base font-bold'>Pay with transfer</p>
             <p className='mt-1 md:mt-[6px] font-dm-sans text-[8px] md:text-xs text-[#4E4E4E]'>
-              Use the account number displayed below totransfer funds to your
+              Use the account number displayed below to transfer funds to your
               wallet
             </p>
             <div className='mt-3 md:mt-5 md:space-y-3 space-y-2'>
@@ -137,15 +136,8 @@ function OrderSummary() {
                   Providus Bank
                 </p>
               </div>
-              <div className='flex items-center gap-4 justify-between'>
-                <p className='text-xs font-montserrat'>Account number:</p>
-                <div className='flex items-center gap-1'>
-                  <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
-                    1012239271
-                  </p>
-                  <CopyIcon />
-                </div>
-              </div>
+              <Clipboard title='Account number:' value='9131200194' />
+
               <div className='flex items-center gap-4 justify-between'>
                 <p className='text-xs font-montserrat'>Account name:</p>
                 <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>

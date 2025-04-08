@@ -6,6 +6,7 @@ import {
   Roboto,
 } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
 
 const montSerrat = Montserrat_Alternates({
   variable: '--font-sans',
@@ -46,6 +47,7 @@ export default function RootLayout({
       <body
         className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} ${roboto.variable} font-sans antialiased`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );
