@@ -2,6 +2,7 @@ import Clipboard from '@/components/custom/clipboard';
 import FilterSearchIcon from '@/components/icon/filter-search-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SearchIcon } from 'lucide-react';
@@ -102,11 +103,11 @@ function OrderSummary() {
         </h2>
         <RadioGroup
           defaultValue={paymentService[0].name}
-          className='mt-5 md:mt-7 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,270px))] gap-4'>
+          className='mt-5 md:mt-7 max-[380px]:grid-cols-1 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,270px))] gap-4'>
           {paymentService.map((item, index) => (
             <div
               key={index}
-              className='border border-[#E2E6EE] rounded-[12px] p-4 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
+              className='border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
               <div className='flex items-start gap-4'>
                 <RadioGroupItem value={item.name} id={`payment-${index}`} />
                 <h4 className='text-sm md:text-base font-bold'>{item.name}</h4>
@@ -147,6 +148,11 @@ function OrderSummary() {
             </div>
           </div>
         </RadioGroup>
+      </div>
+      <div className='flex justify-center mt-7 md:mt-10 px-4'>
+        <Button className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
+          Proceed to payment
+        </Button>
       </div>
     </div>
   );

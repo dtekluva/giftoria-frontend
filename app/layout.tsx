@@ -47,7 +47,7 @@ export default function RootLayout({
       <body
         className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} ${roboto.variable} font-sans antialiased`}>
         {children}
-        <Toaster />
+        <Toaster position='top-right' />
       </body>
     </html>
   );
