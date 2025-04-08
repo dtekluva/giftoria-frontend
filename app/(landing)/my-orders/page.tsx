@@ -1,5 +1,7 @@
+import ConvertCardIcon from '@/components/icon/convert-card-icon';
 import FilterSearchIcon from '@/components/icon/filter-search-icon';
 import SearchIcon from '@/components/icon/search-icon';
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import React from 'react';
 
@@ -27,29 +29,53 @@ function MyOrderPage() {
         {Array.from({ length: 3 }).map((_, index) => (
           <li
             key={index}
-            className='flex items-center justify-between  gap-2 md:gap-4 pb-6 border-b'>
-            <div className='flex items-center gap-4 font-montserrat'>
-              <Image
-                src={'https://placehold.co/160x100.png'}
-                width={160}
-                height={100}
-                className='max-[380px]:w-[100px]'
-                alt=''
-              />
-              <p className='md:text-sm text-[10px] font-medium'>
-                Zara gift card
-              </p>
-            </div>
-            <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
-              <div className='md:flex-none flex-1 text-end'>
-                <p className='font-dm-sans text-xs md:text-sm font-medium'>
-                  GFT - XYZ123456
+            className='flex items-center justify-between  gap-8 pb-6 border-b flex-wrap'>
+            <div>
+              <div className='flex items-center gap-2 flex-1 md:hidden mb-2'>
+                <ConvertCardIcon width={16} height={16} />
+                <p className='text-[8px] sm:text-xs text-[#990099] font-semibold'>
+                  Buy Again
                 </p>
-                <p className='text-xs md:text-base font-bold mt-8 md:mt-[57px]'>
-                  ₦30000
+              </div>
+              <div className='flex items-center gap-4 font-montserrat'>
+                <Image
+                  src={'https://placehold.co/160x100.png'}
+                  width={160}
+                  height={100}
+                  className='max-[380px]:w-[100px]'
+                  alt=''
+                />
+                <p className='md:text-sm text-[10px] font-medium'>
+                  Zara gift card
                 </p>
               </div>
             </div>
+            <div className='md:flex gap-[110px]'>
+              <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
+                <div className='md:flex-none flex-1 text-end'>
+                  <p className='font-dm-sans text-xs md:text-sm font-medium'>
+                    GFT - XYZ123456
+                  </p>
+                  <p className='text-xs md:text-base font-bold mt-5 md:mt-8'>
+                    ₦30000
+                  </p>
+                </div>
+              </div>
+              <div className='hidden md:block'>
+                <div className='flex items-center gap-2'>
+                  <ConvertCardIcon />
+                  <p className='text-base text-[#990099] font-semibold'>
+                    Buy Again
+                  </p>
+                </div>
+                <Button className='mt-4 h-[63px] text-base font-semibold min-w-[200px]'>
+                  View order
+                </Button>
+              </div>
+            </div>
+            <Button className='md:hidden h-10 text-xs font-semibold max-w-[130px] flex-1 ml-auto'>
+              View order
+            </Button>
           </li>
         ))}
       </ul>
