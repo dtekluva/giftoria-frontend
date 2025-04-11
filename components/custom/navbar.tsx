@@ -8,10 +8,12 @@ import ShoppingCartIcon from '../icon/shopping-cart-icon';
 import UserIcon from '../icon/user-icon';
 import { Input } from '../ui/input';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   console.log('pathname', pathname);
 
@@ -30,7 +32,11 @@ function NavBar() {
     <div
       className={`fixed top-0 w-full z-[99999] transition-colors duration-300 ${
         isScrolled ? 'bg-primary shadow-md' : ''
-      } ${pathname != '/' ? 'bg-primary relative shadow-md' : ''}`}>
+      } ${
+        pathname != '/'
+          ? `bg-primary relative shadow-md ${isScrolled ? 'relative' : ''}`
+          : ''
+      }`}>
       <div className='px-[30px] py-6 lg:px-[50px] flex flex-row items-center lg:justify-between container mx-auto'>
         <Link href={'/'}>
           <LogoIcon width={80} height={30} className='hidden lg:block' />
@@ -61,7 +67,12 @@ function NavBar() {
               </Link>
               <UserIcon />
             </div>
-            <ShoppingCartIcon />
+            <ShoppingCartIcon
+              className='cursor-pointer'
+              onClick={() => {
+                router.push('/order-summary');
+              }}
+            />
           </div>
         </div>
       </div>
