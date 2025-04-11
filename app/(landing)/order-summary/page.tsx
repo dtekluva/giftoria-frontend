@@ -1,3 +1,4 @@
+'use client';
 import Clipboard from '@/components/custom/clipboard';
 import FilterSearchIcon from '@/components/icon/filter-search-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
@@ -7,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const paymentService = [
   {
@@ -20,6 +22,7 @@ const paymentService = [
 ];
 
 function OrderSummary() {
+  const router = useRouter();
   return (
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
       <div className='lg:flex justify-between items-center'>
@@ -150,7 +153,11 @@ function OrderSummary() {
         </RadioGroup>
       </div>
       <div className='flex justify-center mt-7 md:mt-10 px-4'>
-        <Button className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
+        <Button
+          onClick={() => {
+            router.push('/my-orders');
+          }}
+          className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
           Proceed to payment
         </Button>
       </div>

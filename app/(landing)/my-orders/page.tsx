@@ -1,29 +1,20 @@
+'use client';
+import SearchInput from '@/components/custom/search-input';
 import ConvertCardIcon from '@/components/icon/convert-card-icon';
-import FilterSearchIcon from '@/components/icon/filter-search-icon';
-import SearchIcon from '@/components/icon/search-icon';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import React from 'react';
+import { useRouter } from 'next/navigation';
 
 function MyOrderPage() {
+  const router = useRouter();
+
   return (
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
       <div className='lg:flex justify-between items-center'>
         <h1 className='md:text-2xl font-bold text-base font-dm-sans'>
           My Order
         </h1>
-        <div className='p-3 pl-3 px-5 border rounded-[12px] border-[#E2E6EE] flex gap-2 items-center max-w-[90%] mx-auto mt-4 lg:mt-0 lg:max-w-[290px] lg:mx-0'>
-          <div>
-            <SearchIcon />
-          </div>
-          <input
-            placeholder='Search'
-            className='border-0 focus:border-0 focus:outline-none focus:ring-0 flex-1'
-          />
-          <div className='pl-4 border-l border-[#93A3C0]'>
-            <FilterSearchIcon />
-          </div>
-        </div>
+        <SearchInput />
       </div>
       <ul className='mt-4 md:mt-6 space-y-4'>
         {Array.from({ length: 3 }).map((_, index) => (
@@ -68,12 +59,20 @@ function MyOrderPage() {
                     Buy Again
                   </p>
                 </div>
-                <Button className='mt-4 h-[63px] text-base font-semibold min-w-[200px]'>
+                <Button
+                  onClick={() => {
+                    router.push('/order-details');
+                  }}
+                  className='mt-4 h-[63px] text-base font-semibold min-w-[200px]'>
                   View order
                 </Button>
               </div>
             </div>
-            <Button className='md:hidden h-10 text-xs font-semibold max-w-[130px] flex-1 ml-auto'>
+            <Button
+              onClick={() => {
+                router.push('/order-details');
+              }}
+              className='md:hidden h-10 text-xs font-semibold max-w-[130px] flex-1 ml-auto'>
               View order
             </Button>
           </li>
