@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Checkbox } from '../ui/checkbox';
-import SearchInput from './search-input';
-import ImportIcon from '../icon/import-icon';
 
 const historyData = [
   {
@@ -46,19 +44,6 @@ const TransactionHistoryTable = () => {
 
   return (
     <>
-      <div className='md:mt-[60px] mt-7 px-4 md:flex items-center justify-between'>
-        <h3 className='font-semibold md:text-xl lg:text-2xl text-base'>
-          Shopping History
-        </h3>
-        <div className='grid grid-cols-[1fr_auto] md:flex gap-3 mt-4 md:mt-0'>
-          <SearchInput className='max-w-[100%]' />
-          <button className='bg-[#990099] text-sm text-white cursor-pointer md:px-8 md:py-2 flex items-center gap-2 rounded-[8px] p-3'>
-            <span className='hidden lg:block'>Download Transactions</span>
-            <ImportIcon />
-          </button>
-        </div>
-      </div>
-
       <div className='container mx-auto px-4 pt-4 md:pt-9'>
         <div className='overflow-x-auto hidden md:block'>
           <table className='min-w-full bg-white shadow-md rounded-lg text-sm'>
