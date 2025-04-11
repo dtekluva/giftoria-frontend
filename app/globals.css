@@ -10,6 +10,7 @@
   --font-dm-sans: var(--font-dm-sans);
   --font-roboto: var(--font-roboto);
   --font-montserrat: var(--font-montserrat);
+  --font-albert-sans: var(--font-albert-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -126,4 +127,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.custom-dash {
+  border-top-width: 2px; /* Adjust thickness */
+  border-style: dashed;
+  border-color: var(--muted); /* Use your Tailwind color variable */
+  border-spacing: 8px; /* Adjust the spacing between dashes */
 }
