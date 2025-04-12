@@ -15,7 +15,7 @@ function Input({ className, type, isPassword, ...props }: InputProps) {
   };
 
   return (
-    <div className='relative'>
+    <div className={'relative flex-1'}>
       <input
         type={isPassword ? (showPassword ? 'text' : 'password') : type}
         data-slot='input'
