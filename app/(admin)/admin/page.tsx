@@ -1,7 +1,106 @@
+import DirectionDefaultIcon from '@/components/icon/direction-default-icon';
+import SendIcon from '@/components/icon/send-icon';
+import SMSIcon from '@/components/icon/sms-icon';
+import SMSNotificationIcon from '@/components/icon/sms-notification-icon';
+import SmsStarIcon from '@/components/icon/sms-star-icon';
+import SMSTrackingIcon from '@/components/icon/sms-tracking-icon';
+import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 import React from 'react';
 
+// const cards = [
+//   {
+
+//   }
+// ]
+
 function AdminPage() {
-  return <div>AdminPage</div>;
+  return (
+    <div>
+      <div className='border-b-[2px] border-[#F6F3FB] hidden md:block'>
+        <div className='container mx-auto mt-6 md:mt-[36px] flex items-end pl-14 mb-4'>
+          <h1 className='text-xl font-semibold'>Gift Card Orders</h1>
+          <div className='ml-auto pl-14 flex justify-end pr-10 gap-2 items-center'>
+            <Image
+              src={'https://placehold.co/40x40.png'}
+              width={40}
+              height={40}
+              alt='Admin Banner'
+              className='rounded-full'
+            />
+            <div>
+              <h2 className='font-bold text-sm'>Shopybee</h2>
+              <p className='text-[10px] text-[#818181]'>shopybee@gmail.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='px-4 pt-6'>
+        <h2 className='text-base md:hidden font-semibold'>Gift Card Orders</h2>
+        <div className='flex items-center border py-1 px-1 rounded-[8px] md:mt-0 mt-6 max-w-[400px] mx-auto pr-6'>
+          <Input
+            type='text'
+            className='border-none flex-1 md:h-[50px] font-nunito'
+            placeholder='Enter gift card unique code'
+          />
+          <SendIcon />
+        </div>
+      </div>
+      <div className='md:mt-7 mt-5 border-t-[2px] border-[#F6F3FB] md:px-6 px-4 md:py-10 py-5'>
+        <div className='container mx-auto grid md:gap-5 gap-4 grid-cols-[repeat(auto-fit,minmax(216px,1fr))] max-w-full'>
+          <Card title='Sent' icon={<SMSTrackingIcon />} value='44' />
+          <Card title='Claimed' icon={<DirectionDefaultIcon />} value='20' />
+          <Card title='Redeemed' icon={<SmsStarIcon />} value='14' />
+          <Card title='Pending' icon={<SMSIcon />} value='20' />
+          <Card title='Declined' icon={<SMSNotificationIcon />} value='54' />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Card({
+  title,
+  value,
+  icon,
+}: {
+  title: string;
+  value: string;
+  icon: React.ReactNode;
+}) {
+  function getTitleColor(title: string) {
+    switch (title.toLowerCase()) {
+      case 'sent':
+        return 'text-[#259C80]';
+      case 'claimed':
+        return 'text-[#13ACF3]';
+      case 'redeemed':
+        return 'text-[#4E00AD]';
+      case 'pending':
+        return 'text-[#E5A300]';
+      case 'declined':
+        return 'text-[#F97878]';
+
+      default:
+        return '#000000';
+    }
+  }
+  return (
+    <div className='border md:py-5 md:pl-[46px] cursor-pointer hover:scale-105 transition-transform duration-300 ease-in-out md:pr-[66px] py-4 px-10 rounded-[10px] flex gap-3 items-center'>
+      {icon}
+      <div className=''>
+        <h3 className='md:text-2xl text-xl font-medium text-[#0E0E2C] md:text-right'>
+          {value}
+        </h3>
+        <p
+          className={`text-sm font-dm-sans font-medium ${getTitleColor(
+            title
+          )}`}>
+          {title}
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default AdminPage;
