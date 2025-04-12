@@ -5,6 +5,7 @@ import {
   Montserrat,
   Roboto,
   Albert_Sans,
+  Nunito,
 } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
@@ -39,6 +40,12 @@ const albert_sans = Albert_Sans({
   weight: ['400', '500', '600', '700'],
 });
 
+const nunito = Nunito({
+  variable: '--font-nunito',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+});
+
 export const metadata: Metadata = {
   title: 'Magenta',
   description: 'A modern waiter',
@@ -52,7 +59,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} ${roboto.variable} ${albert_sans.variable} font-sans antialiased`}>
+        className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} ${roboto.variable} ${albert_sans.variable} ${nunito.variable} font-sans antialiased`}>
         {children}
         <Toaster position='top-right' />
       </body>

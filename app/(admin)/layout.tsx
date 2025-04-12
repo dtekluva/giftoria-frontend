@@ -54,8 +54,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader className='md:px-10 md:pt-9 md:pb-6 px-5 pt-6 pb-4'>
-          <LogoIcon />
+        <SidebarHeader className='md:px-10 md:pt-9 px-5 pt-6 pb-4'>
+          <LogoIcon height={40} />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -83,8 +83,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarTrigger className='md:hidden' />
-      <div>{children}</div>
+      <div className='flex flex-col w-full'>
+        <div className='bg-primary lg:hidden p-4 w-full'>
+          <SidebarTrigger />
+        </div>
+        {children}
+      </div>
     </SidebarProvider>
   );
 }
