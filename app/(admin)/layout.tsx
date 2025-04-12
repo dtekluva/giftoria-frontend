@@ -26,22 +26,27 @@ const links = [
   {
     icon: <MoneyIcon />,
     label: 'Gift Cards',
-    href: '/admin/profile',
+    href: '#',
   },
   {
     icon: <BillIcon />,
-    label: 'Profile',
-    href: '/admin/profile',
+    label: 'Branch',
+    href: '#',
+  },
+  {
+    icon: <BillIcon />,
+    label: 'Company Details',
+    href: '#',
   },
   {
     icon: <TransactionMinusIcon />,
-    label: 'Profile',
-    href: '/admin/profile',
+    label: 'Request Fund',
+    href: '#',
   },
   {
     icon: <LoginIcon />,
-    label: 'Login',
-    href: '/admin/profile',
+    label: 'Sign Out',
+    href: '#',
   },
 ];
 
@@ -49,7 +54,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader className='md:px-10 md:pt-9 md:pb-6 px-5 pt-6 pb-4 border-b border-[#D9D9D9]'>
+        <SidebarHeader className='md:px-10 md:pt-9 md:pb-6 px-5 pt-6 pb-4'>
           <LogoIcon />
         </SidebarHeader>
         <SidebarContent>
@@ -59,8 +64,11 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               return (
                 <SidebarMenuItem
                   key={index}
-                  className='py-1 border-b border-white'>
-                  <SidebarMenuButton asChild>
+                  data-active={index === 3 ? 'true' : 'false'}
+                  className={`py-1 border-t border-[#D9D9D9] data-[active=true]:border-[#FF0066] peer/${
+                    index + 1
+                  }`}>
+                  <SidebarMenuButton isActive={index === 3} asChild>
                     <Link
                       href={item.href}
                       className='text-white font-dm-sans text-base font-bold rounded-none'>
@@ -75,8 +83,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarTrigger />
-      <div className='container mx-auto px-4 py-6 md:py-11'>{children}</div>
+      <SidebarTrigger className='md:hidden' />
+      <div>{children}</div>
     </SidebarProvider>
   );
 }
