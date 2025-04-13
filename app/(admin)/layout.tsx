@@ -1,3 +1,4 @@
+'use client';
 import BillIcon from '@/components/icon/bill-icon';
 import LoginIcon from '@/components/icon/login-icon';
 import LogoIcon from '@/components/icon/logo';
@@ -14,7 +15,9 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { UserIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 const links = [
@@ -26,7 +29,8 @@ const links = [
   {
     icon: <MoneyIcon />,
     label: 'Gift Cards',
-    href: '#',
+    href: '/admin/gift-cards',
+    details: 'Gift Card Orders',
   },
   {
     icon: <BillIcon />,
@@ -41,7 +45,8 @@ const links = [
   {
     icon: <TransactionMinusIcon />,
     label: 'Request Fund',
-    href: '#',
+    href: '/admin/request-funds',
+    details: 'Request FundS',
   },
   {
     icon: <LoginIcon />,
@@ -51,6 +56,7 @@ const links = [
 ];
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   return (
     <SidebarProvider>
       <Sidebar>
@@ -64,11 +70,11 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               return (
                 <SidebarMenuItem
                   key={index}
-                  data-active={index === 3 ? 'true' : 'false'}
+                  data-active={pathname === item.href}
                   className={`py-1 border-t border-[#D9D9D9] data-[active=true]:border-[#FF0066] peer/${
                     index + 1
                   }`}>
-                  <SidebarMenuButton isActive={index === 3} asChild>
+                  <SidebarMenuButton isActive={pathname === item.href} asChild>
                     <Link
                       href={item.href}
                       className='text-white font-dm-sans text-base font-bold rounded-none'>
@@ -86,6 +92,26 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       <div className='flex flex-col w-full'>
         <div className='bg-primary lg:hidden p-4 w-full'>
           <SidebarTrigger />
+        </div>
+        <div className='border-b-[2px] border-[#F6F3FB] hidden md:block'>
+          <div className='container mx-auto mt-6 md:mt-[36px] flex items-end pl-14 mb-4'>
+            <h1 className='text-xl font-semibold'>
+              {links.find((item) => item.href === pathname)?.details || ''}
+            </h1>
+            <div className='ml-auto pl-14 flex justify-end pr-10 gap-2 items-center'>
+              <Image
+                src={'https://placehold.co/40x40.png'}
+                width={40}
+                height={40}
+                alt='Admin Banner'
+                className='rounded-full'
+              />
+              <div>
+                <h2 className='font-bold text-sm'>Shopybee</h2>
+                <p className='text-[10px] text-[#818181]'>shopybee@gmail.com</p>
+              </div>
+            </div>
+          </div>
         </div>
         {children}
       </div>
