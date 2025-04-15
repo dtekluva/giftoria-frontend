@@ -72,7 +72,7 @@ const DragAndDropUpload: React.FC<DragAndDropUploadProps> = ({
       />
       <div className='space-y-[6px]'>
         <h1 className='text-xs md:text-base font-bold font-montserrat'>
-          Upload your file
+          Upload company logo
         </h1>
         <p className='font-dm-sans text-xs md:text-sm font-medium text-[#344054] md:mt-1'>
           Drag and drop your file(s) here or{' '}

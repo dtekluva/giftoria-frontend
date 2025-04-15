@@ -1,7 +1,17 @@
 'use client';
 import DragAndDropUpload from '@/components/custom/drag-n-drop';
+import GiftCardDetailsTable from '@/components/custom/gift-card-details';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+
+const companyCardDetails = {
+  'Business type:': 'Limited liability',
+  'CAC registration number:': 'RC 1234567',
+  'Date of incorporation:': '₦60,000',
+  'Tin number:': '2345678-0001',
+  'Company address:': 'No. 5 shomolu, Obanikoro, Lagos.',
+};
 
 function CompanyDetails() {
   return (
@@ -56,6 +66,21 @@ function CompanyDetails() {
               Request change of password
             </p>
           </div>
+        </div>
+      </div>
+      <div className='grid md:grid-cols-2 gap-[10px] px-7 md:mt-7'>
+        <div>
+          <h3 className='md:mb-8 mb-3 font-semibold'>Company Details</h3>
+          <GiftCardDetailsTable data={companyCardDetails} />
+        </div>
+        <div className='flex flex-col items-end'>
+          <Button className='md:h-16  ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans md:font-sans rounded-[6px] font-semibold md:mt-0'>
+            Request Edit
+          </Button>
+          <p className='text-[10px] md:text-sm font-dm-sans mt-3 md:mt-4 text-[#4A4A68]'>
+            Please not that any change to your document will require <br />
+            verification and may require between 3-72 hours{' '}
+          </p>
         </div>
       </div>
     </div>
