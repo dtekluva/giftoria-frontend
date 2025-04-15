@@ -21,7 +21,7 @@ function BusinessProfileLayout({ children }: { children: React.ReactNode }) {
     <div>
       <div className='mt-7 w-full'>
         <Tabs defaultValue='details' className='px-7 w-full border-b-2'>
-          <TabsList className='w-full md:max-w-[600px]'>
+          <TabsList className='w-full md:max-w-[600px] md:gap-16'>
             {linksHeader.map((link) => (
               <TabsTrigger
                 key={link.name}
