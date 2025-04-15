@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import { Checkbox } from '../ui/checkbox';
 
@@ -32,51 +33,70 @@ const Table = <T extends Record<string, unknown>>({
   };
 
   return (
-    <div className='overflow-x-auto'>
-      <table className='min-w-full bg-white shadow-md rounded-lg text-sm'>
-        <thead className='border-y'>
-          <tr className='font-montserrat'>
-            {selectable && (
-              <th className='py-4 px-4'>
-                <Checkbox
-                  checked={selectedRows.length === data.length}
-                  onCheckedChange={handleSelectAll}
-                  aria-label='Select all rows'
-                />
-              </th>
-            )}
-            {headers.map((header, index) => (
-              <th key={index} className='py-6 px-4 text-left font-medium'>
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className='text-gray-700'>
-          {data.map((row, rowIndex) => (
-            <tr
-              key={rowIndex}
-              className={`border-b hover:bg-gray-50 font-dm-sans ${
-                selectedRows.includes(rowIndex) ? 'bg-gray-100' : ''
-              }`}>
+    <div className='container mx-auto px-4 pt-4 md:pt-9'>
+      {/* Desktop Table */}
+      <div className='overflow-x-auto hidden md:block'>
+        <table className='min-w-full bg-white shadow-md rounded-lg text-sm'>
+          <thead className='border-y'>
+            <tr className='font-montserrat'>
               {selectable && (
                 <th className='py-4 px-4'>
                   <Checkbox
-                    checked={selectedRows.includes(rowIndex)}
-                    onCheckedChange={() => handleCheckboxChange(rowIndex)}
-                    aria-label={`Select row ${rowIndex + 1}`}
+                    checked={selectedRows.length === data.length}
+                    onCheckedChange={handleSelectAll}
+                    aria-label='Select all rows'
                   />
                 </th>
               )}
-              {headers.map((header, colIndex) => (
-                <td key={colIndex} className='py-[36px] px-4'>
-                  {String(row[header] || '-')}
-                </td>
+              {headers.map((header, index) => (
+                <th key={index} className='py-6 px-4 text-left font-medium'>
+                  {header}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className='text-gray-700'>
+            {data.map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className={`border-b hover:bg-gray-50 font-dm-sans ${
+                  selectedRows.includes(rowIndex) ? 'bg-gray-100' : ''
+                }`}>
+                {selectable && (
+                  <th className='py-4 px-4'>
+                    <Checkbox
+                      checked={selectedRows.includes(rowIndex)}
+                      onCheckedChange={() => handleCheckboxChange(rowIndex)}
+                      aria-label={`Select row ${rowIndex + 1}`}
+                    />
+                  </th>
+                )}
+                {headers.map((header, colIndex) => (
+                  <td key={colIndex} className='py-[36px] px-4'>
+                    {String(row[header] || '-')}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile View */}
+      {data.map((row, rowIndex) => (
+        <div key={rowIndex} className='block md:hidden mt-4'>
+          <div className='bg-white rounded-lg p-4 text-sm space-y-5 border'>
+            {headers.map((header, colIndex) => (
+              <p
+                key={colIndex}
+                className='flex justify-between font-dm-sans gap-1 text-xs'>
+                <span className='font-medium font-sans'>{header}:</span>
+                {String(row[header] || '-')}
+              </p>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

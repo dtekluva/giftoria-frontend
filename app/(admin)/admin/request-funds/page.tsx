@@ -1,10 +1,44 @@
+import SearchInput from '@/components/custom/search-input';
+import Table from '@/components/custom/table';
+import { Button } from '@/components/ui/button';
+
+const historyData = [
+  {
+    dateTime: '2/10/2023 - 4:30PM',
+    orderNo: 'GFT - XYZ123456',
+    storeAddress: 'No. 5 Shomolu, Obanikoro, Lagos',
+    totalValue: '₦400,000.00',
+    redeemed: '₦400,000.00',
+    balance: '₦10,000',
+  },
+  {
+    dateTime: '2/10/2023 - 4:30PM',
+    orderNo: 'GFT - XYZ123457',
+    storeAddress: 'No. 10 Ikeja, Lagos',
+    totalValue: '₦200,000.00',
+    redeemed: '₦150,000.00',
+    balance: '₦50,000',
+  },
+];
+
+const headers = [
+  'dateTime',
+  'orderNo',
+  'storeAddress',
+  'totalValue',
+  'redeemed',
+  'balance',
+];
+
 function RequestFundPage() {
   return (
     <div>
-      <div className='px-4 pt-6'>
-        <h2 className='text-base md:hidden font-semibold'>Request Funds</h2>
-        <div className='md:mt-7 mt-5 border-t-[2px] border-[#F6F3FB] md:px-6 px-4 md:py-10 py-5'>
-          <div className='container  max-w-[1100px]'>
+      <div className='md:px-6'>
+        <h2 className='text-base md:hidden px-4 py-4 font-semibold'>
+          Request Funds
+        </h2>
+        <div className='border-y-[2px] border-[#F6F3FB] md:px-6 px-4 md:py-10 py-5'>
+          <div className='container max-w-[1100px]'>
             <div className='container max-w-full grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-stretch lg:gap-12 gap-4'>
               <Card
                 asChild
@@ -28,6 +62,18 @@ function RequestFundPage() {
               <Card title='₦19,000,000' value='Pending balance' />
             </div>
           </div>
+        </div>
+        <div className='container grid lg:flex gap-5 lg:items-center lg:justify-between py-4 md:px-6 px-4'>
+          <h1 className='md:text-xl text-base font-semibold'>
+            Request Funds History
+          </h1>
+          <SearchInput className='md:max-w-fit md:mx-auto' />
+          <Button className='md:h-16 col-span-full ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans font-semibold mt-5 md:mt-0'>
+            Request Funds
+          </Button>
+        </div>
+        <div>
+          <Table headers={headers} data={historyData} selectable={true} />
         </div>
       </div>
     </div>

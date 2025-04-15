@@ -46,7 +46,7 @@ const links = [
     icon: <TransactionMinusIcon />,
     label: 'Request Fund',
     href: '/admin/request-funds',
-    details: 'Request FundS',
+    details: 'Request Funds',
   },
   {
     icon: <LoginIcon />,
@@ -89,12 +89,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
       </Sidebar>
 
-      <div className='flex flex-col w-full'>
+      <div className='flex flex-col w-full container mx-auto'>
         <div className='bg-primary lg:hidden p-4 w-full'>
           <SidebarTrigger />
         </div>
         <div className='border-b-[2px] border-[#F6F3FB] hidden md:block'>
-          <div className='container mx-auto mt-6 md:mt-[36px] flex items-end pl-14 mb-4'>
+          <div
+            className={`container mt-6 md:mt-[36px] flex items-end pl-14 mb-4`}>
             <h1 className='text-xl font-semibold'>
               {links.find((item) => item.href === pathname)?.details || ''}
             </h1>
