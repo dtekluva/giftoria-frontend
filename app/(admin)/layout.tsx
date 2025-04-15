@@ -35,12 +35,14 @@ const links = [
   {
     icon: <BillIcon />,
     label: 'Branch',
-    href: '#',
+    href: '/admin/branch',
+    details: 'Business Profile',
   },
   {
     icon: <BillIcon />,
     label: 'Company Details',
-    href: '#',
+    href: '/admin/company-details',
+    details: 'Business Profile',
   },
   {
     icon: <TransactionMinusIcon />,
@@ -95,7 +97,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         </div>
         <div className='border-b-[2px] border-[#F6F3FB] hidden md:block'>
           <div
-            className={`container mt-6 md:mt-[36px] flex items-end pl-14 mb-4`}>
+            className={`container mt-6 md:mt-[36px] flex items-end pl-7 mb-4`}>
             <h1 className='text-xl font-semibold'>
               {links.find((item) => item.href === pathname)?.details || ''}
             </h1>
