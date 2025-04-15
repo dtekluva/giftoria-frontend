@@ -4,30 +4,24 @@ import { Button } from '@/components/ui/button';
 
 const historyData = [
   {
+    id: 1,
     dateTime: '2/10/2023 - 4:30PM',
-    orderNo: 'GFT - XYZ123456',
-    storeAddress: 'No. 5 Shomolu, Obanikoro, Lagos',
-    totalValue: '₦400,000.00',
-    redeemed: '₦400,000.00',
-    balance: '₦10,000',
-  },
-  {
-    dateTime: '2/10/2023 - 4:30PM',
-    orderNo: 'GFT - XYZ123457',
-    storeAddress: 'No. 10 Ikeja, Lagos',
-    totalValue: '₦200,000.00',
-    redeemed: '₦150,000.00',
-    balance: '₦50,000',
+    desc: 'January/2025 payment',
+    amount: 'No. 5 Shomolu, Obanikoro, Lagos',
+    walletId: '182563802142',
+    sessionCode: 'R2GDRRS2232',
+    status: 'Success',
   },
 ];
 
 const headers = [
-  'dateTime',
-  'orderNo',
-  'storeAddress',
-  'totalValue',
-  'redeemed',
-  'balance',
+  { key: 'id', title: 'Id' },
+  { key: 'dateTime', title: 'Date/Time' },
+  { key: 'desc', title: 'Description' },
+  { key: 'amount', title: 'Amount' },
+  { key: 'walletId', title: 'Wallet ID' },
+  { key: 'sessionCode', title: 'Session code' },
+  { key: 'status', title: 'Status' },
 ];
 
 function RequestFundPage() {

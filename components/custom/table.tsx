@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Checkbox } from '../ui/checkbox';
 
 interface TableProps<T> {
-  headers: string[]; // Array of header titles
+  headers: { key: string; title: string }[]; // Array of header objects with key and title
   data: T[]; // Array of data objects
   selectable?: boolean; // Optional prop to enable row selection
 }
@@ -50,7 +50,7 @@ const Table = <T extends Record<string, unknown>>({
               )}
               {headers.map((header, index) => (
                 <th key={index} className='py-6 px-4 text-left font-medium'>
-                  {header}
+                  {header.title}
                 </th>
               ))}
             </tr>
@@ -73,7 +73,7 @@ const Table = <T extends Record<string, unknown>>({
                 )}
                 {headers.map((header, colIndex) => (
                   <td key={colIndex} className='py-[36px] px-4'>
-                    {String(row[header] || '-')}
+                    {String(row[header.key] || '-')}
                   </td>
                 ))}
               </tr>
@@ -90,8 +90,8 @@ const Table = <T extends Record<string, unknown>>({
               <p
                 key={colIndex}
                 className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>{header}:</span>
-                {String(row[header] || '-')}
+                <span className='font-medium font-sans'>{header.title}:</span>
+                {String(row[header.key] || '-')}
               </p>
             ))}
           </div>
