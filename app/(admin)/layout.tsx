@@ -91,7 +91,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
       </Sidebar>
 
-      <div className='flex flex-col w-full container mx-auto'>
+      <div className='flex flex-col w-full lg:container mx-auto'>
         <div className='bg-primary lg:hidden p-4 w-full'>
           <SidebarTrigger />
         </div>
