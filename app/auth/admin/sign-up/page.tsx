@@ -4,24 +4,23 @@ import UploadDocumentIcon from '@/components/icon/upload-document-icon';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  Form,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Stepper,
-  StepperTrigger,
-  StepperItem,
   StepperIndicator,
+  StepperItem,
   StepperSeparator,
+  StepperTrigger,
 } from '@/components/ui/number-stepper';
 import { useCreateAdminAccount, useVerifyEmail } from '@/services/mutations';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 import React from 'react';
 
 const steps = [1, 2, 3];

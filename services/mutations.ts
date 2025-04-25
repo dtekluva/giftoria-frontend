@@ -1,3 +1,4 @@
+'use client';
 import { createAdminAccountSchema, verifyEmailSchema } from '@/libs/schema';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -7,6 +8,12 @@ import { adminSignUp, verifyEmail } from './api';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import { parseAsBoolean, useQueryState } from 'nuqs';
+import { useRouter } from 'next/navigation';
+import { userSignUp } from './api';
+import {
+  createUserAccountSchema,
+  type CreateUserAccountType,
+} from '@/libs/schema';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -32,7 +39,7 @@ export function useCreateAdminAccount() {
 
   async function onSubmit(data: ApiAuthCompanyResponse) {
     const res = mutation.mutateAsync(data);
-    console.log('Response:', res);
+
     toast.promise(res, {
       loading: 'Creating account...',
       success: (data) => {
@@ -148,5 +155,65 @@ export const useVerifyEmail = () => {
     userEmail,
     setEmailVerified,
     emailVerified,
+  };
+};
+
+export const useCreateUserAccount = () => {
+  const router = useRouter();
+  const [, setEmail] = useQueryState('email');
+
+  const form = useForm<CreateUserAccountType>({
+    resolver: zodResolver(createUserAccountSchema),
+    defaultValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone_number: '',
+      password: '',
+      promotion_notification: false,
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: userSignUp,
+    onSuccess: (data) => {
+      if (data.status) {
+        setEmail(form.getValues('email'));
+        router.push('/auth/email-verify');
+      }
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(error.response?.data?.message || 'Something went wrong');
+    },
+  });
+
+  const onSubmit = (data: CreateUserAccountType) => {
+    const res = mutation.mutateAsync(data);
+
+    toast.promise(res, {
+      loading: 'Creating account...',
+      success: (data) => {
+        if (data.status) {
+          return 'Account created successfully';
+        } else {
+          return 'Account creation failed';
+        }
+      },
+      error: (error) => {
+        if (error.response) {
+          const errorKey = Object.keys(error.response.data)[1];
+          const errorMessage = error.response.data[errorKey];
+          return errorMessage;
+        } else {
+          return 'An error occurred';
+        }
+      },
+    });
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
   };
 };
