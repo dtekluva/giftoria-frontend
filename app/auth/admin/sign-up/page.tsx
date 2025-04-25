@@ -157,11 +157,66 @@ function AdminSignUp() {
           </div>
         )}
         {activeStep == 3 && (
-          <div>
-            <h1 className='md:text-2xl'>
-              To keep your account safe we need to <br /> verify your email
-              address
-            </h1>
+          <div className='md:space-y-7 space-y-5'>
+            <div className='space-y-2 flex-1 font-dm-sans'>
+              <Label
+                htmlFor='business_type'
+                className='text-base font-semibold text-gray-700'>
+                Business Type
+              </Label>
+              <Input
+                id='business_type'
+                placeholder='Please enter your first name'
+              />
+            </div>
+            <div className='space-y-2 flex-1 font-dm-sans'>
+              <Label
+                htmlFor='business_type'
+                className='text-base font-semibold text-gray-700'>
+                Company Registration Number
+              </Label>
+              <Input
+                id='business_type'
+                placeholder='Please enter your first name'
+              />
+            </div>
+            <div className='flex md:flex-row flex-col gap-4'>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <Label
+                  htmlFor='company_name'
+                  className='text-base font-semibold text-gray-700'>
+                  Date of Incorporation
+                </Label>
+                <Input
+                  id='company_name'
+                  placeholder='Please enter your first name'
+                />
+              </div>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <Label
+                  htmlFor='company_name'
+                  className='text-base font-semibold text-gray-700'>
+                  Tin Number
+                </Label>
+                <Input id='company_name' placeholder='0000000' />
+              </div>
+            </div>
+            <div className='space-y-2 flex-1 font-dm-sans'>
+              <Label
+                htmlFor='business_type'
+                className='text-base font-semibold text-gray-700'>
+                Company Address
+              </Label>
+              <Input
+                id='business_type'
+                placeholder='Please enter your comapny address'
+              />
+            </div>
+            <div>
+              <p className='text-base font-dm-sans font-semibold text-gray-700'>
+                Upload your comapy CAC document
+              </p>
+            </div>
           </div>
         )}
       </AuthCard>
