@@ -58,6 +58,22 @@ export const createUserAccountSchema = z.object({
   promotion_notification: z.boolean().optional(),
 });
 
+export const sendVerificationCodeSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z
+    .string()
+    .min(1, { message: 'Password is required' })
+    .max(60, 'Password must be less than 60 characters'),
+});
+
 export type CreateAdminAccountType = z.infer<typeof createAdminAccountSchema>;
 export type VerifyEmailType = z.infer<typeof verifyEmailSchema>;
 export type CreateUserAccountType = z.infer<typeof createUserAccountSchema>;
+export type SendVerificationCodeType = z.infer<
+  typeof sendVerificationCodeSchema
+>;
+export type LoginType = z.infer<typeof loginSchema>;

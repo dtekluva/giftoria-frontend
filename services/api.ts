@@ -4,6 +4,8 @@ import {
   createAdminAccountSchema,
   CreateUserAccountType,
   VerifyEmailType,
+  SendVerificationCodeType,
+  LoginType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
@@ -26,4 +28,12 @@ export const userSignUp = async (data: CreateUserAccountType) => {
 };
 export const verifyEmail = async (data: VerifyEmailType) => {
   return await httpConfig.post('/auth/verify_email/', data);
+};
+
+export const sendVerificationCode = async (data: SendVerificationCodeType) => {
+  return await httpConfig.post('/auth/send_verification_code/', data);
+};
+
+export const login = async (data: LoginType) => {
+  return await httpConfig.post('/auth/signin/', data);
 };

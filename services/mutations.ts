@@ -4,16 +4,24 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { adminSignUp, verifyEmail } from './api';
+import {
+  adminSignUp,
+  verifyEmail,
+  userSignUp,
+  sendVerificationCode,
+  login,
+} from './api';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useRouter } from 'next/navigation';
-import { userSignUp } from './api';
 import {
   createUserAccountSchema,
   type CreateUserAccountType,
+  loginSchema,
+  type LoginType,
 } from '@/libs/schema';
+import { setCookie } from 'cookies-next/client';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -207,6 +215,104 @@ export const useCreateUserAccount = () => {
         } else {
           return 'An error occurred';
         }
+      },
+    });
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useSendVerificationCode = () => {
+  const [email] = useQueryState('email');
+
+  const mutation = useMutation({
+    mutationFn: sendVerificationCode,
+    onSuccess: () => {
+      toast.success('Verification code sent successfully');
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(
+        error.response?.data?.message || 'Failed to send verification code'
+      );
+    },
+  });
+
+  const resendCode = () => {
+    if (!email) {
+      toast.error('Email not found');
+      return;
+    }
+
+    const res = mutation.mutateAsync({ email });
+
+    toast.promise(res, {
+      loading: 'Sending verification code...',
+      success: 'Verification code sent successfully',
+      error: (error) => {
+        if (error.response) {
+          const errorKey = Object.keys(error.response.data)[1];
+          const errorMessage = error.response.data[errorKey];
+          return errorMessage;
+        }
+        return 'Failed to send verification code';
+      },
+    });
+  };
+
+  return {
+    resendCode,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useLogin = () => {
+  const router = useRouter();
+
+  const form = useForm<LoginType>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      if (data.status) {
+        toast.success('Login successful');
+        setCookie('token', data.data.token);
+        router.push('/');
+      }
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(error.response?.data?.message || 'Login failed');
+    },
+  });
+
+  const onSubmit = (data: LoginType) => {
+    const res = mutation.mutateAsync(data);
+
+    toast.promise(res, {
+      loading: 'Logging in...',
+      success: (data) => {
+        if (data.status) {
+          return 'Login successful';
+        } else {
+          return 'Login failed';
+        }
+      },
+      error: (error) => {
+        if (error.response) {
+          const errorKey = Object.keys(error.response.data)[1];
+          const errorMessage = error.response.data[errorKey];
+          return errorMessage;
+        }
+        return 'Login failed';
       },
     });
   };

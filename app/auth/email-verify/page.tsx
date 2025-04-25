@@ -12,19 +12,21 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useQueryState } from 'nuqs';
-import { useVerifyEmail } from '@/services/mutations';
+import { useVerifyEmail, useSendVerificationCode } from '@/services/mutations';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
 function VerifyEmail() {
   const [email] = useQueryState('email');
   const { form, onSubmit, mutation } = useVerifyEmail();
+  const { resendCode, isLoading: isResending } = useSendVerificationCode();
   const router = useRouter();
+
   React.useEffect(() => {
     if (mutation.isSuccess) {
       router.push('/auth/login/');
     }
-  }, [mutation.isSuccess]);
+  }, [mutation.isSuccess, router]);
 
   return (
     <div className='w-full'>
@@ -46,7 +48,7 @@ function VerifyEmail() {
               control={form.control}
               name='otp_code'
               render={({ field }) => (
-                <FormItem className='flex md:flex-row flex-col gap-4'>
+                <FormItem className='flex md:flex-row flex-col gap-4 mt-9'>
                   <div className='space-y-2 flex-1 font-dm-sans'>
                     <FormLabel className='text-base font-semibold text-gray-700'>
                       Enter Code
@@ -60,13 +62,17 @@ function VerifyEmail() {
               )}
             />
 
-            <button className='font-dm-sans font-medium text-base md:mt-4 mt-3 text-primary'>
-              Request the code again
+            <button
+              type='button'
+              onClick={resendCode}
+              disabled={isResending}
+              className='font-dm-sans font-medium text-base md:mt-4 mt-3 text-primary cursor-pointer'>
+              {isResending ? 'Sending...' : 'Request the code again'}
             </button>
             <p className='md:mt-7 mt-5 font-dm-sans'>
               Remember to check your spam/junk folder. It can take several
-              minutes for your email to arrive, but if you don’t see the mail
-              after 5 minutes
+              minutes for your email to arrive, but if you don&apos;t see the
+              mail after 5 minutes
             </p>
             <p className='md:mt-5 mt-3 font-dm-sans'>
               If you do request the code to be re-sent, makes sure you enter it
@@ -80,7 +86,7 @@ function VerifyEmail() {
             </Button>
             <Button
               variant={'outline'}
-              className='text-sm font-bold md:text-base md:h-[70px] h-[50px] mb-10  mt-10 w-full'>
+              className='text-sm font-bold md:text-base md:h-[70px] h-[50px] mb-10 mt-5 w-full'>
               Back to Create Account
             </Button>
           </form>
