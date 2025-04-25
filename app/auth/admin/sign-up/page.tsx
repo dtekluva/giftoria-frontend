@@ -1,5 +1,6 @@
 'use client';
 import AuthCard from '@/components/custom/auth-card';
+import UploadDocumentIcon from '@/components/icon/upload-document-icon';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -212,10 +213,16 @@ function AdminSignUp() {
                 placeholder='Please enter your comapny address'
               />
             </div>
-            <div>
+            <div className='mb-10'>
               <p className='text-base font-dm-sans font-semibold text-gray-700'>
                 Upload your comapy CAC document
               </p>
+              <div className='md:px-6 px-5 flex items-center gap-4 cursor-pointer mt-2 py-4 rounded-[8px] bg-secondary-transparent'>
+                <UploadDocumentIcon />
+                <p className='font-medium font-dm-sans text-[#323232] text-sm'>
+                  Maximum file size 10MB
+                </p>
+              </div>
             </div>
           </div>
         )}
