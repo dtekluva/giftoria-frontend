@@ -170,12 +170,13 @@ function CreateAccount({
 }: {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const { form } = useCreateAdminAccount();
+  const { form, onSubmit } = useCreateAdminAccount();
+
   return (
     <Form {...form}>
       <form
         className='md:space-y-7 space-y-4'
-        onSubmit={form.handleSubmit((data) => console.log(data))}>
+        onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name='company_name'
