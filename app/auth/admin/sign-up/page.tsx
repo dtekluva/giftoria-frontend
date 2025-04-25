@@ -3,6 +3,14 @@ import AuthCard from '@/components/custom/auth-card';
 import UploadDocumentIcon from '@/components/icon/upload-document-icon';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Form,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -12,6 +20,7 @@ import {
   StepperIndicator,
   StepperSeparator,
 } from '@/components/ui/number-stepper';
+import { useCreateAdminAccount } from '@/services/mutations';
 import React from 'react';
 
 const steps = [1, 2, 3];
@@ -37,82 +46,7 @@ function AdminSignUp() {
             </StepperItem>
           ))}
         </Stepper>
-        {activeStep == 1 && (
-          <>
-            <div className='flex md:flex-row flex-col gap-4'>
-              <div className='space-y-2 flex-1 font-dm-sans'>
-                <Label
-                  htmlFor='company_name'
-                  className='text-base font-semibold text-gray-700'>
-                  Company Name
-                </Label>
-                <Input
-                  id='company_name'
-                  placeholder='Please enter your first name'
-                />
-              </div>
-            </div>
-            <div className='flex md:flex-row flex-col gap-4'>
-              <div className='space-y-2 flex-1 font-dm-sans'>
-                <Label
-                  htmlFor='email'
-                  className='text-base font-semibold text-gray-700'>
-                  Email
-                </Label>
-                <Input
-                  type='email'
-                  id='email'
-                  placeholder='Please enter your email'
-                />
-              </div>
-              <div className='space-y-2 flex-1 font-dm-sans'>
-                <Label htmlFor='phone' className='text-base font-semibold'>
-                  Phone Number
-                </Label>
-                <Input id='phone' placeholder='+234 070 0000000' />
-              </div>
-            </div>
-            <div className='space-y-2 font-dm-sans'>
-              <Label htmlFor='email' className='text-base font-semibold'>
-                Password
-              </Label>
-              <Input
-                type='email'
-                id='email'
-                isPassword
-                placeholder='Please enter your password'
-              />
-            </div>
-            <div className='flex flex-row justify-between items-center'>
-              <div className='flex items-center space-x-2 -mt-2 md:-mt-4 cursor-pointer'>
-                <Checkbox id='logged-in' />
-                <label htmlFor='logged-in' className='text-xs font-dm-sans'>
-                  Notify me of new deals and offers from your Partners
-                </label>
-              </div>
-            </div>
-            <p className='text-xs font-dm-sans'>
-              By creating an account, you agree to the Giftoria terms and
-              conditions. John Lewis will process your personal data as set out
-              in our privacy notice
-            </p>
-            <Button
-              onClick={() => {
-                setActiveStep((prev) => prev + 1);
-              }}
-              className='text-base font-semibold md:h-[70px] h-[50px] mt-4'>
-              Create Account
-            </Button>
-            <Button
-              variant={'outline'}
-              className='text-xs md:h-[70px] h-[50px] mb-10 -mt-1 text-black'>
-              Already have an account ?
-              <span className='font-semibold text-base text-primary'>
-                Sign up
-              </span>
-            </Button>
-          </>
-        )}
+        {activeStep == 1 && <CreateAccount setActiveStep={setActiveStep} />}
         {activeStep == 2 && (
           <div>
             <h1 className='md:text-2xl'>
@@ -228,6 +162,148 @@ function AdminSignUp() {
         )}
       </AuthCard>
     </div>
+  );
+}
+
+function CreateAccount({
+  setActiveStep,
+}: {
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const { form } = useCreateAdminAccount();
+  return (
+    <Form {...form}>
+      <form
+        className='md:space-y-7 space-y-4'
+        onSubmit={form.handleSubmit((data) => console.log(data))}>
+        <FormField
+          control={form.control}
+          name='company_name'
+          render={({ field }) => (
+            <FormItem className='flex md:flex-row flex-col gap-4'>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <FormLabel className='text-base font-semibold text-gray-700'>
+                  Company Name
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder='Please enter your first name'
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <div className='flex md:flex-row flex-col gap-4'>
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem className='flex md:flex-row flex-col gap-4 flex-1'>
+                <div className='space-y-2 flex-1 font-dm-sans'>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='email'
+                      {...field}
+                      placeholder='Please enter your email'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='phone_number'
+            render={({ field }) => (
+              <FormItem className='flex md:flex-row flex-col gap-4 flex-1'>
+                <div className='space-y-2 flex-1 font-dm-sans'>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Phone Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder='+234 070 0000000' />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem className='flex md:flex-row flex-col gap-4'>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <FormLabel className='text-base font-semibold text-gray-700'>
+                  Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    {...field}
+                    placeholder='Please enter your password'
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name='promote_notification'
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className='flex items-center space-x-2 -mt-2 md:-mt-4 cursor-pointer'>
+              <FormControl>
+                <Checkbox
+                  id='logged-in'
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel htmlFor='logged-in' className='text-xs font-dm-sans'>
+                {' '}
+                Notify me of new deals and offers from your Partners
+              </FormLabel>
+            </FormItem>
+          )}
+        />
+
+        <p className='text-xs font-dm-sans'>
+          By creating an account, you agree to the Giftoria terms and
+          conditions. John Lewis will process your personal data as set out in
+          our privacy notice
+        </p>
+        <Button
+          onClick={() => {
+            if (form.formState.isValid) {
+              // setActiveStep((prev) => prev + 1);
+            }
+          }}
+          type='submit'
+          className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'>
+          Create Account
+        </Button>
+        <Button
+          variant={'outline'}
+          className='text-xs w-full md:h-[70px] h-[50px] mb-10 -mt-1 text-black'>
+          Already have an account ?
+          <span className='font-semibold text-base text-primary'>Sign up</span>
+        </Button>
+      </form>
+    </Form>
   );
 }
 
