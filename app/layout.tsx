@@ -63,7 +63,7 @@ export default function RootLayout({
         className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} ${roboto.variable} ${albert_sans.variable} ${nunito.variable} font-sans antialiased`}>
         <Providers>
           {children}
-          <Toaster position='top-right' richColors />
+          <Toaster position='top-right' />
         </Providers>
       </body>
     </html>

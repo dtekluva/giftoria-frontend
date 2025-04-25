@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { httpConfig } from './api.config';
-import { createAdminAccountSchema } from '@/libs/schema';
+import { createAdminAccountSchema, VerifyEmailType } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
 
@@ -12,4 +12,8 @@ export const adminSignUp = async (
     AxiosError,
     AxiosResponse<ApiAuthCompanyResponse>
   >('/auth/company_signup/', data);
+};
+
+export const verifyEmail = async (data: VerifyEmailType) => {
+  return await httpConfig.post('/auth/verify_email/', data);
 };

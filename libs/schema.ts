@@ -23,3 +23,16 @@ export const createAdminAccountSchema = z.object({
     .regex(/[0-9]/, 'Password must contain at least one number'),
   promote_notification: z.boolean().optional(),
 });
+
+export const verifyEmailSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  otp_code: z
+    .string()
+    .min(1, {
+      message: 'OTP code is required',
+    })
+    .max(6, 'OTP code must be 6 characters'),
+});
+
+export type CreateAdminAccountType = z.infer<typeof createAdminAccountSchema>;
+export type VerifyEmailType = z.infer<typeof verifyEmailSchema>;
