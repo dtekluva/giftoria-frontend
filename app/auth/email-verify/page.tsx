@@ -12,7 +12,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useQueryState } from 'nuqs';
-import { useVerifyEmail, useSendVerificationCode } from '@/services/mutations';
+import {
+  useVerifyEmail,
+  useSendVerificationCode,
+} from '@/services/mutations/auth.mutations';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 

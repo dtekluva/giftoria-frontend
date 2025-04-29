@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useCreateUserAccount } from '@/services/mutations';
+import { useCreateUserAccount } from '@/services/mutations/auth.mutations';
 
 function CreateAccount() {
   const { form, onSubmit, isLoading } = useCreateUserAccount();

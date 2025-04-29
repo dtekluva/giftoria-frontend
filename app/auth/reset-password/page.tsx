@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useChangePassword } from '@/services/mutations';
+import { useChangePassword } from '@/services/mutations/auth.mutations';
 
 function ResetPassword() {
   const { form, onSubmit } = useChangePassword();

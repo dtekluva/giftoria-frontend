@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useLogin } from '@/services/mutations';
+import { useLogin } from '@/services/mutations/auth.mutations';
 import { useRouter } from 'next/navigation';
 
 function SignIn() {

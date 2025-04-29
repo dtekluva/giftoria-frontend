@@ -20,7 +20,10 @@ import {
   StepperSeparator,
   StepperTrigger,
 } from '@/components/ui/number-stepper';
-import { useCreateAdminAccount, useVerifyEmail } from '@/services/mutations';
+import {
+  useCreateAdminAccount,
+  useVerifyEmail,
+} from '@/services/mutations/auth.mutations';
 import React from 'react';
 
 const steps = [1, 2, 3];

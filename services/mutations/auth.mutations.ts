@@ -16,7 +16,7 @@ import {
   sendVerificationCode,
   login,
   changePassword,
-} from './api';
+} from '../api';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import { parseAsBoolean, useQueryState } from 'nuqs';
