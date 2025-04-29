@@ -1,5 +1,10 @@
 'use client';
-import { createAdminAccountSchema, verifyEmailSchema } from '@/libs/schema';
+import {
+  changePasswordScheme,
+  ChangePasswordType,
+  createAdminAccountSchema,
+  verifyEmailSchema,
+} from '@/libs/schema';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +15,7 @@ import {
   userSignUp,
   sendVerificationCode,
   login,
+  changePassword,
 } from './api';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
@@ -22,6 +28,7 @@ import {
   type LoginType,
 } from '@/libs/schema';
 import { setCookie } from 'cookies-next/client';
+import { showToast } from '@/libs/toast';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -190,32 +197,15 @@ export const useCreateUserAccount = () => {
         router.push('/auth/email-verify');
       }
     },
-    onError: (error: AxiosError<{ message: string }>) => {
-      toast.error(error.response?.data?.message || 'Something went wrong');
-    },
   });
 
   const onSubmit = (data: CreateUserAccountType) => {
     const res = mutation.mutateAsync(data);
 
-    toast.promise(res, {
+    showToast(res, {
       loading: 'Creating account...',
-      success: (data) => {
-        if (data.status) {
-          return 'Account created successfully';
-        } else {
-          return 'Account creation failed';
-        }
-      },
-      error: (error) => {
-        if (error.response) {
-          const errorKey = Object.keys(error.response.data)[1];
-          const errorMessage = error.response.data[errorKey];
-          return errorMessage;
-        } else {
-          return 'An error occurred';
-        }
-      },
+      success: 'Account created successfully',
+      error: 'Something went wrong',
     });
   };
 
@@ -231,14 +221,6 @@ export const useSendVerificationCode = () => {
 
   const mutation = useMutation({
     mutationFn: sendVerificationCode,
-    onSuccess: () => {
-      toast.success('Verification code sent successfully');
-    },
-    onError: (error: AxiosError<{ message: string }>) => {
-      toast.error(
-        error.response?.data?.message || 'Failed to send verification code'
-      );
-    },
   });
 
   const resendCode = () => {
@@ -284,13 +266,10 @@ export const useLogin = () => {
     mutationFn: login,
     onSuccess: (data) => {
       if (data.status) {
-        toast.success('Login successful');
-        setCookie('token', data.data.token);
+        setCookie('access_token', data.data.access);
+        setCookie('refresh_token', data.data.refresh);
         router.push('/');
       }
-    },
-    onError: (error: AxiosError<{ message: string }>) => {
-      toast.error(error.response?.data?.message || 'Login failed');
     },
   });
 
@@ -299,24 +278,52 @@ export const useLogin = () => {
 
     toast.promise(res, {
       loading: 'Logging in...',
-      success: (data) => {
-        if (data.status) {
-          return 'Login successful';
-        } else {
-          return 'Login failed';
-        }
-      },
+      success: 'Login Successful',
       error: (error) => {
         if (error.response) {
           const errorKey = Object.keys(error.response.data)[1];
-          const errorMessage = error.response.data[errorKey];
+          const firstKey = Object.keys(error.response.data)[0];
+          const errorMessage =
+            error.response.data[errorKey] ?? error.response.data[firstKey];
+
           return errorMessage;
         }
-        return 'Login failed';
       },
     });
   };
 
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useChangePassword = () => {
+  const router = useRouter();
+  const form = useForm<ChangePasswordType>({
+    resolver: zodResolver(changePasswordScheme),
+    defaultValues: {
+      old_password: '',
+      new_password: '',
+    },
+  });
+  const mutation = useMutation({
+    mutationFn: changePassword,
+    onSuccess: (data) => {
+      if (data.status) {
+        router.push('/');
+      }
+    },
+  });
+  const onSubmit = (data: ChangePasswordType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Changing password...',
+      success: 'Password changed successfully',
+      error: 'An error occurred while changing the password',
+    });
+  };
   return {
     form,
     onSubmit,

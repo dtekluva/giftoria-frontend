@@ -38,7 +38,7 @@ function NavBar() {
           : ''
       }`}>
       <div className='px-[30px] py-6 lg:px-[50px] flex flex-row items-center lg:justify-between container mx-auto'>
-        <Link href={'/'}>
+        <Link className='cursor-pointer' href={'/'}>
           <LogoIcon width={80} height={30} className='hidden lg:block' />
           <MobileLogoIcon className='block lg:hidden' />
         </Link>

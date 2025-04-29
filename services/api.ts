@@ -6,6 +6,7 @@ import {
   VerifyEmailType,
   SendVerificationCodeType,
   LoginType,
+  ChangePasswordType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
@@ -37,3 +38,8 @@ export const sendVerificationCode = async (data: SendVerificationCodeType) => {
 export const login = async (data: LoginType) => {
   return await httpConfig.post('/auth/signin/', data);
 };
+
+export const changePassword = (data: ChangePasswordType) =>
+  httpConfig.put('/auth/change_password/', data);
+
+/// GIFT CARD API SERVICES

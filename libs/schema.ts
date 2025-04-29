@@ -70,6 +70,19 @@ export const loginSchema = z.object({
     .max(60, 'Password must be less than 60 characters'),
 });
 
+export const changePasswordScheme = z.object({
+  old_password: z
+    .string()
+    .min(1, { message: 'Password is required' })
+    .max(60, 'Password must be less than 60 characters'),
+  new_password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(60, 'Password must be less than 60 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter'),
+});
+
+export type ChangePasswordType = z.infer<typeof changePasswordScheme>;
 export type CreateAdminAccountType = z.infer<typeof createAdminAccountSchema>;
 export type VerifyEmailType = z.infer<typeof verifyEmailSchema>;
 export type CreateUserAccountType = z.infer<typeof createUserAccountSchema>;

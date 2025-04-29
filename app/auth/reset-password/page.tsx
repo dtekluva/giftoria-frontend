@@ -11,32 +11,30 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useLogin } from '@/services/mutations';
-import { useRouter } from 'next/navigation';
+import { useChangePassword } from '@/services/mutations';
 
-function SignIn() {
-  const { form, onSubmit, isLoading } = useLogin();
-  const router = useRouter();
+function ResetPassword() {
+  const { form, onSubmit } = useChangePassword();
   return (
-    <div className='w-full font-dm-sans'>
-      <AuthCard title='Sign In'>
+    <div className='w-full'>
+      <AuthCard title='Reset Password'>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='md:space-y-7 space-y-4'>
+            className='md:space-y-7 space-y-4 font-dm-sans'>
             <FormField
               control={form.control}
-              name='email'
+              name='old_password'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='text-base font-semibold text-gray-700'>
-                    Email
+                    Old Password
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type='email'
+                      type='password'
                       {...field}
-                      placeholder='Please enter your email'
+                      placeholder='Enter your old password'
                     />
                   </FormControl>
                   <FormMessage />
@@ -46,17 +44,17 @@ function SignIn() {
 
             <FormField
               control={form.control}
-              name='password'
+              name='new_password'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='text-base font-semibold text-gray-700'>
-                    Password
+                    New Password
                   </FormLabel>
                   <FormControl>
                     <Input
                       type='password'
                       {...field}
-                      placeholder='Please enter your password'
+                      placeholder='Enter your new password'
                     />
                   </FormControl>
                   <FormMessage />
@@ -66,17 +64,8 @@ function SignIn() {
 
             <Button
               type='submit'
-              className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'
-              disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-
-            <Button
-              variant={'outline'}
-              type='button'
-              onClick={() => router.push('/auth/sign-up')}
-              className='text-sm font-bold md:text-base md:h-[70px] h-[50px] w-full'>
-              Don&apos;t have an account? Sign up
+              className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'>
+              Reset Password
             </Button>
           </form>
         </Form>
@@ -85,4 +74,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default ResetPassword;
