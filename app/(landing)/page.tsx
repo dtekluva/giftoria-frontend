@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useGetAllBrandCardsQuery } from '@/services/queries/brand.queries';
+import { Card } from '@/components/custom/card';
 
 export default function Home() {
   const fadeInUp = {
@@ -27,6 +29,8 @@ export default function Home() {
       },
     },
   };
+
+  const { query } = useGetAllBrandCardsQuery();
 
   return (
     <motion.div initial='hidden' animate='visible' variants={staggerContainer}>
@@ -73,24 +77,8 @@ export default function Home() {
           Explore our collections of Gift cards
         </h2>
         <div className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] md:px-[3.125rem] container mx-auto px-5'>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <motion.div
-              key={index}
-              className='p-5 border-[0.01875rem] border-[#D9D9D9] rounded-[1.875rem] max-w-[320px] mx-auto w-full'
-              variants={fadeInUp}>
-              <Image
-                src={'https://placehold.co/280x140.png'}
-                width={280}
-                className='w-full'
-                height={140}
-                alt=''
-              />
-              <div className=' border-black mt-6'>
-                <p className='text-black text-base text-left font-normal font-montserrat'>
-                  Zara gift card
-                </p>
-              </div>
-            </motion.div>
+          {query?.data?.results.map((data, index) => (
+            <Card key={index} data={data} />
           ))}
         </div>
         <div className='flex justify-center mt-7 md:mt-10 px-20'>

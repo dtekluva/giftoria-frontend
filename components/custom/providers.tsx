@@ -1,12 +1,34 @@
 'use client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-const queryClient = new QueryClient({});
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  },
+});
+const persister =
+  typeof window !== 'undefined'
+    ? createSyncStoragePersister({
+        storage: window.localStorage,
+      })
+    : undefined;
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister,
+        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      }}>
       <NuqsAdapter>{children}</NuqsAdapter>
-    </QueryClientProvider>
+      <ReactQueryDevtools initialIsOpen={true} />
+    </PersistQueryClientProvider>
   );
 };
