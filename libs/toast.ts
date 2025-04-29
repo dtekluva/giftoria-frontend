@@ -12,7 +12,8 @@ export const showToast = <T>(
         const errorKey = Object.keys(error.response.data)[1];
         const firstErrorKey = Object.keys(error.response.data)[0];
         const errorMessage =
-          error.response.data[errorKey] ?? error.response.data[firstErrorKey];
+          error.response.data[errorKey] || error.response.data[firstErrorKey];
+
         if (errorMessage) {
           return errorMessage;
         }
