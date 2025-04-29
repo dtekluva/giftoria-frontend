@@ -10,6 +10,7 @@ import {
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
+import { ApiAllBrandCardsResponse } from '@/libs/types/brand.types';
 
 /// AUTHENTICATION API SERVICES
 export const adminSignUp = async (
@@ -42,4 +43,10 @@ export const login = async (data: LoginType) => {
 export const changePassword = (data: ChangePasswordType) =>
   httpConfig.put('/auth/change_password/', data);
 
-/// GIFT CARD API SERVICES
+/// Brand API SERVICES
+export const getAllBrandCards = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiAllBrandCardsResponse>
+  >('/brand/all_cards');
+};

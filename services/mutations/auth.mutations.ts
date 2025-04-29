@@ -276,19 +276,10 @@ export const useLogin = () => {
   const onSubmit = (data: LoginType) => {
     const res = mutation.mutateAsync(data);
 
-    toast.promise(res, {
+    showToast(res, {
       loading: 'Logging in...',
-      success: 'Login Successful',
-      error: (error) => {
-        if (error.response) {
-          const errorKey = Object.keys(error.response.data)[1];
-          const firstKey = Object.keys(error.response.data)[0];
-          const errorMessage =
-            error.response.data[errorKey] ?? error.response.data[firstKey];
-
-          return errorMessage;
-        }
-      },
+      success: 'Login successful',
+      error: 'Something went wrong',
     });
   };
 
