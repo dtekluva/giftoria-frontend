@@ -82,6 +82,24 @@ export const changePasswordScheme = z.object({
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter'),
 });
 
+export const buyCardSchema = z.object({
+  brand: z.string().min(1, 'Brand is required'),
+  card_amount: z.number().min(1, 'Card amount is required'),
+  recepient_name: z.string().min(1, 'Recepient name is required'),
+  recepient_email: z
+    .string()
+    .email('Invalid email address')
+    .min(1, 'Recepient email is required'),
+  recepient_phone_number: z
+    .string()
+    .min(1, 'Recepient phone number is required')
+    .max(11, 'Recepient phone number must be less than 11 characters'),
+  for_who: z.string().min(1, 'For who is required'),
+  occasion: z.string().min(1, 'Occasion is required'),
+  message: z.string().min(1, 'Message is required'),
+});
+
+export type BuyCardType = z.infer<typeof buyCardSchema>;
 export type ChangePasswordType = z.infer<typeof changePasswordScheme>;
 export type CreateAdminAccountType = z.infer<typeof createAdminAccountSchema>;
 export type VerifyEmailType = z.infer<typeof verifyEmailSchema>;
