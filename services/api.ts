@@ -10,7 +10,10 @@ import {
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
-import { ApiAllBrandCardsResponse } from '@/libs/types/brand.types';
+import {
+  ApiAllBrandCardsResponse,
+  BuyMultipleCard,
+} from '@/libs/types/brand.types';
 
 /// AUTHENTICATION API SERVICES
 export const adminSignUp = async (
@@ -49,4 +52,18 @@ export const getAllBrandCards = async () => {
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
   >('/brand/all_cards');
+};
+
+export const getBrandCardById = async (id: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiAllBrandCardsResponse>
+  >(`/brand/fetch_single_brand/${id}`);
+};
+
+export const buyCardbyId = async (data: BuyMultipleCard) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiAllBrandCardsResponse>
+  >(`/brand/buy_card`, data);
 };
