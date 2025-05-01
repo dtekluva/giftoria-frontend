@@ -10,6 +10,7 @@ import {
   Roboto,
 } from 'next/font/google';
 import './globals.css';
+import { Suspense } from 'react';
 
 const montSerrat = Montserrat_Alternates({
   variable: '--font-sans',
@@ -62,8 +63,10 @@ export default function RootLayout({
       <body
         className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} ${roboto.variable} ${albert_sans.variable} ${nunito.variable} font-sans antialiased`}>
         <Providers>
-          {children}
-          <Toaster position='top-right' richColors />
+          <Suspense>
+            {children}
+            <Toaster position='top-right' richColors />
+          </Suspense>
         </Providers>
       </body>
     </html>
