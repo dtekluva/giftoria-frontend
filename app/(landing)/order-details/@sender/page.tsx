@@ -1,0 +1,58 @@
+'use client';
+import { TransactionStepper } from '@/components/custom/transaction-stepper';
+import { ArrowLeft } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+function Page() {
+  const router = useRouter();
+  return (
+    <div className='container mx-auto px-4 py-6 md:py-11'>
+      <div className='flex items-center gap-2 mb-4'>
+        <ArrowLeft
+          className='cursor-pointer'
+          onClick={() => {
+            router.back();
+          }}
+        />
+        <h1 className='lg:text-2xl md:text-xl text-base font-albert-sans font-medium'>
+          Zara Gift Card
+        </h1>
+      </div>
+      <TransactionStepper activeStep={3} />
+      <div className='md:mt-[105px] mt-8 md:pb-10 border-b pb-4 border-[#FAFAFA]'>
+        <p className='font-albert-sans italic text-[10px] md:text-sm text-end md:text-start'>
+          2 year gurantee included
+        </p>
+      </div>
+      <div className='flex items-center justify-between pt-4 md:pt-8 gap-8 flex-wrap'>
+        <div>
+          <div className='flex items-center gap-4 font-montserrat'>
+            <Image
+              src={'https://placehold.co/160x100.png'}
+              width={160}
+              height={100}
+              className='max-[380px]:w-[100px]'
+              alt=''
+            />
+            <p className='md:text-sm text-[10px] font-medium'>Zara gift card</p>
+          </div>
+        </div>
+        <div className='md:flex gap-[110px]'>
+          <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
+            <div className='md:flex-none flex-1 text-end'>
+              <p className='font-dm-sans text-xs md:text-sm font-medium'>
+                GFT - XYZ123456
+              </p>
+              <p className='text-xs md:text-base font-bold mt-5 md:mt-8'>
+                ₦30000
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Page;

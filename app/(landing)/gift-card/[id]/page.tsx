@@ -1,13 +1,16 @@
 import AddingShoppingIcon from '@/components/icon/add-shopping-icon';
+import AIIcon from '@/components/icon/ai-icon';
+import SendIcon from '@/components/icon/send-icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 import React from 'react';
 
 function GiftCardDetails() {
   return (
-    <div className='mx-auto container md:px-14 px-4 py-3 md:py-7 lg:px-20'>
+    <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
       <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
         <Image
           src={'https://placehold.co/500x300.png'}
@@ -23,7 +26,7 @@ function GiftCardDetails() {
           fashion
         </p>
       </div>
-      <div className='md:grid grid-cols-2 md:gap-20 lg:gap-[120px]'>
+      <div className='lg:grid grid-cols-2 md:gap-20 lg:gap-[120px]'>
         <div>
           <h1 className='text-[#160032] text-base md:text-2xl font-semibold md:font-bold md:mt-20 mt-7'>
             Recepient Information
@@ -89,7 +92,7 @@ function GiftCardDetails() {
           <div className='font-dm-sans mt-4 space-y-7 md:mt-10 flex flex-col flex-1'>
             <div className='flex gap-3'>
               <div className='space-y-2 flex-1'>
-                <Label htmlFor='receipt_email'>Receipt Email</Label>
+                <Label htmlFor='receipt_email'>Who is it for?</Label>
                 <Input
                   id='receipt_email'
                   placeholder='receipt@gmail.com'
@@ -98,7 +101,7 @@ function GiftCardDetails() {
               </div>
               <div className='space-y-2 flex-1'>
                 <Label htmlFor='receipt_phone_number'>
-                  Receipt Phone Number
+                  What is the occassion
                 </Label>
                 <Input
                   id='receipt_phone_number'
@@ -106,6 +109,20 @@ function GiftCardDetails() {
                   className='md:h-12'
                 />{' '}
               </div>
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='receipt_name'>Personalized Message</Label>
+              <Textarea className='min-h-[74px] md:min-h-[126px] resize-none' />{' '}
+            </div>
+            <div className='bg-[#F6F3FB] py-3 flex flex-row gap-2 md:gap-5 items-center md:py-4 md:px-6 px-3 -mt-3 rounded-[10px]'>
+              <AIIcon />
+              <div className='flex-1'>
+                <p className='text-sm text-[#675E8B]'>
+                  Need inspiration?
+                  <br /> Let our AI help craft the perfect message for you!
+                </p>
+              </div>
+              <SendIcon />
             </div>
             <Button className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl mt-auto'>
               Proceed to make payment
