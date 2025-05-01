@@ -65,8 +65,14 @@ export const useByCardsMutation = () => {
       router.push('/auth/sign-in');
       return;
     }
+
     const res = mutation.mutateAsync({
-      cards: [data],
+      cards: [
+        {
+          ...data,
+          card_amount: data.card_amount.split(',').join(''),
+        },
+      ],
       password: getCookie('password') ?? '',
     });
 

@@ -1,12 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getAllBrandCards, getBrandCardById } from '../api';
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { getAllBrandCards, getAllCardSales, getBrandCardById } from '../api';
 import { ApiAllBrandCardsResponse, ICard } from '@/libs/types/brand.types';
 import { AxiosResponse } from 'axios';
 
 const brand_keys = {
   all: ['brands', 'all_cards'],
   brand: (id: string) => [...brand_keys.all, id],
+  brand_card_sales: (search: string, page: number, page_size: number) => [
+    ...brand_keys.all,
+    'card',
+    'sales',
+    {
+      search,
+      page,
+      page_size,
+    },
+  ],
 } as const;
 
 export const useGetAllBrandCardsQuery = () => {
@@ -40,6 +54,32 @@ export const useGetBrandCardByIdQuery = (id: string) => {
       }
       return undefined;
     },
+  });
+
+  return {
+    query,
+  };
+};
+
+export const useGetBrandCardSalesQuery = ({
+  search = '',
+  page = 2,
+  page_size = 4,
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  const query = useQuery({
+    queryKey: brand_keys.brand_card_sales(search, page, page_size),
+    queryFn: () =>
+      getAllCardSales({
+        search,
+        page,
+        page_size,
+      }),
+    select: (data) => data.data,
+    placeholderData: keepPreviousData,
   });
 
   return {

@@ -118,7 +118,7 @@ export const useVerifyEmail = () => {
     parseAsBoolean
   );
 
-  const [userEmail, setEmail] = useQueryState('email');
+  const userEmail = localStorage.getItem('verify-mail') as string;
   const [emailVerified, setEmailVerified] = useQueryState(
     'email_verified',
     parseAsBoolean
@@ -128,6 +128,7 @@ export const useVerifyEmail = () => {
     resolver: zodResolver(verifyEmailSchema),
     defaultValues: {
       email: userEmail ?? '',
+      otp_code: '',
     },
   });
 
@@ -165,7 +166,7 @@ export const useVerifyEmail = () => {
     mutation,
     onSubmit,
     setAccountCreated,
-    setEmail,
+
     userEmail,
     setEmailVerified,
     emailVerified,

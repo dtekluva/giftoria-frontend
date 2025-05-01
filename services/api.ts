@@ -13,6 +13,7 @@ import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
 import {
   ApiAllBrandCardsResponse,
   ApiBuyCardResponse,
+  ApiCardSalesResponse,
   BuyMultipleCard,
   ICard,
 } from '@/libs/types/brand.types';
@@ -59,6 +60,20 @@ export const getAllBrandCards = async () => {
 export const getBrandCardById = async (id: string) => {
   return await httpConfig.get<AxiosError, AxiosResponse<ICard>>(
     `/brand/fetch_single_brand/?brand_id=${id}`
+  );
+};
+
+export const getAllCardSales = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiCardSalesResponse>>(
+    `/brand/fetch_card_sales/?search=${search}&page=${page}&page_size=${page_size}`
   );
 };
 
