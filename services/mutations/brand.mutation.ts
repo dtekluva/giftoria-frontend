@@ -4,10 +4,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { buyCardbyId } from '../api';
+import { usePathname } from 'next/navigation';
 
 export const useByCardsMutation = () => {
+  const cardId = usePathname()?.split('/').pop();
+
   const form = useForm<BuyCardType>({
     resolver: zodResolver(buyCardSchema),
+    defaultValues: {
+      brand: cardId,
+      card_amount: '',
+      recipient_name: '',
+      recipient_email: '',
+      recipient_phone_number: '',
+      for_who: '',
+      occasion: '',
+      message: '',
+    },
   });
 
   const mutation = useMutation({

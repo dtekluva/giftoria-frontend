@@ -15,10 +15,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useByCardsMutation } from '@/services/mutations/brand.mutation';
+import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 function GiftCardDetails() {
   const { form, onSubmit, isLoading } = useByCardsMutation();
+  const cardId = usePathname()?.split('/').pop();
+  const { query } = useGetBrandCardByIdQuery(cardId ?? '');
+
+  console.log(query.data, 'this is the query');
 
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
@@ -78,7 +84,7 @@ function GiftCardDetails() {
               <div className='space-y-2'>
                 <FormField
                   control={form.control}
-                  name='recepient_name'
+                  name='recipient_name'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Receipt Name</FormLabel>
@@ -99,7 +105,7 @@ function GiftCardDetails() {
                 <div className='space-y-2 flex-1'>
                   <FormField
                     control={form.control}
-                    name='recepient_email'
+                    name='recipient_email'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Receipt Email</FormLabel>
@@ -119,7 +125,7 @@ function GiftCardDetails() {
                 <div className='space-y-2 flex-1'>
                   <FormField
                     control={form.control}
-                    name='recepient_phone_number'
+                    name='recipient_phone_number'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Receipt Phone Number</FormLabel>
@@ -142,8 +148,8 @@ function GiftCardDetails() {
                 variant={'outline'}
                 type='submit'
                 disabled={isLoading}>
-                {isLoading ? 'Adding to cart...' : <AddingShoppingIcon />}
-                Add to cart and continue shopping
+                <AddingShoppingIcon />
+                Add to cart
               </Button>
             </div>
           </div>

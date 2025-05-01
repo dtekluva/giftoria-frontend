@@ -84,13 +84,13 @@ export const changePasswordScheme = z.object({
 
 export const buyCardSchema = z.object({
   brand: z.string().min(1, 'Brand is required'),
-  card_amount: z.number().min(1, 'Card amount is required'),
-  recepient_name: z.string().min(1, 'Recepient name is required'),
-  recepient_email: z
+  card_amount: z.string().min(1, 'Card amount is required'),
+  recipient_name: z.string().min(1, 'Recepient name is required'),
+  recipient_email: z
     .string()
     .email('Invalid email address')
     .min(1, 'Recepient email is required'),
-  recepient_phone_number: z
+  recipient_phone_number: z
     .string()
     .min(1, 'Recepient phone number is required')
     .max(11, 'Recepient phone number must be less than 11 characters'),

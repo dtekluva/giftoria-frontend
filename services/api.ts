@@ -13,6 +13,7 @@ import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
 import {
   ApiAllBrandCardsResponse,
   BuyMultipleCard,
+  ICard,
 } from '@/libs/types/brand.types';
 
 /// AUTHENTICATION API SERVICES
@@ -55,10 +56,9 @@ export const getAllBrandCards = async () => {
 };
 
 export const getBrandCardById = async (id: string) => {
-  return await httpConfig.get<
-    AxiosError,
-    AxiosResponse<ApiAllBrandCardsResponse>
-  >(`/brand/fetch_single_brand/${id}`);
+  return await httpConfig.get<AxiosError, AxiosResponse<ICard>>(
+    `/brand/fetch_single_brand/?brand_id=${id}`
+  );
 };
 
 export const buyCardbyId = async (data: BuyMultipleCard) => {
