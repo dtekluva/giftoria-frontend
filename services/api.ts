@@ -65,5 +65,5 @@ export const buyCardbyId = async (data: BuyMultipleCard) => {
   return await httpConfig.post<
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
-  >(`/brand/buy_card`, data);
+  >(`/brand/buy_card/`, data);
 };

@@ -5,6 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { buyCardbyId } from '../api';
 import { usePathname } from 'next/navigation';
+import { getCookie } from 'cookies-next/client';
+import { localStorageStore } from '@/libs/store';
+import { BuyMultipleCard } from '@/libs/types/brand.types';
+import { toast } from 'sonner';
 
 export const useByCardsMutation = () => {
   const cardId = usePathname()?.split('/').pop();
@@ -25,12 +29,39 @@ export const useByCardsMutation = () => {
 
   const mutation = useMutation({
     mutationFn: buyCardbyId,
+    onSuccess: (data) => {
+      console.log(data, 'data');
+    },
   });
+
+  const saveItemToLocalStorage = () => {
+    const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
+    form.trigger();
+    if (!form.formState.isValid) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    if (!cards) {
+      localStorageStore.setItem('cards', {
+        cards: [form.getValues()],
+        password: getCookie('password') ?? '',
+      });
+    } else {
+      const newCards = [...cards.cards, form.getValues()];
+      localStorageStore.setItem('cards', {
+        cards: newCards,
+        password: getCookie('password') ?? '',
+      });
+    }
+    toast.success('Card added to cart');
+    form.reset();
+  };
 
   const onSubmit = (data: BuyCardType) => {
     const res = mutation.mutateAsync({
       cards: [data],
-      password: 'Ashiru123@',
+      password: getCookie('password') ?? '',
     });
 
     showToast(res, {
@@ -43,6 +74,7 @@ export const useByCardsMutation = () => {
   return {
     form,
     onSubmit,
+    saveItemToLocalStorage,
     isLoading: mutation.isPending,
   };
 };

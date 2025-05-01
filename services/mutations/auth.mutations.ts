@@ -268,6 +268,7 @@ export const useLogin = () => {
       if (data.status) {
         setCookie('access_token', data.data.access);
         setCookie('refresh_token', data.data.refresh);
+        setCookie('password', form.getValues('password'));
         router.push('/');
       }
     },
