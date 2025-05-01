@@ -1,7 +1,10 @@
 'use client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryClient } from '@tanstack/react-query';
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import {
+  Persister,
+  PersistQueryClientProvider,
+} from '@tanstack/react-query-persist-client';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
@@ -12,12 +15,13 @@ const queryClient = new QueryClient({
     },
   },
 });
-const persister =
+const persister = (
   typeof window !== 'undefined'
     ? createSyncStoragePersister({
         storage: window.localStorage,
       })
-    : undefined;
+    : undefined
+) as Persister;
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
