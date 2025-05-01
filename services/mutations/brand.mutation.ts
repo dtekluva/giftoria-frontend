@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { buyCardbyId } from '../api';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getCookie } from 'cookies-next/client';
 import { localStorageStore } from '@/libs/store';
 import { BuyMultipleCard } from '@/libs/types/brand.types';
@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 export const useByCardsMutation = () => {
   const cardId = usePathname()?.split('/').pop();
-
+  const router = useRouter();
   const form = useForm<BuyCardType>({
     resolver: zodResolver(buyCardSchema),
     defaultValues: {
@@ -29,8 +29,8 @@ export const useByCardsMutation = () => {
 
   const mutation = useMutation({
     mutationFn: buyCardbyId,
-    onSuccess: (data) => {
-      console.log(data, 'data');
+    onSuccess: (query) => {
+      router.push(query.data.payment_details.payment_link);
     },
   });
 

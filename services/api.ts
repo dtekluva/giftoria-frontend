@@ -12,6 +12,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
 import {
   ApiAllBrandCardsResponse,
+  ApiBuyCardResponse,
   BuyMultipleCard,
   ICard,
 } from '@/libs/types/brand.types';
@@ -62,8 +63,8 @@ export const getBrandCardById = async (id: string) => {
 };
 
 export const buyCardbyId = async (data: BuyMultipleCard) => {
-  return await httpConfig.post<
-    AxiosError,
-    AxiosResponse<ApiAllBrandCardsResponse>
-  >(`/brand/buy_card/`, data);
+  return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
+    `/brand/buy_card/`,
+    data
+  );
 };
