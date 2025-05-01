@@ -11,19 +11,18 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useQueryState } from 'nuqs';
 import {
-  useVerifyEmail,
   useSendVerificationCode,
+  useVerifyEmail,
 } from '@/services/mutations/auth.mutations';
-import React from 'react';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 
 function VerifyEmail() {
-  const [email] = useQueryState('email');
   const { form, onSubmit, mutation } = useVerifyEmail();
   const { resendCode, isLoading: isResending } = useSendVerificationCode();
   const router = useRouter();
+  const email = localStorage.getItem('verify-mail') as string;
 
   React.useEffect(() => {
     if (mutation.isSuccess) {
@@ -43,7 +42,7 @@ function VerifyEmail() {
               </h1>
               <p className='mt-4 md:mt-7 font-dm-sans'>
                 Check your email, we sent an OTP to your email
-                <br /> <span className='font-bold'>{email ?? ''}</span>
+                <br /> <span className='font-bold'>{email}</span>
               </p>
             </div>
 

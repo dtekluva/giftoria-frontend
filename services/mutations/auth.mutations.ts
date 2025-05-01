@@ -3,32 +3,31 @@ import {
   changePasswordScheme,
   ChangePasswordType,
   createAdminAccountSchema,
-  verifyEmailSchema,
-} from '@/libs/schema';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import {
-  adminSignUp,
-  verifyEmail,
-  userSignUp,
-  sendVerificationCode,
-  login,
-  changePassword,
-} from '../api';
-import { toast } from 'sonner';
-import { AxiosError } from 'axios';
-import { parseAsBoolean, useQueryState } from 'nuqs';
-import { useRouter } from 'next/navigation';
-import {
   createUserAccountSchema,
   type CreateUserAccountType,
   loginSchema,
   type LoginType,
+  verifyEmailSchema,
 } from '@/libs/schema';
-import { setCookie } from 'cookies-next/client';
+import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { setCookie } from 'cookies-next/client';
+import { useRouter } from 'next/navigation';
+import { parseAsBoolean, useQueryState } from 'nuqs';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+import {
+  adminSignUp,
+  changePassword,
+  login,
+  sendVerificationCode,
+  userSignUp,
+  verifyEmail,
+} from '../api';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -175,7 +174,6 @@ export const useVerifyEmail = () => {
 
 export const useCreateUserAccount = () => {
   const router = useRouter();
-  const [, setEmail] = useQueryState('email');
 
   const form = useForm<CreateUserAccountType>({
     resolver: zodResolver(createUserAccountSchema),
@@ -193,8 +191,8 @@ export const useCreateUserAccount = () => {
     mutationFn: userSignUp,
     onSuccess: (data) => {
       if (data.status) {
-        setEmail(form.getValues('email'));
-        router.push('/auth/email-verify');
+        localStorageStore.setItem('verify-mail', form.getValues('email'));
+        router.push('/auth/email-verify/');
       }
     },
   });
@@ -217,7 +215,7 @@ export const useCreateUserAccount = () => {
 };
 
 export const useSendVerificationCode = () => {
-  const [email] = useQueryState('email');
+  const email = localStorage.getItem('verify-mail') as string;
 
   const mutation = useMutation({
     mutationFn: sendVerificationCode,
