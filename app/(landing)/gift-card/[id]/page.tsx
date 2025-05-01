@@ -15,15 +15,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useByCardsMutation } from '@/services/mutations/brand.mutation';
-import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
+// import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+// import { usePathname } from 'next/navigation';
 
 function GiftCardDetails() {
   const { form, onSubmit, isLoading, saveItemToLocalStorage } =
     useByCardsMutation();
-  const cardId = usePathname()?.split('/').pop();
-  const { query } = useGetBrandCardByIdQuery(cardId ?? '');
+  // const cardId = usePathname()?.split('/').pop();
+  // const { query } = useGetBrandCardByIdQuery(cardId ?? '');
 
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
@@ -73,6 +73,12 @@ function GiftCardDetails() {
                 <div className='flex flex-row flex-wrap mt-4 md:mt-6 gap-3 cursor-pointer'>
                   {Array.from({ length: 5 }).map((_, index) => (
                     <div
+                      onClick={() => {
+                        form.setValue(
+                          'card_amount',
+                          ((index + 1) * 10000).toString()
+                        );
+                      }}
                       key={index}
                       className='p-3 rounded-sm border transition-transform duration-300 hover:scale-105 hover:border-primary'>
                       <p>{(index + 1) * 10000}</p>

@@ -27,7 +27,7 @@ function VerifyEmail() {
 
   React.useEffect(() => {
     if (mutation.isSuccess) {
-      router.push('/auth/login/');
+      router.push('/auth/sign-in/');
     }
   }, [mutation.isSuccess, router]);
 
