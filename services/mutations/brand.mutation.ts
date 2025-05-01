@@ -1,14 +1,15 @@
 import { buyCardSchema, BuyCardType } from '@/libs/schema';
 import { showToast } from '@/libs/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { buyCardbyId } from '../api';
+import { buyCardAgainbyId, buyCardbyId } from '../api';
 import { usePathname, useRouter } from 'next/navigation';
 import { getCookie } from 'cookies-next/client';
 import { localStorageStore } from '@/libs/store';
 import { BuyMultipleCard } from '@/libs/types/brand.types';
 import { toast } from 'sonner';
+import { brand_keys } from '../queries/brand.queries';
 
 export const useByCardsMutation = () => {
   const cardId = usePathname()?.split('/').pop();
@@ -87,6 +88,39 @@ export const useByCardsMutation = () => {
     form,
     onSubmit,
     saveItemToLocalStorage,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useBuyCardById = (id: string) => {
+  const queryClient = useQueryClient();
+
+  const data = {
+    card_id: id,
+    password: getCookie('password') ?? '',
+  };
+
+  const mutation = useMutation({
+    mutationFn: buyCardAgainbyId,
+    mutationKey: ['buy-card-again', id],
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [...brand_keys.all, 'card', 'sales'],
+      });
+    },
+  });
+
+  const buyCard = () => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      success: 'Card purchased successfully',
+      error: 'Error purchasing card',
+      loading: 'Purchasing card...',
+    });
+  };
+
+  return {
+    buyCard,
     isLoading: mutation.isPending,
   };
 };
