@@ -59,6 +59,12 @@ export const useByCardsMutation = () => {
   };
 
   const onSubmit = (data: BuyCardType) => {
+    const accessToken = getCookie('access_token');
+    if (!accessToken) {
+      toast.error('Please sign in to continue');
+      router.push('/auth/sign-in');
+      return;
+    }
     const res = mutation.mutateAsync({
       cards: [data],
       password: getCookie('password') ?? '',
