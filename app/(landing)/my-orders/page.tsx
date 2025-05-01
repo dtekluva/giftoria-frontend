@@ -7,19 +7,19 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
+import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 
 function MyOrderPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { query } = useGetBrandCardSalesQuery({
+  const { query, prefetchQuery } = useGetBrandCardSalesQuery({
     search: '',
     page: currentPage,
     page_size: MY_ORDER_PAGE_SIZE,
   });
-
-  console.log('query', query.data);
 
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -61,7 +61,8 @@ function MyOrderPage() {
                 <div className='w-[130px] h-10 bg-gray-300 rounded-md'></div>
               </li>
             ))
-          : query?.data?.results?.map((order, index) => (
+          : query.data?.results &&
+            query?.data?.results?.map((order, index) => (
               <li
                 key={index}
                 className='flex items-center justify-between gap-8 pb-6 border-b flex-wrap'>
@@ -124,31 +125,41 @@ function MyOrderPage() {
       </ul>
 
       {/* Pagination Controls */}
-      <div className='flex justify-between items-center mt-6'>
-        <Button
-          onClick={handlePreviousPage}
-          disabled={currentPage === 1}
-          className={`h-10 px-4 text-sm font-medium font-dm-sans ${
-            currentPage === 1
-              ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-              : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
-          }`}>
-          Previous
-        </Button>
-        <p className='text-sm text-gray-600'>
-          Page {currentPage} of {query?.data?.count || 1}
-        </p>
-        <Button
-          onClick={handleNextPage}
-          disabled={!query?.data?.next}
-          className={`h-10 px-4 text-sm font-medium font-dm-sans ${
-            !query?.data?.next
-              ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-              : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
-          }`}>
-          Next
-        </Button>
-      </div>
+      {query.data && (
+        <div className='flex justify-between items-center mt-6'>
+          <Button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+              currentPage === 1
+                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+            }`}>
+            <PreviousChevronLeftIcon />
+            Previous
+          </Button>
+          <p className='text-sm text-gray-600'>
+            Page {currentPage} of{' '}
+            {(query?.data?.count / MY_ORDER_PAGE_SIZE).toFixed(0)}
+          </p>
+          <Button
+            onClick={handleNextPage}
+            onMouseEnter={() => {
+              if (query?.data?.next) {
+                console.log('Prefetching next page');
+                prefetchQuery();
+              }
+            }}
+            disabled={!query?.data?.next}
+            className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+              !query?.data?.next
+                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+            }`}>
+            Next <NextChevronRightIcon />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
