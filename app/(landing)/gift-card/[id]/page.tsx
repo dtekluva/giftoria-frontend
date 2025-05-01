@@ -20,11 +20,10 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 function GiftCardDetails() {
-  const { form, onSubmit, isLoading } = useByCardsMutation();
+  const { form, onSubmit, isLoading, saveItemToLocalStorage } =
+    useByCardsMutation();
   const cardId = usePathname()?.split('/').pop();
   const { query } = useGetBrandCardByIdQuery(cardId ?? '');
-
-  console.log(query.data, 'this is the query');
 
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
@@ -144,12 +143,13 @@ function GiftCardDetails() {
                 </div>
               </div>
               <Button
-                className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl'
+                className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-base font-sans'
                 variant={'outline'}
-                type='submit'
+                type='button'
+                onClick={saveItemToLocalStorage}
                 disabled={isLoading}>
                 <AddingShoppingIcon />
-                Add to cart
+                Add to cart and continue shoppping
               </Button>
             </div>
           </div>
