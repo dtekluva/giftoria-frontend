@@ -22,6 +22,7 @@ import Image from 'next/image';
 function GiftCardDetails() {
   const { form, onSubmit, isLoading, saveItemToLocalStorage } =
     useByCardsMutation();
+
   // const cardId = usePathname()?.split('/').pop();
   // const { query } = useGetBrandCardByIdQuery(cardId ?? '');
 
@@ -64,6 +65,16 @@ function GiftCardDetails() {
                           placeholder='Input gift card worth'
                           className='md:h-12'
                           {...field}
+                          onInput={(e) => {
+                            field.onChange(e);
+                            e.currentTarget.value =
+                              e.currentTarget.value.replace(/\D/g, '');
+                            e.currentTarget.value =
+                              e.currentTarget.value.replace(
+                                /(\d)(?=(\d{3})+(?!\d))/g,
+                                '$1,'
+                              );
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -76,7 +87,9 @@ function GiftCardDetails() {
                       onClick={() => {
                         form.setValue(
                           'card_amount',
-                          ((index + 1) * 10000).toString()
+                          ((index + 1) * 10000)
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                         );
                       }}
                       key={index}
