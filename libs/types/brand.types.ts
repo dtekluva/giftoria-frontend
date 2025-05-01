@@ -19,6 +19,11 @@ export interface BuyMultipleCard {
   password: string; // Required password with a minimum length of 1
 }
 
+export interface IBuyCardAgain {
+  card_id: string; // ID of the card to be bought again
+  password: string; // Required password with a minimum length of 1
+}
+
 export interface ApiBuyCardResponse {
   status: boolean;
   message: string;

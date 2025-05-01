@@ -15,6 +15,7 @@ import {
   ApiBuyCardResponse,
   ApiCardSalesResponse,
   BuyMultipleCard,
+  IBuyCardAgain,
   ICard,
 } from '@/libs/types/brand.types';
 
@@ -80,6 +81,13 @@ export const getAllCardSales = async ({
 export const buyCardbyId = async (data: BuyMultipleCard) => {
   return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
     `/brand/buy_card/`,
+    data
+  );
+};
+
+export const buyCardAgainbyId = async (data: IBuyCardAgain) => {
+  return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
+    `/brand/buy_card_again/`,
     data
   );
 };
