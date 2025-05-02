@@ -112,9 +112,6 @@ export const useByCardsMutation = () => {
       error: 'Error purchasing card',
       loading: 'Purchasing card...',
     });
-    if (mutation.isSuccess) {
-      localStorage.removeItem('cards');
-    }
   };
 
   return {
