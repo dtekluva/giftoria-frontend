@@ -95,12 +95,35 @@ export const useByCardsMutation = () => {
     });
   };
 
+  const buyAllCards = () => {
+    const storedCards: BuyMultipleCard = JSON.parse(
+      localStorage.getItem('cards') ?? 'null'
+    );
+
+    const res = mutation.mutateAsync({
+      ...storedCards,
+      cards: storedCards.cards.map((card) => ({
+        ...card,
+        card_amount: card.card_amount.split(',').join(''),
+      })),
+    });
+    showToast(res, {
+      success: 'Card purchased successfully',
+      error: 'Error purchasing card',
+      loading: 'Purchasing card...',
+    });
+    if (mutation.isSuccess) {
+      localStorage.removeItem('cards');
+    }
+  };
+
   return {
     form,
     onSubmit,
     saveItemToLocalStorage,
     isLoading: mutation.isPending,
     deleteItemFromLocalStorage,
+    buyAllCards,
   };
 };
 

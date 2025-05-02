@@ -10,7 +10,6 @@ import { BuyMultipleCard } from '@/libs/types/brand.types';
 import { useByCardsMutation } from '@/services/mutations/brand.mutation';
 import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const paymentService = [
@@ -21,10 +20,9 @@ const paymentService = [
 ];
 
 function OrderSummary() {
-  const router = useRouter();
   const [cards, setCards] = useState<BuyMultipleCard | null>(null);
 
-  const { deleteItemFromLocalStorage } = useByCardsMutation();
+  const { deleteItemFromLocalStorage, buyAllCards } = useByCardsMutation();
 
   // Load cards from localStorage when the component mounts
   useEffect(() => {
@@ -182,7 +180,7 @@ function OrderSummary() {
           <div className='flex justify-center mt-7 md:mt-10 px-4'>
             <Button
               onClick={() => {
-                router.push('/my-orders');
+                buyAllCards();
               }}
               className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
               Proceed to payment
