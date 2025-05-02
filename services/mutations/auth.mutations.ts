@@ -7,6 +7,8 @@ import {
   type CreateUserAccountType,
   loginSchema,
   type LoginType,
+  uploadCompanyDetailSchema,
+  UploadCompanyDetailType,
   verifyEmailSchema,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
@@ -32,12 +34,7 @@ import {
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
 export function useCreateAdminAccount() {
-  const [accountCreated, setAccountCreated] = useQueryState(
-    'account_created',
-    parseAsBoolean
-  );
-
-  const [userEmail, setEmail] = useQueryState('email');
+  const email = localStorage.getItem('verify-mail') as string;
   const [emailVerified] = useQueryState('email_verified', parseAsBoolean);
 
   const form = useForm<ApiAuthCompanyResponse>({
@@ -94,8 +91,7 @@ export function useCreateAdminAccount() {
       if (data.status) {
         // setEmail(data.data.email);
         console.log('Email:', form.getValues('email'));
-        setEmail(form.getValues('email'));
-        setAccountCreated(true);
+        localStorage.setItem('verify-mail', form.getValues('email'));
       }
     },
   });
@@ -104,13 +100,31 @@ export function useCreateAdminAccount() {
     form,
     mutation,
     onSubmit,
-    setAccountCreated,
-    setEmail,
-    accountCreated,
-    userEmail,
+    email,
+
     emailVerified,
   };
 }
+
+export const useAdminUploadDetails = () => {
+  const form = useForm<UploadCompanyDetailType>({
+    resolver: zodResolver(uploadCompanyDetailSchema),
+    defaultValues: {
+      business_type: '',
+      registration_number: '',
+      date_of_incorporation: '',
+      tin_number: '',
+      company_address: '',
+      email: '',
+      upload_cac_document: null,
+      terms_and_conditions: false,
+    },
+  });
+
+  return {
+    form,
+  };
+};
 
 export const useVerifyEmail = () => {
   const [, setAccountCreated] = useQueryState(

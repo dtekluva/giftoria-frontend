@@ -24,6 +24,7 @@ import {
   useCreateAdminAccount,
   useVerifyEmail,
 } from '@/services/mutations/auth.mutations';
+import { useQueryState } from 'nuqs';
 import React from 'react';
 
 const steps = [1, 2, 3];
@@ -51,75 +52,7 @@ function AdminSignUp() {
         </Stepper>
         {activeStep == 1 && <CreateAccount setActiveStep={setActiveStep} />}
         {activeStep == 2 && <VerifyEmail setActiveStep={setActiveStep} />}
-        {activeStep == 3 && (
-          <div className='md:space-y-7 space-y-5'>
-            <div className='space-y-2 flex-1 font-dm-sans'>
-              <Label
-                htmlFor='business_type'
-                className='text-base font-semibold text-gray-700'>
-                Business Type
-              </Label>
-              <Input
-                id='business_type'
-                placeholder='Please enter your first name'
-              />
-            </div>
-            <div className='space-y-2 flex-1 font-dm-sans'>
-              <Label
-                htmlFor='business_type'
-                className='text-base font-semibold text-gray-700'>
-                Company Registration Number
-              </Label>
-              <Input
-                id='business_type'
-                placeholder='Please enter your first name'
-              />
-            </div>
-            <div className='flex md:flex-row flex-col gap-4'>
-              <div className='space-y-2 flex-1 font-dm-sans'>
-                <Label
-                  htmlFor='company_name'
-                  className='text-base font-semibold text-gray-700'>
-                  Date of Incorporation
-                </Label>
-                <Input
-                  id='company_name'
-                  placeholder='Please enter your first name'
-                />
-              </div>
-              <div className='space-y-2 flex-1 font-dm-sans'>
-                <Label
-                  htmlFor='company_name'
-                  className='text-base font-semibold text-gray-700'>
-                  Tin Number
-                </Label>
-                <Input id='company_name' placeholder='0000000' />
-              </div>
-            </div>
-            <div className='space-y-2 flex-1 font-dm-sans'>
-              <Label
-                htmlFor='business_type'
-                className='text-base font-semibold text-gray-700'>
-                Company Address
-              </Label>
-              <Input
-                id='business_type'
-                placeholder='Please enter your comapny address'
-              />
-            </div>
-            <div className='mb-10'>
-              <p className='text-base font-dm-sans font-semibold text-gray-700'>
-                Upload your comapy CAC document
-              </p>
-              <div className='md:px-6 px-5 flex items-center gap-4 cursor-pointer mt-2 py-4 rounded-[8px] bg-secondary-transparent'>
-                <UploadDocumentIcon />
-                <p className='font-medium font-dm-sans text-[#323232] text-sm'>
-                  Maximum file size 10MB
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        {activeStep == 3 && <UploadDocDetails setActiveStep={setActiveStep} />}
       </AuthCard>
     </div>
   );
@@ -130,17 +63,16 @@ function CreateAccount({
 }: {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const { form, onSubmit, accountCreated, userEmail, emailVerified } =
-    useCreateAdminAccount();
+  const { form, onSubmit, email } = useCreateAdminAccount();
+
+  const [accountCreated] = useQueryState('account_created');
 
   React.useEffect(() => {
-    if (emailVerified) {
-      return setActiveStep((prev) => prev + 2);
-    }
-    if (userEmail && accountCreated) {
+    if (email && accountCreated) {
+      console.log('email', email);
       setActiveStep((prev) => prev + 1);
     }
-  }, [accountCreated, setActiveStep, userEmail]);
+  }, [setActiveStep, email, accountCreated]);
 
   return (
     <Form {...form}>
@@ -346,6 +278,69 @@ function VerifyEmail({
         </div>
       </form>
     </Form>
+  );
+}
+
+function UploadDocDetails() {
+  return (
+    <div className='md:space-y-7 space-y-5'>
+      <div className='space-y-2 flex-1 font-dm-sans'>
+        <Label
+          htmlFor='business_type'
+          className='text-base font-semibold text-gray-700'>
+          Business Type
+        </Label>
+        <Input id='business_type' placeholder='Please enter your first name' />
+      </div>
+      <div className='space-y-2 flex-1 font-dm-sans'>
+        <Label
+          htmlFor='business_type'
+          className='text-base font-semibold text-gray-700'>
+          Company Registration Number
+        </Label>
+        <Input id='business_type' placeholder='Please enter your first name' />
+      </div>
+      <div className='flex md:flex-row flex-col gap-4'>
+        <div className='space-y-2 flex-1 font-dm-sans'>
+          <Label
+            htmlFor='company_name'
+            className='text-base font-semibold text-gray-700'>
+            Date of Incorporation
+          </Label>
+          <Input id='company_name' placeholder='Please enter your first name' />
+        </div>
+        <div className='space-y-2 flex-1 font-dm-sans'>
+          <Label
+            htmlFor='company_name'
+            className='text-base font-semibold text-gray-700'>
+            Tin Number
+          </Label>
+          <Input id='company_name' placeholder='0000000' />
+        </div>
+      </div>
+      <div className='space-y-2 flex-1 font-dm-sans'>
+        <Label
+          htmlFor='business_type'
+          className='text-base font-semibold text-gray-700'>
+          Company Address
+        </Label>
+        <Input
+          id='business_type'
+          placeholder='Please enter your comapny address'
+        />
+      </div>
+      <div className='mb-10'>
+        <p className='text-base font-dm-sans font-semibold text-gray-700'>
+          Upload your comapy CAC document
+        </p>
+        <div className='md:px-6 px-5 flex items-center gap-4 cursor-pointer mt-2 py-4 rounded-[8px] bg-secondary-transparent'>
+          <UploadDocumentIcon />
+          <p className='font-medium font-dm-sans text-[#323232] text-sm'>
+            Maximum file size 10MB
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 
