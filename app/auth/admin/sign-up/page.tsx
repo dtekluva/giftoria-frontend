@@ -1,7 +1,352 @@
+'use client';
+import AuthCard from '@/components/custom/auth-card';
+import UploadDocumentIcon from '@/components/icon/upload-document-icon';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Stepper,
+  StepperIndicator,
+  StepperItem,
+  StepperSeparator,
+  StepperTrigger,
+} from '@/components/ui/number-stepper';
+import {
+  useCreateAdminAccount,
+  useVerifyEmail,
+} from '@/services/mutations/auth.mutations';
 import React from 'react';
 
+const steps = [1, 2, 3];
+
 function AdminSignUp() {
-  return <div>AdminSignUp</div>;
+  const [activeStep, setActiveStep] = React.useState(1);
+  return (
+    <div className='w-full'>
+      <AuthCard showPadding={false} title='Create Account'>
+        <Stepper value={activeStep} orientation='horizontal'>
+          {steps.map((step) => (
+            <StepperItem
+              key={step}
+              step={step}
+              className='[&:not(:last-child)]:flex-1'>
+              <StepperTrigger className='flex-col gap-0'>
+                <StepperIndicator className='mt-7' />
+                <p className='font-dm-sans md:text-lg text-base text-[#BCBCBC]'>
+                  Step 1
+                </p>
+              </StepperTrigger>
+              {step < steps.length && <StepperSeparator />}
+            </StepperItem>
+          ))}
+        </Stepper>
+        {activeStep == 1 && <CreateAccount setActiveStep={setActiveStep} />}
+        {activeStep == 2 && <VerifyEmail setActiveStep={setActiveStep} />}
+        {activeStep == 3 && (
+          <div className='md:space-y-7 space-y-5'>
+            <div className='space-y-2 flex-1 font-dm-sans'>
+              <Label
+                htmlFor='business_type'
+                className='text-base font-semibold text-gray-700'>
+                Business Type
+              </Label>
+              <Input
+                id='business_type'
+                placeholder='Please enter your first name'
+              />
+            </div>
+            <div className='space-y-2 flex-1 font-dm-sans'>
+              <Label
+                htmlFor='business_type'
+                className='text-base font-semibold text-gray-700'>
+                Company Registration Number
+              </Label>
+              <Input
+                id='business_type'
+                placeholder='Please enter your first name'
+              />
+            </div>
+            <div className='flex md:flex-row flex-col gap-4'>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <Label
+                  htmlFor='company_name'
+                  className='text-base font-semibold text-gray-700'>
+                  Date of Incorporation
+                </Label>
+                <Input
+                  id='company_name'
+                  placeholder='Please enter your first name'
+                />
+              </div>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <Label
+                  htmlFor='company_name'
+                  className='text-base font-semibold text-gray-700'>
+                  Tin Number
+                </Label>
+                <Input id='company_name' placeholder='0000000' />
+              </div>
+            </div>
+            <div className='space-y-2 flex-1 font-dm-sans'>
+              <Label
+                htmlFor='business_type'
+                className='text-base font-semibold text-gray-700'>
+                Company Address
+              </Label>
+              <Input
+                id='business_type'
+                placeholder='Please enter your comapny address'
+              />
+            </div>
+            <div className='mb-10'>
+              <p className='text-base font-dm-sans font-semibold text-gray-700'>
+                Upload your comapy CAC document
+              </p>
+              <div className='md:px-6 px-5 flex items-center gap-4 cursor-pointer mt-2 py-4 rounded-[8px] bg-secondary-transparent'>
+                <UploadDocumentIcon />
+                <p className='font-medium font-dm-sans text-[#323232] text-sm'>
+                  Maximum file size 10MB
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </AuthCard>
+    </div>
+  );
+}
+
+function CreateAccount({
+  setActiveStep,
+}: {
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const { form, onSubmit, accountCreated, userEmail, emailVerified } =
+    useCreateAdminAccount();
+
+  React.useEffect(() => {
+    if (emailVerified) {
+      return setActiveStep((prev) => prev + 2);
+    }
+    if (userEmail && accountCreated) {
+      setActiveStep((prev) => prev + 1);
+    }
+  }, [accountCreated, setActiveStep, userEmail]);
+
+  return (
+    <Form {...form}>
+      <form
+        className='md:space-y-7 space-y-4'
+        onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name='company_name'
+          render={({ field }) => (
+            <FormItem className='flex md:flex-row flex-col gap-4'>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <FormLabel className='text-base font-semibold text-gray-700'>
+                  Company Name
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder='Please enter your first name'
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <div className='flex md:flex-row flex-col gap-4'>
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem className='flex md:flex-row flex-col gap-4 flex-1'>
+                <div className='space-y-2 flex-1 font-dm-sans'>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='email'
+                      {...field}
+                      placeholder='Please enter your email'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='phone_number'
+            render={({ field }) => (
+              <FormItem className='flex md:flex-row flex-col gap-4 flex-1'>
+                <div className='space-y-2 flex-1 font-dm-sans'>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Phone Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder='+234 070 0000000' />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem className='flex md:flex-row flex-col gap-4'>
+              <div className='space-y-2 flex-1 font-dm-sans'>
+                <FormLabel className='text-base font-semibold text-gray-700'>
+                  Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    {...field}
+                    placeholder='Please enter your password'
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name='promote_notification'
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className='flex items-center space-x-2 -mt-2 md:-mt-4 cursor-pointer'>
+              <FormControl>
+                <Checkbox
+                  id='logged-in'
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel htmlFor='logged-in' className='text-xs font-dm-sans'>
+                {' '}
+                Notify me of new deals and offers from your Partners
+              </FormLabel>
+            </FormItem>
+          )}
+        />
+
+        <p className='text-xs font-dm-sans'>
+          By creating an account, you agree to the Giftoria terms and
+          conditions. John Lewis will process your personal data as set out in
+          our privacy notice
+        </p>
+        <Button
+          onClick={() => {
+            if (form.formState.isValid) {
+              // setActiveStep((prev) => prev + 1);
+            }
+          }}
+          type='submit'
+          className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'>
+          Create Account
+        </Button>
+        <Button
+          variant={'outline'}
+          className='text-xs w-full md:h-[70px] h-[50px] mb-10 -mt-1 text-black'>
+          Already have an account ?
+          <span className='font-semibold text-base text-primary'>Sign up</span>
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
+function VerifyEmail({
+  setActiveStep,
+}: {
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const { form, onSubmit, userEmail, emailVerified } = useVerifyEmail();
+
+  React.useEffect(() => {
+    if (emailVerified) {
+      setActiveStep((prev) => prev + 1);
+    }
+  }, [emailVerified, setActiveStep]);
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div>
+          <h1 className='md:text-2xl'>
+            To keep your account safe we need to <br /> verify your email
+            address
+          </h1>
+          <p className='mt-4 md:mt-7 font-dm-sans'>
+            Check your email, we sent an OTP to your email
+            <br /> <span className='font-bold'>{userEmail ?? ''}</span>
+          </p>
+          <FormField
+            control={form.control}
+            name='otp_code'
+            render={({ field }) => (
+              <FormItem className='flex md:flex-row flex-col gap-4'>
+                <div className='space-y-2 flex-1 font-dm-sans'>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Enter Code
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder='Please enter OTP code' />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <button className='font-dm-sans font-medium text-base md:mt-4 mt-3 text-primary'>
+            Request the code again
+          </button>
+          <p className='md:mt-7 mt-5 font-dm-sans'>
+            Remember to check your spam/junk folder. It can take several minutes
+            for your email to arrive, but if you don’t see the mail after 5
+            minutes
+          </p>
+          <p className='md:mt-5 mt-3 font-dm-sans'>
+            If you do request the code to be re-sent, makes sure you enter it on
+            this page as signing it again will generate a different code
+          </p>
+          <Button
+            type='submit'
+            className='text-base font-semibold md:h-[70px] h-[50px] mt-4'>
+            Verify Code
+          </Button>
+          <Button
+            variant={'outline'}
+            className='text-sm font-bold md:text-base md:h-[70px] h-[50px] mb-10  mt-10 w-full'>
+            Back to Create Account
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
 }
 
 export default AdminSignUp;

@@ -4,7 +4,9 @@ import SearchInput from '@/components/custom/search-input';
 import TransactionHistoryTable from '@/components/custom/transaction-history-table';
 import { TransactionStepper } from '@/components/custom/transaction-stepper';
 import ImportIcon from '@/components/icon/import-icon';
+import { useGetSingleCardSalesQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const giftCardDetails = {
   'Gift Card Code': 'GFT - XYZ123456',
@@ -24,6 +26,12 @@ const userProfile = {
 };
 
 function Page() {
+  const cardId = usePathname()?.split('/')[2];
+
+  const { query } = useGetSingleCardSalesQuery(cardId ?? '');
+
+  console.log(query.data);
+
   return (
     <div className='container mx-auto px-4 py-6 md:py-11'>
       <TransactionStepper activeStep={3} />

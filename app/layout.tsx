@@ -1,14 +1,16 @@
+import { Providers } from '@/components/custom/providers';
+import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
 import {
-  DM_Sans,
-  Montserrat_Alternates,
-  Montserrat,
-  Roboto,
   Albert_Sans,
+  DM_Sans,
+  Montserrat,
+  Montserrat_Alternates,
   Nunito,
+  Roboto,
 } from 'next/font/google';
 import './globals.css';
-import { Toaster } from '@/components/ui/sonner';
+import { Suspense } from 'react';
 
 const montSerrat = Montserrat_Alternates({
   variable: '--font-sans',
@@ -60,8 +62,12 @@ export default function RootLayout({
     <html lang='en'>
       <body
         className={`${montSerrat.variable} ${dmSans.variable} ${montSerratDefault.variable} ${roboto.variable} ${albert_sans.variable} ${nunito.variable} font-sans antialiased`}>
-        {children}
-        <Toaster position='top-right' />
+        <Providers>
+          <Suspense>
+            {children}
+            <Toaster position='top-right' richColors />
+          </Suspense>
+        </Providers>
       </body>
     </html>
   );
