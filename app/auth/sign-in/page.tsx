@@ -55,6 +55,7 @@ function SignIn() {
                   <FormControl>
                     <Input
                       type='password'
+                      isPassword
                       {...field}
                       placeholder='Please enter your password'
                     />
