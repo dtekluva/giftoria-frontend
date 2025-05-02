@@ -9,6 +9,7 @@ import UserIcon from '../icon/user-icon';
 import { Input } from '../ui/input';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { AccountDropdown } from './account-dropdown';
 
 function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -65,7 +66,7 @@ function NavBar() {
                 href={'/auth/sign-up'}>
                 Sign up
               </Link>
-              <UserIcon />
+              <AccountDropdown />
             </div>
             <ShoppingCartIcon
               className='cursor-pointer'
