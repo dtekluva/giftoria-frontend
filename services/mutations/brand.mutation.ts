@@ -7,7 +7,7 @@ import { buyCardAgainbyId, buyCardbyId } from '../api';
 import { usePathname, useRouter } from 'next/navigation';
 import { getCookie } from 'cookies-next/client';
 import { localStorageStore } from '@/libs/store';
-import { BuyMultipleCard } from '@/libs/types/brand.types';
+import { BuyMultipleCard, IBuyCardAgain } from '@/libs/types/brand.types';
 import { toast } from 'sonner';
 import { brand_keys } from '../queries/brand.queries';
 
@@ -56,7 +56,18 @@ export const useByCardsMutation = () => {
       });
     }
     toast.success('Card added to cart');
-    form.reset();
+  };
+
+  const deleteItemFromLocalStorage = (id: number | string) => {
+    const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
+    if (cards) {
+      const newCards = cards.cards.filter((_, index) => index !== id);
+
+      localStorageStore.setItem('cards', {
+        cards: newCards,
+        password: getCookie('password') ?? '',
+      });
+    }
   };
 
   const onSubmit = (data: BuyCardType) => {
@@ -89,29 +100,29 @@ export const useByCardsMutation = () => {
     onSubmit,
     saveItemToLocalStorage,
     isLoading: mutation.isPending,
+    deleteItemFromLocalStorage,
   };
 };
 
-export const useBuyCardById = (id: string) => {
+export const useBuyCardById = () => {
   const queryClient = useQueryClient();
-
-  const data = {
-    card_id: id,
-    password: getCookie('password') ?? '',
-  };
-
+  const router = useRouter();
   const mutation = useMutation({
     mutationFn: buyCardAgainbyId,
-    mutationKey: ['buy-card-again', id],
-    onSuccess: () => {
+    mutationKey: ['buy-card-again', 'card'],
+    onSuccess: (data) => {
+      router.push(data.data.payment_details.payment_link);
       queryClient.invalidateQueries({
         queryKey: [...brand_keys.all, 'card', 'sales'],
       });
     },
   });
 
-  const buyCard = () => {
-    const res = mutation.mutateAsync(data);
+  const buyCard = (data: Partial<IBuyCardAgain>) => {
+    const res = mutation.mutateAsync({
+      card_id: data.card_id ?? '',
+      password: getCookie('password') ?? '',
+    });
     showToast(res, {
       success: 'Card purchased successfully',
       error: 'Error purchasing card',
@@ -121,6 +132,6 @@ export const useBuyCardById = (id: string) => {
 
   return {
     buyCard,
-    isLoading: mutation.isPending,
+    isBuyingCard: mutation.isPending,
   };
 };

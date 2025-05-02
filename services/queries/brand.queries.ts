@@ -4,7 +4,12 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { getAllBrandCards, getAllCardSales, getBrandCardById } from '../api';
+import {
+  getAllBrandCards,
+  getAllCardSales,
+  getBrandCardById,
+  getCardSalesById,
+} from '../api';
 import { ApiAllBrandCardsResponse, ICard } from '@/libs/types/brand.types';
 import { AxiosResponse } from 'axios';
 
@@ -20,6 +25,12 @@ export const brand_keys = {
       page,
       page_size,
     },
+  ],
+  brand_card_sales_by_id: (id: string) => [
+    ...brand_keys.all,
+    'card',
+    'sales',
+    id,
   ],
 } as const;
 
@@ -99,5 +110,18 @@ export const useGetBrandCardSalesQuery = ({
   return {
     query,
     prefetchQuery,
+  };
+};
+
+export const useGetSingleCardSalesQuery = (id: string) => {
+  const query = useQuery({
+    queryKey: brand_keys.brand_card_sales_by_id(id),
+    queryFn: () => getCardSalesById(id),
+    select: (data) => data.data,
+    enabled: !!id,
+  });
+
+  return {
+    query,
   };
 };

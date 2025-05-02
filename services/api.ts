@@ -15,6 +15,7 @@ import {
   ApiBuyCardResponse,
   ApiCardSalesResponse,
   BuyMultipleCard,
+  CardSale,
   IBuyCardAgain,
   ICard,
 } from '@/libs/types/brand.types';
@@ -75,6 +76,12 @@ export const getAllCardSales = async ({
 }) => {
   return await httpConfig.get<AxiosError, AxiosResponse<ApiCardSalesResponse>>(
     `/brand/fetch_card_sales/?search=${search}&page=${page}&page_size=${page_size}`
+  );
+};
+
+export const getCardSalesById = async (id: string) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<CardSale>>(
+    `/brand/fetch_single_card_sale/?sale_id=${id}`
   );
 };
 
