@@ -10,6 +10,7 @@ import { useState } from 'react';
 import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
 import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
+import { useBuyCardById } from '@/services/mutations/brand.mutation';
 
 function MyOrderPage() {
   const router = useRouter();
@@ -20,6 +21,8 @@ function MyOrderPage() {
     page: currentPage,
     page_size: MY_ORDER_PAGE_SIZE,
   });
+
+  const { buyCard, isBuyingCard } = useBuyCardById();
 
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -98,12 +101,20 @@ function MyOrderPage() {
                     </div>
                   </div>
                   <div className='hidden md:block'>
-                    <div className='flex items-center gap-2'>
+                    <button
+                      type='button'
+                      disabled={isBuyingCard}
+                      onClick={() => {
+                        buyCard({
+                          card_id: order.brand,
+                        });
+                      }}
+                      className='flex cursor-pointer items-center gap-2 disabled:opacity-50'>
                       <ConvertCardIcon />
                       <p className='text-base text-[#990099] font-semibold'>
                         Buy Again
                       </p>
-                    </div>
+                    </button>
                     <Button
                       onClick={() => {
                         router.push(`/order-details/${order.id}`);
