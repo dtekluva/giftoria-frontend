@@ -119,17 +119,8 @@ export const useAdminUploadDetails = () => {
   };
 };
 
-export const useVerifyEmail = () => {
-  const [, setAccountCreated] = useQueryState(
-    'account_created',
-    parseAsBoolean
-  );
-
+export const useVerifyEmail = (fn?: () => void) => {
   const userEmail = localStorage.getItem('verify-mail') as string;
-  const [emailVerified, setEmailVerified] = useQueryState(
-    'email_verified',
-    parseAsBoolean
-  );
 
   const form = useForm({
     resolver: zodResolver(verifyEmailSchema),
@@ -164,7 +155,7 @@ export const useVerifyEmail = () => {
     mutationFn: verifyEmail,
     mutationKey: ['auth', 'verify_email'],
     onSuccess: () => {
-      setEmailVerified(true);
+      fn?.();
     },
   });
 
@@ -172,11 +163,8 @@ export const useVerifyEmail = () => {
     form,
     mutation,
     onSubmit,
-    setAccountCreated,
 
     userEmail,
-    setEmailVerified,
-    emailVerified,
   };
 };
 
@@ -287,7 +275,7 @@ export const useLogin = () => {
         if (
           error?.response?.data.detail.includes('company details not verified')
         ) {
-          console.log('Hi');
+          router.push('/auth/admin/sign-up?step=3');
         }
       }
     },
