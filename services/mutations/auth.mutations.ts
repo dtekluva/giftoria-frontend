@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import {
   changePasswordScheme,
@@ -18,7 +19,6 @@ import { useMutation } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -27,6 +27,7 @@ import {
   changePassword,
   login,
   sendVerificationCode,
+  uploadCompanyDetail,
   userSignUp,
   verifyEmail,
 } from '../api';
@@ -114,8 +115,48 @@ export const useAdminUploadDetails = () => {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: uploadCompanyDetail,
+    mutationKey: ['auth', 'company_upload_document'],
+  });
+
+  async function onSubmit(data: UploadCompanyDetailType) {
+    try {
+      const formData = new FormData();
+      formData.append('business_type', data.business_type);
+      formData.append('registration_number', data.registration_number);
+      formData.append('date_of_incorporation', data.date_of_incorporation);
+      formData.append('tin_number', data.tin_number);
+      formData.append('company_address', data.company_address);
+      formData.append('email', data.email);
+
+      // Append the file if it exists
+      if (data.upload_cac_document) {
+        formData.append(
+          'upload_cac_document',
+          data.upload_cac_document as File
+        );
+      }
+
+      formData.append(
+        'terms_and_conditions',
+        data.terms_and_conditions.toString()
+      );
+
+      const res = mutation.mutateAsync(formData as any);
+      showToast(res, {
+        loading: 'Uploading company details...',
+        success: 'Company details uploaded successfully',
+        error: 'Something went wrong',
+      });
+    } catch (error) {
+      console.error('Error uploading company details:', error);
+    }
+  }
+
   return {
     form,
+    onSubmit,
   };
 };
 
