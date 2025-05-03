@@ -15,7 +15,7 @@ import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
 import { parseAsBoolean, useQueryState } from 'nuqs';
@@ -33,10 +33,7 @@ import {
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
-export function useCreateAdminAccount() {
-  const email = localStorage.getItem('verify-mail') as string;
-  const [emailVerified] = useQueryState('email_verified', parseAsBoolean);
-
+export function useCreateAdminAccount(fn?: () => void) {
   const form = useForm<ApiAuthCompanyResponse>({
     resolver: zodResolver(createAdminAccountSchema),
     defaultValues: {
@@ -89,9 +86,8 @@ export function useCreateAdminAccount() {
     },
     onSuccess: (data) => {
       if (data.status) {
-        // setEmail(data.data.email);
-        console.log('Email:', form.getValues('email'));
         localStorage.setItem('verify-mail', form.getValues('email'));
+        fn?.();
       }
     },
   });
@@ -100,9 +96,6 @@ export function useCreateAdminAccount() {
     form,
     mutation,
     onSubmit,
-    email,
-
-    emailVerified,
   };
 }
 
@@ -283,6 +276,19 @@ export const useLogin = () => {
         setCookie('refresh_token', data.data.refresh);
         setCookie('password', form.getValues('password'));
         router.push('/');
+      }
+    },
+    onError(error, variables) {
+      if (axios.isAxiosError(error)) {
+        if (error?.response?.data.detail.includes('verify')) {
+          localStorageStore.setItem('verify-mail', variables.email);
+          router.push('/auth/email-verify');
+        }
+        if (
+          error?.response?.data.detail.includes('company details not verified')
+        ) {
+          console.log('Hi');
+        }
       }
     },
   });
