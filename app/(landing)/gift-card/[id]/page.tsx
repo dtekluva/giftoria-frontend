@@ -105,7 +105,7 @@ function GiftCardDetails() {
                   name='recipient_name'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Receipt Name</FormLabel>
+                      <FormLabel>Recipient Name</FormLabel>
                       <FormControl>
                         <Input
                           id='receipt_name'
@@ -126,7 +126,7 @@ function GiftCardDetails() {
                     name='recipient_email'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Receipt Email</FormLabel>
+                        <FormLabel>Recipient Email</FormLabel>
                         <FormControl>
                           <Input
                             id='receipt_email'
@@ -146,7 +146,7 @@ function GiftCardDetails() {
                     name='recipient_phone_number'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Receipt Phone Number</FormLabel>
+                        <FormLabel>Recipient Phone Number</FormLabel>
                         <FormControl>
                           <Input
                             id='receipt_phone_number'

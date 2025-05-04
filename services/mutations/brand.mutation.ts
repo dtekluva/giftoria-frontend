@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { buyCardSchema, BuyCardType } from '@/libs/schema';
 import { showToast } from '@/libs/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,7 +50,8 @@ export const useByCardsMutation = () => {
         password: getCookie('password') ?? '',
       });
     } else {
-      const newCards = [...cards.cards, form.getValues()];
+      const localCards = JSON.parse(cards as any) as BuyMultipleCard;
+      const newCards = [...localCards.cards, form.getValues()];
       localStorageStore.setItem('cards', {
         cards: newCards,
         password: getCookie('password') ?? '',
@@ -59,7 +61,9 @@ export const useByCardsMutation = () => {
   };
 
   const deleteItemFromLocalStorage = (id: number | string) => {
-    const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
+    const cards = JSON.parse(
+      localStorageStore.getItem('cards') as any
+    ) as BuyMultipleCard;
     if (cards) {
       const newCards = cards.cards.filter((_, index) => index !== id);
 

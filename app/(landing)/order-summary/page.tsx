@@ -8,9 +8,12 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BuyMultipleCard } from '@/libs/types/brand.types';
 import { useByCardsMutation } from '@/services/mutations/brand.mutation';
+import { getCookie } from 'cookies-next/client';
 import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 const paymentService = [
   {
@@ -23,6 +26,8 @@ function OrderSummary() {
   const [cards, setCards] = useState<BuyMultipleCard | null>(null);
 
   const { deleteItemFromLocalStorage, buyAllCards } = useByCardsMutation();
+
+  const access_token = getCookie('access_token');
 
   // Load cards from localStorage when the component mounts
   useEffect(() => {
@@ -43,6 +48,8 @@ function OrderSummary() {
       };
     });
   };
+
+  const router = useRouter();
 
   return (
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
@@ -180,6 +187,11 @@ function OrderSummary() {
           <div className='flex justify-center mt-7 md:mt-10 px-4'>
             <Button
               onClick={() => {
+                if (!access_token) {
+                  toast.error('Please sign in to continue');
+                  router.push('/auth/sign-in');
+                  return;
+                }
                 buyAllCards();
               }}
               className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
