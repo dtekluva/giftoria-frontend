@@ -87,7 +87,7 @@ export function useCreateAdminAccount(fn?: () => void) {
     },
     onSuccess: (data) => {
       if (data.status) {
-        localStorage.setItem('verify-mail', form.getValues('email'));
+        localStorageStore.setItem('verify-mail', form.getValues('email'));
         fn?.();
       }
     },
@@ -165,7 +165,7 @@ export const useAdminUploadDetails = () => {
 };
 
 export const useVerifyEmail = (fn?: () => void) => {
-  const userEmail = localStorage.getItem('verify-mail') as string;
+  const userEmail = localStorageStore.getItem('verify-mail') as string;
 
   const form = useForm({
     resolver: zodResolver(verifyEmailSchema),
@@ -256,7 +256,7 @@ export const useCreateUserAccount = () => {
 };
 
 export const useSendVerificationCode = () => {
-  const email = localStorage.getItem('verify-mail') as string;
+  const email = localStorageStore.getItem('verify-mail') as string;
 
   const mutation = useMutation({
     mutationFn: sendVerificationCode,

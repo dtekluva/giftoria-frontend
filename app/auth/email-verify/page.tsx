@@ -23,6 +23,12 @@ function VerifyEmail() {
   const { resendCode, isLoading: isResending } = useSendVerificationCode();
   const router = useRouter();
 
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   React.useEffect(() => {
     if (mutation.isSuccess) {
       router.push('/auth/sign-in/');
@@ -41,7 +47,10 @@ function VerifyEmail() {
               </h1>
               <p className='mt-4 md:mt-7 font-dm-sans'>
                 Check your email, we sent an OTP to your email
-                <br /> <span className='font-bold'>{userEmail}</span>
+                <br />{' '}
+                <span className='font-bold'>
+                  {!isClient ? '....' : userEmail}
+                </span>
               </p>
             </div>
 
