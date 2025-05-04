@@ -101,6 +101,7 @@ export function useCreateAdminAccount(fn?: () => void) {
 }
 
 export const useAdminUploadDetails = () => {
+  const router = useRouter();
   const form = useForm<UploadCompanyDetailType>({
     resolver: zodResolver(uploadCompanyDetailSchema),
     defaultValues: {
@@ -118,6 +119,9 @@ export const useAdminUploadDetails = () => {
   const mutation = useMutation({
     mutationFn: uploadCompanyDetail,
     mutationKey: ['auth', 'company_upload_document'],
+    onSuccess: () => {
+      router.push('/auth/sign-in');
+    },
   });
 
   async function onSubmit(data: UploadCompanyDetailType) {
