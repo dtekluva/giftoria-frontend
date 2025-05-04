@@ -8,7 +8,7 @@ function OrderDetailsLayout({
   receiver: React.ReactNode;
   sender: React.ReactNode;
 }) {
-  const [userType] = React.useState('receiver');
+  const [userType] = React.useState('sender');
   return (
     <div className='flex'>{userType === 'receiver' ? receiver : sender}</div>
   );

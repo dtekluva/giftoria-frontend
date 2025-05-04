@@ -61,7 +61,9 @@ export const useByCardsMutation = () => {
   };
 
   const deleteItemFromLocalStorage = (id: number | string) => {
-    const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
+    const cards = JSON.parse(
+      localStorageStore.getItem('cards') as any
+    ) as BuyMultipleCard;
     if (cards) {
       const newCards = cards.cards.filter((_, index) => index !== id);
 

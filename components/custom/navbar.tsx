@@ -8,13 +8,14 @@ import MobileLogoIcon from '../icon/mobile-logo';
 import ShoppingCartIcon from '../icon/shopping-cart-icon';
 import { Input } from '../ui/input';
 import { AccountDropdown } from './account-dropdown';
+import { getCookie } from 'cookies-next/client';
 
 function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  console.log('pathname', pathname);
+  const access_token = getCookie('access_token');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,11 +60,13 @@ function NavBar() {
           </div>
           <div className='flex flex-row gap-3 lg:gap-8 ml-7'>
             <div className='flex flex-row gap-3 items-end'>
-              <Link
-                className='text-white text-sm font-semibold hidden lg:block'
-                href={'/auth/sign-up'}>
-                Sign up
-              </Link>
+              {!access_token && (
+                <Link
+                  className='text-white text-sm font-semibold hidden lg:block'
+                  href={'/auth/sign-up'}>
+                  Sign up
+                </Link>
+              )}
               <AccountDropdown />
             </div>
             <ShoppingCartIcon
