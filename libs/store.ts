@@ -19,10 +19,12 @@ export const localStorageStore = {
    * @param key - The key of the item to retrieve
    * @returns The parsed value or `null` if the key does not exist
    */
-  getItem: <T>(key: string): T | null => {
+  getItem: <T>(key: string): T | string | null | undefined => {
     try {
-      const value = localStorage.getItem(key);
-      return value ? (JSON.parse(value) as T) : null;
+      if (typeof window !== 'undefined') {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : null;
+      }
     } catch (error) {
       console.error('Error reading from localStorage:', error);
       return null;

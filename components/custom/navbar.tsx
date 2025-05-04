@@ -1,14 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import LogoIcon from '../icon/logo';
 import MobileLogoIcon from '../icon/mobile-logo';
 import ShoppingCartIcon from '../icon/shopping-cart-icon';
-import UserIcon from '../icon/user-icon';
 import { Input } from '../ui/input';
-import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
 import { AccountDropdown } from './account-dropdown';
 
 function NavBar() {

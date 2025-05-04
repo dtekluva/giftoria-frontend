@@ -7,6 +7,7 @@ import {
   SendVerificationCodeType,
   LoginType,
   ChangePasswordType,
+  UploadCompanyDetailType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
@@ -50,6 +51,13 @@ export const login = async (data: LoginType) => {
 
 export const changePassword = (data: ChangePasswordType) =>
   httpConfig.put('/auth/change_password/', data);
+
+export const uploadCompanyDetail = async (data: UploadCompanyDetailType) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiAuthCompanyResponse>
+  >('/auth/company_upload_document/', data);
+};
 
 /// Brand API SERVICES
 export const getAllBrandCards = async () => {

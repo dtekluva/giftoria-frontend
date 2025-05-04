@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import {
   changePasswordScheme,
@@ -7,16 +8,17 @@ import {
   type CreateUserAccountType,
   loginSchema,
   type LoginType,
+  uploadCompanyDetailSchema,
+  UploadCompanyDetailType,
   verifyEmailSchema,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -25,21 +27,14 @@ import {
   changePassword,
   login,
   sendVerificationCode,
+  uploadCompanyDetail,
   userSignUp,
   verifyEmail,
 } from '../api';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
-export function useCreateAdminAccount() {
-  const [accountCreated, setAccountCreated] = useQueryState(
-    'account_created',
-    parseAsBoolean
-  );
-
-  const [userEmail, setEmail] = useQueryState('email');
-  const [emailVerified] = useQueryState('email_verified', parseAsBoolean);
-
+export function useCreateAdminAccount(fn?: () => void) {
   const form = useForm<ApiAuthCompanyResponse>({
     resolver: zodResolver(createAdminAccountSchema),
     defaultValues: {
@@ -92,10 +87,8 @@ export function useCreateAdminAccount() {
     },
     onSuccess: (data) => {
       if (data.status) {
-        // setEmail(data.data.email);
-        console.log('Email:', form.getValues('email'));
-        setEmail(form.getValues('email'));
-        setAccountCreated(true);
+        localStorageStore.setItem('verify-mail', form.getValues('email'));
+        fn?.();
       }
     },
   });
@@ -104,25 +97,75 @@ export function useCreateAdminAccount() {
     form,
     mutation,
     onSubmit,
-    setAccountCreated,
-    setEmail,
-    accountCreated,
-    userEmail,
-    emailVerified,
   };
 }
 
-export const useVerifyEmail = () => {
-  const [, setAccountCreated] = useQueryState(
-    'account_created',
-    parseAsBoolean
-  );
+export const useAdminUploadDetails = () => {
+  const router = useRouter();
+  const form = useForm<UploadCompanyDetailType>({
+    resolver: zodResolver(uploadCompanyDetailSchema),
+    defaultValues: {
+      business_type: '',
+      registration_number: '',
+      date_of_incorporation: '',
+      tin_number: '',
+      company_address: '',
+      email: '',
+      upload_cac_document: null,
+      terms_and_conditions: false,
+    },
+  });
 
-  const userEmail = localStorage.getItem('verify-mail') as string;
-  const [emailVerified, setEmailVerified] = useQueryState(
-    'email_verified',
-    parseAsBoolean
-  );
+  const mutation = useMutation({
+    mutationFn: uploadCompanyDetail,
+    mutationKey: ['auth', 'company_upload_document'],
+    onSuccess: () => {
+      router.push('/auth/sign-in');
+    },
+  });
+
+  async function onSubmit(data: UploadCompanyDetailType) {
+    try {
+      const formData = new FormData();
+      formData.append('business_type', data.business_type);
+      formData.append('registration_number', data.registration_number);
+      formData.append('date_of_incorporation', data.date_of_incorporation);
+      formData.append('tin_number', data.tin_number);
+      formData.append('company_address', data.company_address);
+      formData.append('email', data.email);
+
+      // Append the file if it exists
+      if (data.upload_cac_document) {
+        formData.append(
+          'upload_cac_document',
+          data.upload_cac_document as File
+        );
+      }
+
+      formData.append(
+        'terms_and_conditions',
+        data.terms_and_conditions.toString()
+      );
+
+      const res = mutation.mutateAsync(formData as any);
+      showToast(res, {
+        loading: 'Uploading company details...',
+        success: 'Company details uploaded successfully',
+        error: 'Something went wrong',
+      });
+    } catch (error) {
+      console.error('Error uploading company details:', error);
+    }
+  }
+
+  return {
+    form,
+    onSubmit,
+  };
+};
+
+export const useVerifyEmail = (fn?: () => void) => {
+  const userEmail = localStorageStore.getItem('verify-mail') as string;
 
   const form = useForm({
     resolver: zodResolver(verifyEmailSchema),
@@ -157,7 +200,7 @@ export const useVerifyEmail = () => {
     mutationFn: verifyEmail,
     mutationKey: ['auth', 'verify_email'],
     onSuccess: () => {
-      setEmailVerified(true);
+      fn?.();
     },
   });
 
@@ -165,11 +208,8 @@ export const useVerifyEmail = () => {
     form,
     mutation,
     onSubmit,
-    setAccountCreated,
 
     userEmail,
-    setEmailVerified,
-    emailVerified,
   };
 };
 
@@ -216,7 +256,7 @@ export const useCreateUserAccount = () => {
 };
 
 export const useSendVerificationCode = () => {
-  const email = localStorage.getItem('verify-mail') as string;
+  const email = localStorageStore.getItem('verify-mail') as string;
 
   const mutation = useMutation({
     mutationFn: sendVerificationCode,
@@ -269,6 +309,19 @@ export const useLogin = () => {
         setCookie('refresh_token', data.data.refresh);
         setCookie('password', form.getValues('password'));
         router.push('/');
+      }
+    },
+    onError(error, variables) {
+      if (axios.isAxiosError(error)) {
+        if (error?.response?.data.detail.includes('verify')) {
+          localStorageStore.setItem('verify-mail', variables.email);
+          router.push('/auth/email-verify');
+        }
+        if (
+          error?.response?.data.detail.includes('company details not verified')
+        ) {
+          router.push('/auth/admin/sign-up?step=3');
+        }
       }
     },
   });
