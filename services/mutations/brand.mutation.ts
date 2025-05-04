@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { buyCardSchema, BuyCardType } from '@/libs/schema';
 import { showToast } from '@/libs/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,7 +50,8 @@ export const useByCardsMutation = () => {
         password: getCookie('password') ?? '',
       });
     } else {
-      const newCards = [...cards.cards, form.getValues()];
+      const localCards = JSON.parse(cards as any) as BuyMultipleCard;
+      const newCards = [...localCards.cards, form.getValues()];
       localStorageStore.setItem('cards', {
         cards: newCards,
         password: getCookie('password') ?? '',
