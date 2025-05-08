@@ -8,6 +8,7 @@ import {
   LoginType,
   ChangePasswordType,
   UploadCompanyDetailType,
+  BranchDetailsType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
@@ -114,4 +115,11 @@ export const getCompanyDashboard = async () => {
     AxiosError,
     AxiosResponse<ApiCompanyDetailsResponse>
   >('/auth/company_dashboard/');
+};
+
+export const createBranch = async (data: BranchDetailsType) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >('/branch/create_branch/', data);
 };
