@@ -10,12 +10,6 @@ import SMSTrackingIcon from '@/components/icon/sms-tracking-icon';
 import { Input } from '@/components/ui/input';
 import React from 'react';
 
-// const cards = [
-//   {
-
-//   }
-// ]
-
 function AdminPage() {
   return (
     <div>
