@@ -111,14 +111,16 @@ function BranchPage() {
             control={form.control}
             name='is_active'
             render={({ field }) => (
-              <FormItem className='flex items-center space-x-2'>
+              <FormItem className='flex items-center space-x-1'>
                 <FormControl>
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <FormLabel className='text-xs font-medium'>Is Active</FormLabel>
+                <FormLabel className='text-xs font-medium'>
+                  (Check this box if the branch is currently active)
+                </FormLabel>
               </FormItem>
             )}
           />
