@@ -1,11 +1,13 @@
 import { branchDetailsSchema, companyDetailsSchema } from '@/libs/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { company_keys } from '../queries/company.queries';
 import { AxiosResponse } from 'axios';
 import { ApiCompanyDetailsResponse } from '@/libs/types/brand.types';
+import { createBranch } from '../api';
+import { showToast } from '@/libs/toast';
 
 export const useUpdateCompanyDetails = () => {
   const queryClient = useQueryClient();
@@ -47,13 +49,25 @@ export const useBranchDetailsForm = () => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof branchDetailsSchema>) => {
-    console.log('Branch form submitted:', data);
+  const mutation = useMutation({
+    mutationFn: createBranch,
+  });
+
+  const onSubmit = (data: z.infer<typeof branchDetailsSchema>) => {
+    const res = mutation.mutateAsync(data);
+
+    showToast(res, {
+      success: 'Branch created successfully',
+      error: 'Error creating branch',
+      loading: 'Creating branch...',
+    });
+
     // Add API call logic here
   };
 
   return {
     form,
     onSubmit,
+    mutation,
   };
 };
