@@ -145,8 +145,25 @@ export const uploadCompanyDetailSchema = z.object({
   }),
 });
 
+export const companyDetailsSchema = z.object({
+  company_name: z
+    .string()
+    .min(1, 'Company name is required')
+    .max(50, 'Company name must be less than 50 characters'),
+  company_email: z.string().email('Invalid email address'),
+  phone_number: z
+    .string()
+    .min(1, 'Phone number is required')
+    .max(15, 'Phone number must be less than 15 characters'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(60, 'Password must be less than 60 characters'),
+});
+
 //TYPES
 
+export type CompanyDetailsType = z.infer<typeof companyDetailsSchema>;
 export type UploadCompanyDetailType = z.infer<typeof uploadCompanyDetailSchema>;
 export type BuyCardType = z.infer<typeof buyCardSchema>;
 export type ChangePasswordType = z.infer<typeof changePasswordScheme>;
