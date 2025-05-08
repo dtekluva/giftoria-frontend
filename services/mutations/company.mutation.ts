@@ -51,6 +51,9 @@ export const useBranchDetailsForm = () => {
 
   const mutation = useMutation({
     mutationFn: createBranch,
+    onSuccess: () => {
+      form.reset();
+    },
   });
 
   const onSubmit = (data: z.infer<typeof branchDetailsSchema>) => {
@@ -61,8 +64,6 @@ export const useBranchDetailsForm = () => {
       error: 'Error creating branch',
       loading: 'Creating branch...',
     });
-
-    // Add API call logic here
   };
 
   return {
