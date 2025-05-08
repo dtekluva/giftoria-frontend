@@ -15,7 +15,7 @@ import { useBranchDetailsForm } from '@/services/mutations/company.mutation';
 import SearchInput from '@/components/custom/search-input';
 
 function BranchPage() {
-  const { form, onSubmit } = useBranchDetailsForm();
+  const { form, onSubmit, mutation } = useBranchDetailsForm();
 
   return (
     <div className='md:px-7 px-5 md:pt-10 pt-6'>
@@ -128,6 +128,7 @@ function BranchPage() {
           <div className='md:mt-6 mt-7 flex justify-end md:col-span-2'>
             <Button
               type='submit'
+              disabled={mutation.isPending}
               className='md:h-16 ml-auto md:px-[50px] px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans md:font-sans rounded-[6px] font-semibold md:mt-0'>
               Add Branch
             </Button>
