@@ -1,4 +1,4 @@
-import { companyDetailsSchema } from '@/libs/schema';
+import { branchDetailsSchema, companyDetailsSchema } from '@/libs/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -27,6 +27,29 @@ export const useUpdateCompanyDetails = () => {
 
   const onSubmit = async (data: z.infer<typeof companyDetailsSchema>) => {
     console.log('Form submitted:', data);
+  };
+
+  return {
+    form,
+    onSubmit,
+  };
+};
+
+export const useBranchDetailsForm = () => {
+  const form = useForm<z.infer<typeof branchDetailsSchema>>({
+    resolver: zodResolver(branchDetailsSchema),
+    defaultValues: {
+      branch_name: '',
+      branch_address: '',
+      branch_id: '',
+      branch_password: '',
+      is_active: true,
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof branchDetailsSchema>) => {
+    console.log('Branch form submitted:', data);
+    // Add API call logic here
   };
 
   return {
