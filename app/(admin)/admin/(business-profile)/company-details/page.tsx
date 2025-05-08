@@ -4,6 +4,7 @@ import GiftCardDetailsTable from '@/components/custom/gift-card-details';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useGetCompanyDashboardQuery } from '@/services/queries/company.queries';
 
 const companyCardDetails = {
   'Business type:': 'Limited liability',
@@ -14,6 +15,12 @@ const companyCardDetails = {
 };
 
 function CompanyDetails() {
+  const { query } = useGetCompanyDashboardQuery();
+
+  if (query.isLoading) {
+    return <CompanyDetailsSkeleton />;
+  }
+
   return (
     <div className='pt-7 md:pt-9'>
       <DragAndDropUpload onUpload={(file) => console.log(file)} />
@@ -88,3 +95,41 @@ function CompanyDetails() {
 }
 
 export default CompanyDetails;
+
+function CompanyDetailsSkeleton() {
+  return (
+    <div className='pt-7 md:pt-9 animate-pulse'>
+      {/* Drag and Drop Skeleton */}
+      <div className='h-32 bg-gray-300 rounded-md'></div>
+
+      {/* Form Skeleton */}
+      <div className='border-t md:mt-6 mt-5 py-7 px-7 md:py-[30px] grid gap-5 md:gap-x-6 md:grid-cols-2'>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className='space-y-2 font-dm-sans'>
+            <div className='h-4 bg-gray-300 rounded-md w-1/3'></div>
+            <div className='h-12 bg-gray-300 rounded-md'></div>
+          </div>
+        ))}
+      </div>
+
+      {/* Company Details Skeleton */}
+      <div className='grid md:grid-cols-2 gap-[10px] px-7 md:mt-7'>
+        <div>
+          <div className='h-6 bg-gray-300 rounded-md w-1/4 mb-4'></div>
+          <div className='space-y-3'>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className='flex justify-between items-center'>
+                <div className='h-4 bg-gray-300 rounded-md w-1/3'></div>
+                <div className='h-4 bg-gray-300 rounded-md w-1/2'></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className='flex flex-col items-end'>
+          <div className='h-10 md:h-16 bg-gray-300 rounded-md w-1/3'></div>
+          <div className='h-4 bg-gray-300 rounded-md w-2/3 mt-3 md:mt-4'></div>
+        </div>
+      </div>
+    </div>
+  );
+}

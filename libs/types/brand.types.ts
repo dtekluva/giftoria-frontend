@@ -63,3 +63,16 @@ export interface ApiCardSalesResponse {
   previous: string | null;
   results: CardSale[];
 }
+
+export interface ApiCompanyDetailsResponse {
+  message: string; // Response message
+  status: boolean; // Indicates if the request was successful
+  balance: number; // Company balance
+  company_name: string; // Name of the company
+  company_address: string | null; // Address of the company (nullable)
+  business_type: string | null; // Type of business (nullable)
+  registration_number: string | null; // CAC registration number (nullable)
+  tin_number: string | null; // Tax Identification Number (nullable)
+  date_of_incorporation: string | null; // Date of incorporation (nullable)
+  cac_documents: string | null; // URL or reference to CAC documents (nullable)
+}

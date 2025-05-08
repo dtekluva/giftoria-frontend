@@ -15,6 +15,7 @@ import {
   ApiAllBrandCardsResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
+  ApiCompanyDetailsResponse,
   BuyMultipleCard,
   CardSale,
   IBuyCardAgain,
@@ -105,4 +106,12 @@ export const buyCardAgainbyId = async (data: IBuyCardAgain) => {
     `/brand/buy_card_again/`,
     data
   );
+};
+
+// COMPANY API SERVICES
+export const getCompanyDashboard = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >('/auth/company_dashboard/');
 };
