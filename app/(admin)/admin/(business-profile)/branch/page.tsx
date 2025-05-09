@@ -13,9 +13,21 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useBranchDetailsForm } from '@/services/mutations/company.mutation';
 import SearchInput from '@/components/custom/search-input';
+import TransactionHistoryTable from '@/components/custom/transaction-history-table';
+import { useState } from 'react';
+import { useGetCompanyBranches } from '@/services/queries/company.queries';
+import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 
 function BranchPage() {
   const { form, onSubmit, mutation } = useBranchDetailsForm();
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { query, prefetchQuery } = useGetCompanyBranches({
+    search: '',
+    page: currentPage,
+    page_size: MY_ORDER_PAGE_SIZE,
+  });
 
   return (
     <div className='md:px-7 px-5 md:pt-10 pt-6'>
@@ -136,14 +148,34 @@ function BranchPage() {
         </form>
       </Form>
 
-      <div className='md:mt-10 mt-[30px]'>
-        <div className='flex md:items-center flex-col md:flex-row gap-1 justify-between'>
-          <h3 className='md:mb-8 mb-3 md:text-xl font-semibold'>
-            Branch Details
-          </h3>
-          <SearchInput />
+      {query && query.isSuccess && (
+        <div className='md:mt-10 mt-[30px]'>
+          <div className='flex md:items-center flex-col md:flex-row gap-1 justify-between'>
+            <h3 className='md:mb-8 mb-3 md:text-xl font-semibold'>
+              Branch Details
+            </h3>
+            <SearchInput />
+          </div>
+          <TransactionHistoryTable
+            data={query.data?.results.map((branch) => ({
+              branch_name: branch.branch_name,
+              branch_address: branch.branch_address,
+              branch_id: branch.branch_id,
+              branch_password: branch.branch_password,
+            }))}
+            header={
+              Object.keys(query.data?.results[0])
+                .filter((key) => key !== 'is_active' && key !== 'id')
+                .map((key) => ({
+                  title: key
+                    .replace(/_/g, ' ')
+                    .replace(/\b\w/g, (char) => char.toUpperCase()),
+                  key: key,
+                })) ?? []
+            }
+          />
         </div>
-      </div>
+      )}
     </div>
   );
 }
