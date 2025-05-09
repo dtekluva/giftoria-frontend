@@ -33,6 +33,8 @@ const TransactionHistoryTable = ({
   onPreviousPage,
   prefetchQuery,
   next,
+  showAction,
+  action,
 }: {
   data?: {
     [key: string]: string;
@@ -47,6 +49,8 @@ const TransactionHistoryTable = ({
   onPreviousPage: () => void;
   prefetchQuery: () => void;
   next?: boolean;
+  showAction?: boolean;
+  action?: () => void;
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -90,6 +94,10 @@ const TransactionHistoryTable = ({
                     {item.title}
                   </th>
                 ))}
+
+                {showAction && (
+                  <th className='py-6 px-4 text-left font-medium'>Action</th>
+                )}
               </tr>
             </thead>
             <tbody className='text-gray-700'>
@@ -115,6 +123,16 @@ const TransactionHistoryTable = ({
                       {item[headerItem.key]}
                     </td>
                   ))}
+
+                  {showAction && (
+                    <td className='py-4 px-4 text-sm'>
+                      <Button
+                        onClick={action}
+                        className='bg-[#990099] text-white rounded-md px-4 py-2'>
+                        Action
+                      </Button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -123,31 +141,6 @@ const TransactionHistoryTable = ({
         {data.map((data, index) => (
           <div key={index} className='block md:hidden mt-4'>
             <div className='bg-white rounded-lg p-4 text-sm space-y-5 border'>
-              {/* <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>
-
-                </span>{' '}
-                2/10/2023 - 4:30PM
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Order No.:</span> GFT -
-                XYZ123456
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Store Address:</span>{' '}
-                No. 5 Shomolu, Obanikoro, Lagos
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Total Value:</span>{' '}
-                ₦400,000.00
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Redeemed:</span>{' '}
-                ₦400,000.00
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Balance:</span> ₦10,000
-              </p> */}
               {Object.entries(data).map(([key, value], index) => (
                 <p
                   key={index}
