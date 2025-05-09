@@ -1,7 +1,6 @@
 'use client';
 import GiftCardDetailsTable from '@/components/custom/gift-card-details';
 import SearchInput from '@/components/custom/search-input';
-import TransactionHistoryTable from '@/components/custom/transaction-history-table';
 import { TransactionStepper } from '@/components/custom/transaction-stepper';
 import ImportIcon from '@/components/icon/import-icon';
 import { useGetSingleCardSalesQuery } from '@/services/queries/brand.queries';
@@ -75,7 +74,7 @@ function Page() {
         </div>
       </div>
 
-      <TransactionHistoryTable />
+      {/* <TransactionHistoryTable /> */}
     </div>
   );
 }
