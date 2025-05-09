@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Checkbox } from '../ui/checkbox';
+import { Button } from '../ui/button';
+import PreviousChevronLeftIcon from '../icon/previous-chevron-left-icon';
+import NextChevronRightIcon from '../icon/next-chevron-right-icon';
 
 const historyData = [
   {
@@ -24,6 +27,11 @@ const historyData = [
 const TransactionHistoryTable = ({
   data = historyData,
   header,
+  currentPage,
+  totalPages,
+  onNextPage,
+  onPreviousPage,
+  prefetchQuery,
 }: {
   data?: {
     [key: string]: string;
@@ -32,13 +40,15 @@ const TransactionHistoryTable = ({
     key: string;
     title: string;
   }[];
+  currentPage: number;
+  totalPages: number;
+  onNextPage: () => void;
+  onPreviousPage: () => void;
+  prefetchQuery: () => void;
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  console.log(header);
-
   const handleCheckboxChange = (index: number) => {
-    console.log(index, 'this is the index');
     setSelectedRows(
       (prevSelectedRows) =>
         prevSelectedRows.includes(index)
@@ -87,7 +97,7 @@ const TransactionHistoryTable = ({
                   className='border-b hover:bg-gray-50 font-dm-sans'>
                   <th className='py-4 px-4'>
                     <Checkbox
-                      className='z-999 relative cursor-pointer font-semibold'
+                      className='z-999 relative cursor-pointer'
                       checked={selectedRows.includes(index)}
                       onCheckedChange={() => handleCheckboxChange(index)}
                       aria-label={`Select row ${index + 1}`}
@@ -99,9 +109,7 @@ const TransactionHistoryTable = ({
                   </td>
 
                   {header?.map((headerItem, headerIndex) => (
-                    <td
-                      key={headerIndex}
-                      className='py-[36px] px-4 text-sm font-semibold'>
+                    <td key={headerIndex} className='py-[36px] px-4 text-sm'>
                       {item[headerItem.key]}
                     </td>
                   ))}
@@ -111,11 +119,13 @@ const TransactionHistoryTable = ({
           </table>
         </div>
 
-        {historyData.map((data, index) => (
+        {data.map((data, index) => (
           <div key={index} className='block md:hidden mt-4'>
             <div className='bg-white rounded-lg p-4 text-sm space-y-5 border'>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Date/Time:</span>{' '}
+              {/* <p className='flex justify-between font-dm-sans gap-1 text-xs'>
+                <span className='font-medium font-sans'>
+
+                </span>{' '}
                 2/10/2023 - 4:30PM
               </p>
               <p className='flex justify-between font-dm-sans gap-1 text-xs'>
@@ -136,10 +146,49 @@ const TransactionHistoryTable = ({
               </p>
               <p className='flex justify-between font-dm-sans gap-1 text-xs'>
                 <span className='font-medium font-sans'>Balance:</span> ₦10,000
-              </p>
+              </p> */}
+              {Object.entries(data).map(([key, value], index) => (
+                <p
+                  key={index}
+                  className='flex justify-between font-dm-sans gap-1 text-xs'>
+                  <span className='font-medium capitalize font-dm-sans'>
+                    {key.replace(/_/g, ' ')}:
+                  </span>{' '}
+                  {value}
+                </p>
+              ))}
             </div>
           </div>
         ))}
+
+        {/* Pagination Controls */}
+        <div className='flex justify-between items-center mt-6 mb-6'>
+          <Button
+            onClick={onPreviousPage}
+            disabled={currentPage === 1}
+            className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+              currentPage === 1
+                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+            }`}>
+            <PreviousChevronLeftIcon />
+            Previous
+          </Button>
+          <p className='text-sm text-gray-600'>
+            Page {currentPage} of {totalPages}
+          </p>
+          <Button
+            onClick={onNextPage}
+            onMouseEnter={prefetchQuery}
+            disabled={currentPage === totalPages}
+            className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+              currentPage === totalPages
+                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+            }`}>
+            Next <NextChevronRightIcon />
+          </Button>
+        </div>
       </div>
     </>
   );

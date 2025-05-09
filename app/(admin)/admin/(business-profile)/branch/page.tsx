@@ -29,6 +29,16 @@ function BranchPage() {
     page_size: MY_ORDER_PAGE_SIZE,
   });
 
+  const handleNextPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
   return (
     <div className='md:px-7 px-5 md:pt-10 pt-6'>
       <Form {...form}>
@@ -157,6 +167,7 @@ function BranchPage() {
             <SearchInput />
           </div>
           <TransactionHistoryTable
+            prefetchQuery={prefetchQuery}
             data={query.data?.results.map((branch) => ({
               branch_name: branch.branch_name,
               branch_address: branch.branch_address,
@@ -173,6 +184,10 @@ function BranchPage() {
                   key: key,
                 })) ?? []
             }
+            currentPage={currentPage}
+            totalPages={Math.ceil(query.data?.count / MY_ORDER_PAGE_SIZE)}
+            onNextPage={handleNextPage}
+            onPreviousPage={handlePreviousPage}
           />
         </div>
       )}
