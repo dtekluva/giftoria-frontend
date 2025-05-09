@@ -14,6 +14,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
 import {
   ApiAllBrandCardsResponse,
+  ApiBranchResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
   ApiCompanyDetailsResponse,
@@ -122,4 +123,18 @@ export const createBranch = async (data: BranchDetailsType) => {
     AxiosError,
     AxiosResponse<ApiCompanyDetailsResponse>
   >('/branch/create_branch/', data);
+};
+
+export const fetchBranches = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiBranchResponse>>(
+    `/branch/fetch_branches/?search=${search}&page=${page}&page_size=${page_size}`
+  );
 };

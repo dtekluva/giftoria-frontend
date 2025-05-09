@@ -76,3 +76,19 @@ export interface ApiCompanyDetailsResponse {
   date_of_incorporation: string | null; // Date of incorporation (nullable)
   cac_documents: string | null; // URL or reference to CAC documents (nullable)
 }
+
+export interface Branch {
+  id: string; // Unique identifier for the branch
+  branch_name: string; // Name of the branch
+  branch_address: string; // Address of the branch
+  branch_id: string; // Branch ID
+  branch_password: string; // Password for the branch
+  is_active: boolean; // Indicates if the branch is active
+}
+
+export interface ApiBranchResponse {
+  count: number; // Total number of branches
+  next: string | null; // URL for the next page of results
+  previous: string | null; // URL for the previous page of results
+  results: Branch[]; // Array of branch objects
+}
