@@ -11,7 +11,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useBranchDetailsForm } from '@/services/mutations/company.mutation';
+import {
+  useBranchDetailsForm,
+  useDeleteBranch,
+} from '@/services/mutations/company.mutation';
 import SearchInput from '@/components/custom/search-input';
 import TransactionHistoryTable from '@/components/custom/transaction-history-table';
 import { useState } from 'react';
@@ -22,6 +25,8 @@ function BranchPage() {
   const { form, onSubmit, mutation } = useBranchDetailsForm();
 
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { deleteBranchMutate } = useDeleteBranch(currentPage);
 
   const { query, prefetchQuery } = useGetCompanyBranches({
     search: '',
@@ -185,6 +190,9 @@ function BranchPage() {
                 })) ?? []
             }
             showAction
+            action={(id) => {
+              deleteBranchMutate(id);
+            }}
             next={!!query.data?.next}
             currentPage={currentPage}
             totalPages={Math.ceil(query.data?.count / MY_ORDER_PAGE_SIZE)}

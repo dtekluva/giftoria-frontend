@@ -125,6 +125,13 @@ export const createBranch = async (data: BranchDetailsType) => {
   >('/branch/create_branch/', data);
 };
 
+export const deleteBranch = async (id: string) => {
+  return await httpConfig.delete<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >(`/branch/delete_branches/?branch_id=${id}`);
+};
+
 export const fetchBranches = async ({
   search,
   page,

@@ -3,6 +3,8 @@ import { Checkbox } from '../ui/checkbox';
 import { Button } from '../ui/button';
 import PreviousChevronLeftIcon from '../icon/previous-chevron-left-icon';
 import NextChevronRightIcon from '../icon/next-chevron-right-icon';
+import MenuIcon from '../icon/menu-icon';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 const historyData = [
   {
@@ -50,7 +52,7 @@ const TransactionHistoryTable = ({
   prefetchQuery: () => void;
   next?: boolean;
   showAction?: boolean;
-  action?: () => void;
+  action?: (id: string) => void;
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -126,11 +128,26 @@ const TransactionHistoryTable = ({
 
                   {showAction && (
                     <td className='py-4 px-4 text-sm'>
-                      <Button
-                        onClick={action}
-                        className='bg-[#990099] text-white rounded-md px-4 py-2'>
-                        Action
-                      </Button>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button className='bg-white border text-white hover:bg-white rounded-md px-4 py-2'>
+                            <MenuIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent align='end' className='w-80'>
+                          <ul>
+                            <li
+                              onClick={() => {
+                                console.log(item);
+                                action?.(item.branch_id);
+                              }}>
+                              <button className='flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 cursor-pointer'>
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </PopoverContent>
+                      </Popover>
                     </td>
                   )}
                 </tr>
