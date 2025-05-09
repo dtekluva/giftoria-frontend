@@ -23,5 +23,6 @@ export const config = {
     '/my-orders',
     '/order-details/:path*',
     '/order-summary',
+    '/admin/:path*',
   ],
 };
