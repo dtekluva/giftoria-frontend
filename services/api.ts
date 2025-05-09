@@ -8,13 +8,16 @@ import {
   LoginType,
   ChangePasswordType,
   UploadCompanyDetailType,
+  BranchDetailsType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
 import {
   ApiAllBrandCardsResponse,
+  ApiBranchResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
+  ApiCompanyDetailsResponse,
   BuyMultipleCard,
   CardSale,
   IBuyCardAgain,
@@ -105,4 +108,47 @@ export const buyCardAgainbyId = async (data: IBuyCardAgain) => {
     `/brand/buy_card_again/`,
     data
   );
+};
+
+// COMPANY API SERVICES
+export const getCompanyDashboard = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >('/auth/company_dashboard/');
+};
+
+export const createBranch = async (data: BranchDetailsType) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >('/branch/create_branch/', data);
+};
+
+export const deleteBranch = async (id: string) => {
+  return await httpConfig.delete<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >(`/branch/delete_branches/?branch_id=${id}`);
+};
+
+export const fetchBranches = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiBranchResponse>>(
+    `/branch/fetch_branches/?search=${search}&page=${page}&page_size=${page_size}`
+  );
+};
+
+export const fetchCompanyOrderHistory = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >('/branch/company_branch_order_history/');
 };

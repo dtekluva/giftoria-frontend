@@ -145,8 +145,45 @@ export const uploadCompanyDetailSchema = z.object({
   }),
 });
 
-//TYPES
+export const companyDetailsSchema = z.object({
+  company_name: z
+    .string()
+    .min(1, 'Company name is required')
+    .max(50, 'Company name must be less than 50 characters'),
+  company_email: z.string().email('Invalid email address'),
+  phone_number: z
+    .string()
+    .min(1, 'Phone number is required')
+    .max(15, 'Phone number must be less than 15 characters'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(60, 'Password must be less than 60 characters'),
+});
 
+export const branchDetailsSchema = z.object({
+  branch_name: z
+    .string()
+    .min(1, 'Branch name is required')
+    .max(50, 'Branch name must be less than 50 characters'),
+  branch_address: z
+    .string()
+    .min(1, 'Branch address is required')
+    .max(255, 'Branch address must be less than 255 characters'),
+  branch_id: z
+    .string()
+    .min(1, 'Branch ID is required')
+    .max(50, 'Branch ID must be less than 50 characters'),
+  branch_password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(60, 'Password must be less than 60 characters'),
+  is_active: z.boolean().optional(),
+});
+
+//TYPES
+export type BranchDetailsType = z.infer<typeof branchDetailsSchema>;
+export type CompanyDetailsType = z.infer<typeof companyDetailsSchema>;
 export type UploadCompanyDetailType = z.infer<typeof uploadCompanyDetailSchema>;
 export type BuyCardType = z.infer<typeof buyCardSchema>;
 export type ChangePasswordType = z.infer<typeof changePasswordScheme>;
