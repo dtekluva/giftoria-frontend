@@ -14,6 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { deleteCookie } from 'cookies-next/client';
 import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -54,6 +55,11 @@ const links = [
     icon: <LoginIcon />,
     label: 'Sign Out',
     href: '#',
+    action: () => {
+      deleteCookie('access_token');
+      deleteCookie('refresh_token');
+      deleteCookie('password');
+    },
   },
 ];
 
@@ -72,6 +78,11 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               return (
                 <SidebarMenuItem
                   key={index}
+                  onClick={() => {
+                    if (item.action) {
+                      item.action();
+                    }
+                  }}
                   data-active={pathname === item.href}
                   className={`py-1 border-t border-[#D9D9D9] data-[active=true]:border-[#FF0066] peer/${
                     index + 1
