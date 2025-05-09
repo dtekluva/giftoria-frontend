@@ -21,8 +21,21 @@ const historyData = [
   // ...add more if needed
 ];
 
-const TransactionHistoryTable = () => {
+const TransactionHistoryTable = ({
+  data = historyData,
+  header,
+}: {
+  data?: {
+    [key: string]: string;
+  }[];
+  header?: {
+    key: string;
+    title: string;
+  }[];
+}) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
+
+  console.log(header);
 
   const handleCheckboxChange = (index: number) => {
     console.log(index, 'this is the index');
@@ -35,10 +48,10 @@ const TransactionHistoryTable = () => {
   };
 
   const handleSelectAll = () => {
-    if (selectedRows.length === historyData.length) {
+    if (selectedRows.length === data.length) {
       setSelectedRows([]); // Uncheck all
     } else {
-      setSelectedRows(historyData.map((_, index) => index)); // Check all
+      setSelectedRows(data.map((_, index) => index)); // Check all
     }
   };
 
@@ -51,72 +64,46 @@ const TransactionHistoryTable = () => {
               <tr className='font-montserrat'>
                 <th className='py-4 px-4'>
                   <Checkbox
-                    checked={selectedRows.length === historyData.length}
+                    checked={selectedRows.length === data.length}
                     onCheckedChange={handleSelectAll}
                     className='z-999 relative cursor-pointer'
                     aria-label='Select all rows'
                   />
                 </th>
 
-                <th className='py-6 px-4 text-left font-medium'>Id</th>
-                <th className='py-6 px-4 text-left font-medium'>Date/Time</th>
-                <th className='py-6 px-4 text-left font-medium'>Order No.</th>
-                <th className='py-6 px-4 text-left font-medium'>
-                  Store Address
-                </th>
-                <th className='py-6 px-4 text-left font-medium'>Total Value</th>
-                <th className='py-6 px-4 text-left font-medium'>Redeemed</th>
-                <th className='py-6 px-4 text-left font-medium'>Balance</th>
+                {header?.map((item, index) => (
+                  <th key={index} className='py-6 px-4 text-left font-medium'>
+                    {item.title}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className='text-gray-700'>
-              {historyData.map((item, index) => (
+              {data.map((item, index) => (
                 <tr
                   key={index}
                   className='border-b hover:bg-gray-50 font-dm-sans'>
                   <th className='py-4 px-4'>
                     <Checkbox
-                      className='z-999 relative cursor-pointer'
+                      className='z-999 relative cursor-pointer font-semibold'
                       checked={selectedRows.includes(index)}
                       onCheckedChange={() => handleCheckboxChange(index)}
                       aria-label={`Select row ${index + 1}`}
                     />
                   </th>
-                  <td className='py-[36px] px-4'>{index + 1}</td>
-                  <td className='py-[36px] px-4'>{item.dateTime}</td>
-                  <td className='py-[36px] px-4'>{item.orderNo}</td>
-                  <td className='py-[36px] px-4'>{item.storeAddress}</td>
-                  <td className='py-[36px] px-4'>{item.totalValue}</td>
-                  <td className='py-[36px] px-4'>{item.redeemed}</td>
-                  <td className='py-[36px] px-4'>{item.balance}</td>
+
+                  {header?.map((headerItem, headerIndex) => (
+                    <td
+                      key={headerIndex}
+                      className='py-[36px] px-4 text-sm font-semibold'>
+                      {item[headerItem.key]}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {/* <div className='block md:hidden space-y-4'>
-        <div className='bg-white rounded-lg shadow-md p-4 text-sm'>
-          <p>
-            <span className='font-medium'>Date/Time:</span> 2/10/2023 - 4:30PM
-          </p>
-          <p>
-            <span className='font-medium'>Order No.:</span> GFT - XYZ123456
-          </p>
-          <p>
-            <span className='font-medium'>Store Address:</span> No. 5 Shomolu,
-            Obanikoro, Lagos
-          </p>
-          <p>
-            <span className='font-medium'>Total Value:</span> ₦400,000.00
-          </p>
-          <p>
-            <span className='font-medium'>Redeemed:</span> ₦400,000.00
-          </p>
-          <p>
-            <span className='font-medium'>Balance:</span> ₦10,000
-          </p>
-        </div>
-      </div> */}
 
         {historyData.map((data, index) => (
           <div key={index} className='block md:hidden mt-4'>
