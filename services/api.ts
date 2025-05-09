@@ -145,3 +145,10 @@ export const fetchBranches = async ({
     `/branch/fetch_branches/?search=${search}&page=${page}&page_size=${page_size}`
   );
 };
+
+export const fetchCompanyOrderHistory = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyDetailsResponse>
+  >('/branch/company_order_history/');
+};

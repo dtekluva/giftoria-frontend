@@ -16,6 +16,7 @@ export const company_keys = {
       page_size,
     },
   ],
+  company_history: () => ['company', 'history'],
 };
 
 export const useGetCompanyDashboardQuery = () => {
@@ -68,5 +69,17 @@ export const useGetCompanyBranches = ({
   return {
     query,
     prefetchQuery,
+  };
+};
+
+export const useGetCompanyHistory = () => {
+  const query = useQuery({
+    queryKey: company_keys.company_history(),
+    queryFn: () => getCompanyDashboard(),
+    select: (data) => data.data,
+  });
+
+  return {
+    query,
   };
 };
