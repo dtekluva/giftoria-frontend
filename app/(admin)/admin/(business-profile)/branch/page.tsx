@@ -184,6 +184,7 @@ function BranchPage() {
                   key: key,
                 })) ?? []
             }
+            next={!!query.data?.next}
             currentPage={currentPage}
             totalPages={Math.ceil(query.data?.count / MY_ORDER_PAGE_SIZE)}
             onNextPage={handleNextPage}

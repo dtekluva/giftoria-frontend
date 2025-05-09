@@ -32,6 +32,7 @@ const TransactionHistoryTable = ({
   onNextPage,
   onPreviousPage,
   prefetchQuery,
+  next,
 }: {
   data?: {
     [key: string]: string;
@@ -45,6 +46,7 @@ const TransactionHistoryTable = ({
   onNextPage: () => void;
   onPreviousPage: () => void;
   prefetchQuery: () => void;
+  next?: boolean;
 }) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -118,7 +120,6 @@ const TransactionHistoryTable = ({
             </tbody>
           </table>
         </div>
-
         {data.map((data, index) => (
           <div key={index} className='block md:hidden mt-4'>
             <div className='bg-white rounded-lg p-4 text-sm space-y-5 border'>
@@ -160,7 +161,6 @@ const TransactionHistoryTable = ({
             </div>
           </div>
         ))}
-
         {/* Pagination Controls */}
         <div className='flex justify-between items-center mt-6 mb-6'>
           <Button
@@ -179,10 +179,14 @@ const TransactionHistoryTable = ({
           </p>
           <Button
             onClick={onNextPage}
-            onMouseEnter={prefetchQuery}
-            disabled={currentPage === totalPages}
+            onMouseEnter={() => {
+              if (next) {
+                prefetchQuery();
+              }
+            }}
+            disabled={!next}
             className={`h-10 px-4 text-sm font-medium font-dm-sans ${
-              currentPage === totalPages
+              !next
                 ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
             }`}>
