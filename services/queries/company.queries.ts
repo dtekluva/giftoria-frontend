@@ -3,7 +3,11 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { fetchBranches, getCompanyDashboard } from '../api';
+import {
+  fetchBranches,
+  fetchCompanyOrderHistory,
+  getCompanyDashboard,
+} from '../api';
 
 export const company_keys = {
   company_dashboard: () => ['company', 'dashboard'],
@@ -75,7 +79,7 @@ export const useGetCompanyBranches = ({
 export const useGetCompanyHistory = () => {
   const query = useQuery({
     queryKey: company_keys.company_history(),
-    queryFn: () => getCompanyDashboard(),
+    queryFn: () => fetchCompanyOrderHistory(),
     select: (data) => data.data,
   });
 
