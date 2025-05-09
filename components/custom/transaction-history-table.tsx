@@ -71,6 +71,8 @@ const TransactionHistoryTable = ({
                   />
                 </th>
 
+                <th className='py-6 px-4 text-left font-medium'>S/N</th>
+
                 {header?.map((item, index) => (
                   <th key={index} className='py-6 px-4 text-left font-medium'>
                     {item.title}
@@ -91,6 +93,10 @@ const TransactionHistoryTable = ({
                       aria-label={`Select row ${index + 1}`}
                     />
                   </th>
+
+                  <td className='py-4 px-4 text-sm font-semibold'>
+                    {index + 1}
+                  </td>
 
                   {header?.map((headerItem, headerIndex) => (
                     <td
