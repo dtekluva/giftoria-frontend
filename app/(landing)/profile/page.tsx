@@ -1,4 +1,4 @@
-import UpdateUserInfo from './update-user-info';
+import UpdateUserInfo from '@/components/custom/update-user-info';
 
 function ProfilePage() {
   return (
