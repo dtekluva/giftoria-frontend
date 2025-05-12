@@ -310,6 +310,7 @@ export const useLogin = () => {
       if (data.status) {
         setCookie('access_token', data.data.access);
         setCookie('refresh_token', data.data.refresh);
+        setCookie('user_type', data.data.user_type);
         setCookie('password', form.getValues('password'));
         router.push('/');
       }

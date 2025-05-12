@@ -43,7 +43,9 @@ export function AccountDropdown() {
               My Account
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
+            <DropdownMenuItem
+              onClick={() => router.push('/profile')}
+              className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
               My Profile
             </DropdownMenuItem>
             <DropdownMenuSeparator />
