@@ -70,6 +70,7 @@ function CompanyDetails() {
                 </FormLabel>
                 <FormControl>
                   <Input
+                    defaultValue={''}
                     {...field}
                     placeholder='shopybee@gmail.com'
                     className='md:h-[50px]'
