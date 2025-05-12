@@ -181,7 +181,28 @@ export const branchDetailsSchema = z.object({
   is_active: z.boolean().optional(),
 });
 
+export const updateUserInfoSchema = z.object({
+  email: z
+    .string()
+    .email('Invalid email address')
+    .min(1, 'Email is required')
+    .max(254, 'Email must be less than 254 characters'),
+  first_name: z
+    .string()
+    .min(1, 'First name is required')
+    .max(255, 'First name must be less than 255 characters'),
+  last_name: z
+    .string()
+    .min(1, 'Last name is required')
+    .max(255, 'Last name must be less than 255 characters'),
+  phone_number: z
+    .string()
+    .min(1, 'Phone number is required')
+    .max(255, 'Phone number must be less than 255 characters'),
+});
+
 //TYPES
+export type UpdateUserInfoType = z.infer<typeof updateUserInfoSchema>;
 export type BranchDetailsType = z.infer<typeof branchDetailsSchema>;
 export type CompanyDetailsType = z.infer<typeof companyDetailsSchema>;
 export type UploadCompanyDetailType = z.infer<typeof uploadCompanyDetailSchema>;

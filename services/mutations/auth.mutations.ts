@@ -8,6 +8,8 @@ import {
   type CreateUserAccountType,
   loginSchema,
   type LoginType,
+  updateUserInfoSchema,
+  UpdateUserInfoType,
   uploadCompanyDetailSchema,
   UploadCompanyDetailType,
   verifyEmailSchema,
@@ -27,6 +29,7 @@ import {
   changePassword,
   login,
   sendVerificationCode,
+  updateUserProfile,
   uploadCompanyDetail,
   userSignUp,
   verifyEmail,
@@ -372,5 +375,34 @@ export const useChangePassword = () => {
     form,
     onSubmit,
     isLoading: mutation.isPending,
+  };
+};
+
+export const useUpdateUserProfile = () => {
+  const form = useForm<UpdateUserInfoType>({
+    resolver: zodResolver(updateUserInfoSchema),
+    defaultValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone_number: '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: updateUserProfile,
+  });
+  const onSubmit = (data: UpdateUserInfoType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Updating profile...',
+      success: 'Profile updated successfully',
+      error: 'An error occurred while updating the profile',
+    });
+  };
+
+  return {
+    form,
+    onSubmit,
   };
 };

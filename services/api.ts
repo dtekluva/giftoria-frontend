@@ -9,6 +9,7 @@ import {
   ChangePasswordType,
   UploadCompanyDetailType,
   BranchDetailsType,
+  UpdateUserInfoType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
@@ -50,6 +51,13 @@ export const sendVerificationCode = async (data: SendVerificationCodeType) => {
 
 export const login = async (data: LoginType) => {
   return await httpConfig.post('/auth/signin/', data);
+};
+
+export const updateUserProfile = async (data: UpdateUserInfoType) => {
+  return await httpConfig.put<
+    AxiosError,
+    AxiosResponse<ApiAuthCompanyResponse>
+  >('/auth/update_user_profile/', data);
 };
 
 export const changePassword = (data: ChangePasswordType) =>
