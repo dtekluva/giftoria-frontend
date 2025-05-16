@@ -456,8 +456,12 @@ export const useCashierLogin = () => {
 
   const mutation = useMutation({
     mutationFn: cashierLogin,
-    onSuccess: (data) => {
-      console.log(data, 'cashier login data');
+    onSuccess: (data: any) => {
+      if (data.status) {
+        setCookie('access_token', data.data.access);
+        setCookie('refresh_token', data.data.refresh);
+        setCookie('user_type', data.data.user_type);
+      }
     },
   });
 

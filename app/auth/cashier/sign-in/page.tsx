@@ -11,12 +11,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useCashierLogin, useLogin } from '@/services/mutations/auth.mutations';
-import { useRouter } from 'next/navigation';
+import { useCashierLogin } from '@/services/mutations/auth.mutations';
 
 function CashierSignIn() {
   const { form, onSubmit, isLoading } = useCashierLogin();
-  const router = useRouter();
+
   return (
     <div className='w-full font-dm-sans'>
       <AuthCard title=''>
