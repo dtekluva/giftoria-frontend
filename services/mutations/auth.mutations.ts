@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import {
+  cashierLoginSchema,
+  CashierLoginType,
   changePasswordScheme,
   ChangePasswordType,
   createAdminAccountSchema,
@@ -27,6 +29,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import {
   adminSignUp,
+  cashierLogin,
   changePassword,
   fetUserDetails,
   login,
@@ -441,3 +444,45 @@ export const useUpdateUserProfile = () => {
     userData,
   };
 };
+
+export const useCashierLogin = () => {
+  const form = useForm<CashierLoginType>({
+    resolver: zodResolver(cashierLoginSchema),
+    defaultValues: {
+      branch_id: '',
+      password: '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: cashierLogin,
+    onSuccess: (data) => {
+      console.log(data, 'cashier login data');
+    },
+  });
+
+  const onSubmit = (data: CashierLoginType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Logging in...',
+      success: 'Login successful',
+      error: 'Something went wrong',
+    });
+  };
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+// export const useLogin = () => {
+//   const router = useRouter();
+//   const queryClient = useQueryClient();
+//   const form = useForm<LoginType>({
+//     resolver: zodResolver(loginSchema),
+//     defaultValues: {
+//       email: '',
+//       password: '',
+//     },
+//   });
