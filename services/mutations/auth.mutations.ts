@@ -19,7 +19,6 @@ import { showToast } from '@/libs/toast';
 import { ApiUserInfoResponse } from '@/libs/types/auth.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-s;
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
