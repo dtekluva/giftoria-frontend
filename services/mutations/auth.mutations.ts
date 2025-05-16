@@ -19,6 +19,7 @@ import { showToast } from '@/libs/toast';
 import { ApiUserInfoResponse } from '@/libs/types/auth.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+s;
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
@@ -408,6 +409,23 @@ export const useUpdateUserProfile = () => {
 
   const mutation = useMutation({
     mutationFn: updateUserProfile,
+    onSuccess: async (data, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: user_keys.userInfo(),
+      });
+      queryClient.setQueryData(user_keys.userInfo(), (oldData: any) => {
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            first_name: variables.first_name,
+            last_name: variables.last_name,
+            email: variables.email,
+            phone_number: variables.phone_number,
+          },
+        };
+      });
+    },
   });
   const onSubmit = (data: UpdateUserInfoType) => {
     const res = mutation.mutateAsync(data);
@@ -421,5 +439,6 @@ export const useUpdateUserProfile = () => {
   return {
     form,
     onSubmit,
+    userData,
   };
 };

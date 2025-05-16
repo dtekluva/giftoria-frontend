@@ -13,13 +13,15 @@ import { Input } from '@/components/ui/input';
 import { useUpdateUserProfile } from '@/services/mutations/auth.mutations';
 
 function UpdateUserInfo() {
-  const { form, onSubmit } = useUpdateUserProfile();
+  const { form, onSubmit, userData } = useUpdateUserProfile();
 
   return (
     <div className='w-full font-dm-sans'>
       <div className='flex items-center gap-4 pb-4 border-b md:pb-6'>
         <ProfileIcon />
-        <h1 className='font-bold md:text-base text-sm'>Attah Inyang</h1>
+        <h1 className='font-bold md:text-base text-sm'>
+          {userData?.data.first_name} {userData?.data.last_name}
+        </h1>
       </div>
       <div className='md:mt-7 mt-4'>
         <Form {...form}>
