@@ -14,6 +14,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { ApiUserInfoResponse } from '@/libs/types/auth.types';
+import { useQueryClient } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 import { deleteCookie } from 'cookies-next/client';
 import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -65,6 +68,12 @@ const links = [
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const queryClient = useQueryClient();
+  const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
+    queryClient.getQueryData(['userInfo']);
+
+  console.log('User Data:', userData?.data.email);
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -121,8 +130,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 className='rounded-full'
               />
               <div>
-                <h2 className='font-bold text-sm'>Shopybee</h2>
-                <p className='text-[10px] text-[#818181]'>shopybee@gmail.com</p>
+                <h2 className='font-bold text-sm'>
+                  {userData?.data.first_name} {userData?.data.last_name}
+                </h2>
+                <p className='text-[10px] text-[#818181]'>
+                  {userData?.data.email}
+                </p>
               </div>
             </div>
           </div>
