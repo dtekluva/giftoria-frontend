@@ -35,6 +35,7 @@ import {
   userSignUp,
   verifyEmail,
 } from '../api';
+import { useGetUserInfoQuery } from '../queries/user.queries';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -317,8 +318,10 @@ export const useLogin = () => {
           queryKey: ['userInfo'],
           queryFn: () => fetUserDetails(),
         });
+
         if (data.data.user_type === 'MERCHANT') {
           router.push('/admin/gift-cards');
+          return;
         }
         router.push('/');
       }
@@ -388,6 +391,8 @@ export const useChangePassword = () => {
 };
 
 export const useUpdateUserProfile = () => {
+  const { query } = useGetUserInfoQuery();
+
   const form = useForm<UpdateUserInfoType>({
     resolver: zodResolver(updateUserInfoSchema),
     defaultValues: {

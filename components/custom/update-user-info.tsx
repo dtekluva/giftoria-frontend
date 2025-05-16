@@ -11,12 +11,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useUpdateUserProfile } from '@/services/mutations/auth.mutations';
-import { useGetUserInfoQuery } from '@/services/queries/user.queries';
 
 function UpdateUserInfo() {
   const { form, onSubmit } = useUpdateUserProfile();
-
-  const { query } = useGetUserInfoQuery();
 
   return (
     <div className='w-full font-dm-sans'>

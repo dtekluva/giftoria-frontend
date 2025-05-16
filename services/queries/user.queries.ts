@@ -5,6 +5,7 @@ export const useGetUserInfoQuery = () => {
   const query = useQuery({
     queryKey: ['userInfo'],
     queryFn: () => fetUserDetails(),
+    select: (data) => data.data,
   });
 
   return {
