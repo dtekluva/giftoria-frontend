@@ -178,9 +178,10 @@ function BranchPage() {
               branch_address: branch.branch_address,
               branch_id: branch.branch_id,
               branch_password: branch.branch_password,
+              id: branch.id,
             }))}
             header={
-              Object.keys(query.data?.results[0])
+              Object.keys(query.data?.results[0] ?? {})
                 .filter((key) => key !== 'is_active' && key !== 'id')
                 .map((key) => ({
                   title: key

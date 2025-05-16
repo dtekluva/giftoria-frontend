@@ -139,7 +139,7 @@ const TransactionHistoryTable = ({
                             <li
                               onClick={() => {
                                 console.log(item);
-                                action?.(item.branch_id);
+                                action?.(item.id);
                               }}>
                               <button className='flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 cursor-pointer'>
                                 Delete

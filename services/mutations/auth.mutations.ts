@@ -17,7 +17,7 @@ import {
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
@@ -27,6 +27,7 @@ import { z } from 'zod';
 import {
   adminSignUp,
   changePassword,
+  fetUserDetails,
   login,
   sendVerificationCode,
   updateUserProfile,
@@ -295,7 +296,7 @@ export const useSendVerificationCode = () => {
 
 export const useLogin = () => {
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -306,12 +307,19 @@ export const useLogin = () => {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data.status) {
         setCookie('access_token', data.data.access);
         setCookie('refresh_token', data.data.refresh);
         setCookie('user_type', data.data.user_type);
         setCookie('password', form.getValues('password'));
+        await queryClient.prefetchQuery({
+          queryKey: ['userInfo'],
+          queryFn: () => fetUserDetails(),
+        });
+        if (data.data.user_type === 'MERCHANT') {
+          router.push('/admin/gift-cards');
+        }
         router.push('/');
       }
     },

@@ -70,6 +70,13 @@ export const uploadCompanyDetail = async (data: UploadCompanyDetailType) => {
   >('/auth/company_upload_document/', data);
 };
 
+export const fetUserDetails = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiAuthCompanyResponse>
+  >('/auth/user_profile/');
+};
+
 /// Brand API SERVICES
 export const getAllBrandCards = async () => {
   return await httpConfig.get<

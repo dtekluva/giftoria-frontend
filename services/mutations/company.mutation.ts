@@ -77,6 +77,7 @@ export const useDeleteBranch = (currentPage: number) => {
   const mutation = useMutation({
     mutationFn: deleteBranch,
     onSuccess: () => {
+      console.log(currentPage, 'current page');
       queryClient.invalidateQueries({
         queryKey: company_keys.company_branches(
           '',
