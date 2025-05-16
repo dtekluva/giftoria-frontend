@@ -27,11 +27,8 @@ export interface IBuyCardAgain {
 export interface ApiBuyCardResponse {
   status: boolean;
   message: string;
-  payment_details: {
-    status: boolean;
-    details: string;
-    payment_link: string;
-  };
+  payment_reference: string;
+  amount: number;
 }
 
 export interface CardSale {

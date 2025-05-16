@@ -11,7 +11,7 @@ import { useByCardsMutation } from '@/services/mutations/brand.mutation';
 import { getCookie } from 'cookies-next/client';
 import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -26,6 +26,8 @@ function OrderSummary() {
   const [cards, setCards] = useState<BuyMultipleCard | null>(null);
 
   const { deleteItemFromLocalStorage, buyAllCards } = useByCardsMutation();
+
+  const referenceId = useSearchParams().get('reference');
 
   const access_token = getCookie('access_token');
 
@@ -126,7 +128,7 @@ function OrderSummary() {
           </p>
         </div>
       </div>
-      {(cards?.cards.length ?? 0) > 0 && (
+      {((cards?.cards.length ?? 0) > 0 || referenceId) && (
         <>
           <div>
             <h2 className='font-bold lg:text-2xl md:text-xl text-base pt-[30px] md:pt-10'>

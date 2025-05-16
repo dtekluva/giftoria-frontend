@@ -31,8 +31,9 @@ export const useByCardsMutation = () => {
 
   const mutation = useMutation({
     mutationFn: buyCardbyId,
+    mutationKey: ['buy-card', 'card'],
     onSuccess: (query) => {
-      router.push(query.data.payment_details.payment_link);
+      router.push(`/order-summary?reference=${query.data.payment_reference}`);
     },
   });
 
@@ -82,6 +83,8 @@ export const useByCardsMutation = () => {
       return;
     }
 
+    saveItemToLocalStorage();
+
     const res = mutation.mutateAsync({
       cards: [
         {
@@ -114,7 +117,7 @@ export const useByCardsMutation = () => {
     showToast(res, {
       success: 'Card purchased successfully',
       error: 'Error purchasing card',
-      loading: 'Purchasing card...',
+      loading: 'Purchasing cards...',
     });
   };
 
@@ -134,12 +137,12 @@ export const useBuyCardById = () => {
   const mutation = useMutation({
     mutationFn: buyCardAgainbyId,
     mutationKey: ['buy-card-again', 'card'],
-    onSuccess: (data) => {
-      router.push(data.data.payment_details.payment_link);
-      queryClient.invalidateQueries({
-        queryKey: [...brand_keys.all, 'card', 'sales'],
-      });
-    },
+    // onSuccess: (data) => {
+    //   router.push(data.data.payment_details.payment_link);
+    //   queryClient.invalidateQueries({
+    //     queryKey: [...brand_keys.all, 'card', 'sales'],
+    //   });
+    // },
   });
 
   const buyCard = (data: Partial<IBuyCardAgain>) => {
@@ -147,6 +150,7 @@ export const useBuyCardById = () => {
       card_id: data.card_id ?? '',
       password: getCookie('password') ?? '',
     });
+    console.log(res, 'res');
     showToast(res, {
       success: 'Card purchased successfully',
       error: 'Error purchasing card',
