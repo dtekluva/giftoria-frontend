@@ -29,15 +29,32 @@ const links = [
   {
     icon: <UserIcon height={20} width={20} />,
     label: 'Profile',
-    href: '/cashier/profile',
+    href: '/admin/profile',
   },
   {
     icon: <MoneyIcon />,
     label: 'Gift Cards',
-    href: '/cashier/gift-cards',
+    href: '/admin/gift-cards',
     details: 'Gift Card Orders',
   },
-
+  {
+    icon: <BillIcon />,
+    label: 'Branch',
+    href: '/admin/branch',
+    details: 'Business Profile',
+  },
+  {
+    icon: <BillIcon />,
+    label: 'Company Details',
+    href: '/admin/company-details',
+    details: 'Business Profile',
+  },
+  {
+    icon: <TransactionMinusIcon />,
+    label: 'Request Fund',
+    href: '/admin/request-funds',
+    details: 'Request Funds',
+  },
   {
     icon: <LoginIcon />,
     label: 'Sign Out',
