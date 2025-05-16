@@ -15,6 +15,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { ApiUserInfoResponse } from '@/libs/types/auth.types';
+import { user_keys } from '@/services/queries/user.queries';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { deleteCookie } from 'cookies-next/client';
@@ -70,7 +71,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const queryClient = useQueryClient();
   const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
-    queryClient.getQueryData(['userInfo']);
+    queryClient.getQueryData(user_keys.userInfo());
 
   console.log('User Data:', userData?.data.email);
 

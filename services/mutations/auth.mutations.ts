@@ -16,9 +16,10 @@ import {
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
+import { ApiUserInfoResponse } from '@/libs/types/auth.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -35,7 +36,7 @@ import {
   userSignUp,
   verifyEmail,
 } from '../api';
-import { useGetUserInfoQuery } from '../queries/user.queries';
+import { user_keys } from '../queries/user.queries';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -391,15 +392,17 @@ export const useChangePassword = () => {
 };
 
 export const useUpdateUserProfile = () => {
-  const { query } = useGetUserInfoQuery();
+  const queryClient = useQueryClient();
+  const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
+    queryClient.getQueryData(user_keys.userInfo());
 
   const form = useForm<UpdateUserInfoType>({
     resolver: zodResolver(updateUserInfoSchema),
     defaultValues: {
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone_number: '',
+      first_name: userData?.data.first_name || '',
+      last_name: userData?.data.last_name || '',
+      email: userData?.data.email || '',
+      phone_number: userData?.data.phone_number || '',
     },
   });
 
