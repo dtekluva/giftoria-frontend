@@ -12,7 +12,10 @@ import {
   UpdateUserInfoType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
-import { ApiAuthCompanyResponse } from '@/libs/types/auth.types';
+import {
+  ApiAuthCompanyResponse,
+  ApiUserInfoResponse,
+} from '@/libs/types/auth.types';
 import {
   ApiAllBrandCardsResponse,
   ApiBranchResponse,
@@ -71,10 +74,9 @@ export const uploadCompanyDetail = async (data: UploadCompanyDetailType) => {
 };
 
 export const fetUserDetails = async () => {
-  return await httpConfig.get<
-    AxiosError,
-    AxiosResponse<ApiAuthCompanyResponse>
-  >('/auth/user_profile/');
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiUserInfoResponse>>(
+    '/auth/user_profile/'
+  );
 };
 
 /// Brand API SERVICES
