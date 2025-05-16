@@ -69,6 +69,16 @@ export const loginSchema = z.object({
     .min(1, { message: 'Password is required' })
     .max(60, 'Password must be less than 60 characters'),
 });
+export const cashierLoginSchema = z.object({
+  branch_id: z
+    .string()
+    .min(1, { message: 'Branch ID is required' })
+    .max(50, 'Branch ID must be less than 50 characters'),
+  password: z
+    .string()
+    .min(1, { message: 'Password is required' })
+    .max(60, 'Password must be less than 60 characters'),
+});
 
 export const changePasswordScheme = z.object({
   old_password: z
@@ -215,3 +225,4 @@ export type SendVerificationCodeType = z.infer<
   typeof sendVerificationCodeSchema
 >;
 export type LoginType = z.infer<typeof loginSchema>;
+export type CashierLoginType = z.infer<typeof cashierLoginSchema>;
