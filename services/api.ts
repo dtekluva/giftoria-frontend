@@ -10,6 +10,7 @@ import {
   UploadCompanyDetailType,
   BranchDetailsType,
   UpdateUserInfoType,
+  CashierLoginType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -78,6 +79,13 @@ export const fetUserDetails = async () => {
   return await httpConfig.get<AxiosError, AxiosResponse<ApiUserInfoResponse>>(
     '/auth/user_profile/'
   );
+};
+
+export const cashierLogin = async (data: CashierLoginType) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiAuthCompanyResponse>
+  >('/auth/cashier_login/', data);
 };
 
 /// Brand API SERVICES
