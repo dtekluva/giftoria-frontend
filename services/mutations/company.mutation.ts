@@ -1,18 +1,14 @@
+import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 import { branchDetailsSchema, companyDetailsSchema } from '@/libs/schema';
+import { showToast } from '@/libs/toast';
+import { ApiCompanyDetailsResponse } from '@/libs/types/brand.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { company_keys } from '../queries/company.queries';
-import { AxiosResponse } from 'axios';
-import { ApiCompanyDetailsResponse } from '@/libs/types/brand.types';
 import { createBranch, deleteBranch } from '../api';
-import { showToast } from '@/libs/toast';
-import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
+import { company_keys } from '../queries/company.queries';
 
 export const useUpdateCompanyDetails = () => {
   const queryClient = useQueryClient();
