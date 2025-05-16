@@ -19,15 +19,30 @@ const paymentService = [
   {
     name: 'Paystack',
     image: 'https://placehold.co/225x120.png',
+    description: '',
+    type: 'paystack',
+  },
+  {
+    name: 'Bank Transfer',
+    image: '', // You can add an image if you want
+    description:
+      'Use the account number displayed below to transfer funds to your wallet',
+    type: 'transfer',
   },
 ];
 
 function OrderSummary() {
   const [cards, setCards] = useState<BuyMultipleCard | null>(null);
 
-  const { deleteItemFromLocalStorage, buyAllCards } = useByCardsMutation();
+  // Add a state to track selected payment method
+  const [selectedPayment, setSelectedPayment] = useState(
+    paymentService[0].name
+  );
 
-  const referenceId = useSearchParams().get('reference');
+  const { deleteItemFromLocalStorage, buyAllCards } =
+    useByCardsMutation(selectedPayment);
+
+  const referenceId = useSearchParams()?.get('reference');
 
   const access_token = getCookie('access_token');
 
@@ -135,55 +150,66 @@ function OrderSummary() {
               Choose payment Method
             </h2>
             <RadioGroup
-              defaultValue={paymentService[0].name}
+              value={selectedPayment}
+              onValueChange={setSelectedPayment}
               className='mt-5 md:mt-7 max-[380px]:grid-cols-1 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,270px))] gap-4'>
               {paymentService.map((item, index) => (
-                <div
+                <Label
                   key={index}
-                  className='border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
-                  <div className='flex items-start gap-4'>
-                    <RadioGroupItem value={item.name} id={`payment-${index}`} />
-                    <h4 className='text-sm md:text-base font-bold'>
-                      {item.name}
-                    </h4>
-                  </div>
-                  <Label htmlFor={`payment-${index}`} className='flex-1'>
-                    <div className='flex items-center space-x-4'>
-                      <Image
-                        src={item.image}
-                        width={225}
-                        height={120}
-                        alt={item.name}
+                  htmlFor={`payment-${index}`}
+                  className='flex-1'>
+                  <div className='border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
+                    <div className='flex items-start gap-4'>
+                      <RadioGroupItem
+                        value={item.name}
+                        id={`payment-${index}`}
                       />
+                      <h4 className='text-sm md:text-base font-bold'>
+                        {item.name}
+                      </h4>
                     </div>
-                  </Label>
-                </div>
+                    {item.image && (
+                      <div className='flex items-center space-x-4'>
+                        <Image
+                          src={item.image}
+                          width={225}
+                          height={120}
+                          alt={item.name}
+                        />
+                      </div>
+                    )}
+                    {item.type === 'transfer' && (
+                      <div>
+                        <p className='mt-1 md:mt-[6px] font-dm-sans text-[8px] md:text-xs text-[#4E4E4E]'>
+                          {item.description}
+                        </p>
+                        <div className='mt-3 md:mt-5 md:space-y-3 space-y-2'>
+                          <div className='flex items-center gap-4 justify-between'>
+                            <p className='text-xs font-montserrat'>
+                              Bank name:
+                            </p>
+                            <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
+                              Providus Bank
+                            </p>
+                          </div>
+                          <Clipboard
+                            title='Account number:'
+                            value='9131200194'
+                          />
+                          <div className='flex items-center gap-4 justify-between'>
+                            <p className='text-xs font-montserrat'>
+                              Account name:
+                            </p>
+                            <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
+                              Giftoria
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Label>
               ))}
-              <div className='border border-[#E2E6EE] rounded-[12px] p-4 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
-                <p className='text-sm md:text-base font-bold'>
-                  Pay with transfer
-                </p>
-                <p className='mt-1 md:mt-[6px] font-dm-sans text-[8px] md:text-xs text-[#4E4E4E]'>
-                  Use the account number displayed below to transfer funds to
-                  your wallet
-                </p>
-                <div className='mt-3 md:mt-5 md:space-y-3 space-y-2'>
-                  <div className='flex items-center gap-4 justify-between'>
-                    <p className='text-xs font-montserrat'>Bank name:</p>
-                    <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
-                      Providus Bank
-                    </p>
-                  </div>
-                  <Clipboard title='Account number:' value='9131200194' />
-
-                  <div className='flex items-center gap-4 justify-between'>
-                    <p className='text-xs font-montserrat'>Account name:</p>
-                    <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
-                      Giftoria
-                    </p>
-                  </div>
-                </div>
-              </div>
             </RadioGroup>
           </div>
           <div className='flex justify-center mt-7 md:mt-10 px-4'>

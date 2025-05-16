@@ -22,6 +22,7 @@ import {
   ApiBuyCardResponse,
   ApiCardSalesResponse,
   ApiCompanyDetailsResponse,
+  ApiPaymentSetupResponse,
   BuyMultipleCard,
   CardSale,
   IBuyCardAgain,
@@ -168,4 +169,18 @@ export const fetchCompanyOrderHistory = async () => {
     AxiosError,
     AxiosResponse<ApiCompanyDetailsResponse>
   >('/branch/company_order_history/');
+};
+
+export const payViaPayStack = async (reference: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiPaymentSetupResponse>
+  >(`/brand/pay_via_paystack/?reference=${reference}`);
+};
+
+export const payViaBank = async (reference: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiPaymentSetupResponse>
+  >(`/brand/pay_via_bank_transfer/?reference=${reference}`);
 };

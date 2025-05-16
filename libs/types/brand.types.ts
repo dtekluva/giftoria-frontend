@@ -89,3 +89,15 @@ export interface ApiBranchResponse {
   previous: string | null; // URL for the previous page of results
   results: Branch[]; // Array of branch objects
 }
+
+export interface PaymentDetails {
+  status: boolean;
+  details: string;
+  payment_link: string;
+}
+
+export interface ApiPaymentSetupResponse {
+  status: boolean;
+  message: string;
+  payment_details: PaymentDetails;
+}

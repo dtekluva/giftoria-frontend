@@ -36,7 +36,7 @@ httpConfig.interceptors.response.use(
         // Attempt to refresh the token
         const refreshToken = getCookie('refresh_token') as string;
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/token/refresh`,
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}auth/token/refresh/`,
           {
             refresh_token: refreshToken,
           }
