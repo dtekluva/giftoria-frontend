@@ -56,6 +56,7 @@ export const useGetCompanyBranches = ({
     select: (data) => data.data,
     placeholderData: keepPreviousData,
   });
+  ``;
 
   const prefetchQuery = () => {
     queryClient.prefetchQuery({

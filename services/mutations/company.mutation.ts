@@ -1,6 +1,10 @@
 import { branchDetailsSchema, companyDetailsSchema } from '@/libs/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { company_keys } from '../queries/company.queries';
@@ -36,7 +40,8 @@ export const useUpdateCompanyDetails = () => {
   };
 };
 
-export const useBranchDetailsForm = () => {
+export const useBranchDetailsForm = (currentPage: number) => {
+  const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof branchDetailsSchema>>({
     resolver: zodResolver(branchDetailsSchema),
     defaultValues: {
@@ -50,7 +55,15 @@ export const useBranchDetailsForm = () => {
 
   const mutation = useMutation({
     mutationFn: createBranch,
-    onSuccess: () => {
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({
+        queryKey: company_keys.company_branches(
+          '',
+          currentPage,
+          MY_ORDER_PAGE_SIZE
+        ),
+      });
+      console.log('Branch created:', data);
       form.reset();
     },
   });
@@ -77,7 +90,6 @@ export const useDeleteBranch = (currentPage: number) => {
   const mutation = useMutation({
     mutationFn: deleteBranch,
     onSuccess: () => {
-      console.log(currentPage, 'current page');
       queryClient.invalidateQueries({
         queryKey: company_keys.company_branches(
           '',

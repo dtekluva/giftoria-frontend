@@ -22,11 +22,10 @@ import { useGetCompanyBranches } from '@/services/queries/company.queries';
 import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 
 function BranchPage() {
-  const { form, onSubmit, mutation } = useBranchDetailsForm();
-
   const [currentPage, setCurrentPage] = useState(1);
+  const { form, onSubmit, mutation } = useBranchDetailsForm(currentPage + 1);
 
-  const { deleteBranchMutate } = useDeleteBranch(currentPage);
+  const { deleteBranchMutate } = useDeleteBranch(currentPage + 1);
 
   const { query, prefetchQuery } = useGetCompanyBranches({
     search: '',
