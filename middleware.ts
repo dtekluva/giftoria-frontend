@@ -32,5 +32,6 @@ export const config = {
     '/order-details/:path*',
     '/order-summary',
     '/admin/:path*',
+    '/cashier/:path*',
   ],
 };
