@@ -21,7 +21,7 @@ import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 
 const links = [
   {
@@ -51,24 +51,17 @@ const links = [
 function CashierLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const queryClient = useQueryClient();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
     queryClient.getQueryData(user_keys.userInfo());
 
-  // Helper to detect mobile
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
-
-  // Function to close sidebar on mobile
-  const handleMenuClick = useCallback(() => {
-    if (isMobile) setSidebarOpen(false);
-  }, [isMobile]);
-
   return (
-    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
+    <SidebarProvider>
       <Sidebar>
         <SidebarHeader className='md:px-10 md:pt-9 px-5 pt-6 pb-4'>
-          <LogoIcon height={40} />
+          <Link href={'/'}>
+            <LogoIcon height={40} />
+          </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -78,7 +71,6 @@ function CashierLayout({ children }: { children: React.ReactNode }) {
                   key={index}
                   onClick={() => {
                     if (item.action) item.action();
-                    handleMenuClick();
                   }}
                   data-active={pathname === item.href}
                   className={`py-1 border-t border-[#D9D9D9] data-[active=true]:border-[#FF0066] peer/${
@@ -101,7 +93,7 @@ function CashierLayout({ children }: { children: React.ReactNode }) {
 
       <div className='flex flex-col w-full lg:container mx-auto'>
         <div className='bg-primary lg:hidden p-4 w-full'>
-          <SidebarTrigger onClick={() => setSidebarOpen(true)} />
+          <SidebarTrigger />
         </div>
         <div className='border-b-[2px] border-[#F6F3FB] hidden md:block'>
           <div

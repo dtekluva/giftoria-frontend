@@ -39,8 +39,7 @@ export const useByCardsMutation = (selectedPayment?: string) => {
     mutationKey: ['buy-card', 'card'],
     onSuccess: (query) => {
       const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
-      if (cards) {
-        console.log(selectedPayment, 'selectedPayment');
+      if (cards && selectedPayment) {
         if (selectedPayment?.toLowerCase() === 'paystack') {
           payThroughPayStack(query.data.payment_reference);
         } else {
@@ -112,9 +111,9 @@ export const useByCardsMutation = (selectedPayment?: string) => {
     });
 
     showToast(res, {
-      success: 'Card purchased successfully',
-      error: 'Error purchasing card',
-      loading: 'Purchasing card...',
+      success: 'Processing card payment',
+      error: 'Error processing card',
+      loading: 'Processing card payment...',
     });
   };
 
@@ -131,9 +130,9 @@ export const useByCardsMutation = (selectedPayment?: string) => {
       })),
     });
     showToast(res, {
-      success: 'Card purchased successfully',
-      error: 'Error purchasing card',
-      loading: 'Purchasing cards...',
+      success: 'Processing card payment',
+      error: 'Error processing card',
+      loading: 'Processing card payment...',
     });
   };
 
