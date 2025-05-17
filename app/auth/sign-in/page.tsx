@@ -1,55 +1,86 @@
+'use client';
+
 import AuthCard from '@/components/custom/auth-card';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import React from 'react';
+import { useLogin } from '@/services/mutations/auth.mutations';
+import { useRouter } from 'next/navigation';
 
 function SignIn() {
+  const { form, onSubmit, isLoading } = useLogin();
+  const router = useRouter();
   return (
-    <div className='w-full'>
+    <div className='w-full font-dm-sans'>
       <AuthCard title='Sign In'>
-        <div className='space-y-2  font-dm-sans'>
-          <Label htmlFor='email' className='text-base font-semibold'>
-            Email
-          </Label>
-          <Input
-            type='email'
-            id='email'
-            placeholder='Please enter your email'
-          />
-        </div>
-        <div className='space-y-2 font-dm-sans'>
-          <Label htmlFor='email' className='text-base font-semibold'>
-            Password
-          </Label>
-          <Input
-            type='email'
-            id='email'
-            isPassword
-            placeholder='Please enter your password'
-          />
-        </div>
-        <div className='flex flex-row justify-between items-center'>
-          <div className='flex items-center space-x-2 -mt-2 md:-mt-4 cursor-pointer'>
-            <Checkbox id='logged-in' />
-            <label
-              htmlFor='logged-in'
-              className='text-xs text-muted-foreground'>
-              Keep me logged in
-            </label>
-          </div>
-          <button className='text-[#990099] text-xs font-semibold'>
-            Reset Password
-          </button>
-        </div>
-        <Button className='text-base font-semibold md:h-[70px] h-[50px] mt-4'>
-          Make Payment
-        </Button>
-        <Button variant={'outline'} className='text-xs md:h-[70px] h-[50px]'>
-          Don&apos;t have an account ?{''}
-          <span className='font-semibold text-base'>Sign up</span>
-        </Button>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='md:space-y-7 space-y-4'>
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='email'
+                      {...field}
+                      placeholder='Please enter your email'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='password'
+                      isPassword
+                      {...field}
+                      placeholder='Please enter your password'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type='submit'
+              className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'
+              disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Sign In'}
+            </Button>
+
+            <Button
+              variant={'outline'}
+              type='button'
+              onClick={() => router.push('/auth/sign-up')}
+              className='text-sm font-bold md:text-base md:h-[70px] h-[50px] w-full'>
+              Don&apos;t have an account? Sign up
+            </Button>
+          </form>
+        </Form>
       </AuthCard>
     </div>
   );
