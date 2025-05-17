@@ -21,7 +21,7 @@ import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 const links = [
   {
@@ -48,31 +48,37 @@ const links = [
   },
 ];
 
-function AdminLayout({ children }: { children: React.ReactNode }) {
+function CashierLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const queryClient = useQueryClient();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
     queryClient.getQueryData(user_keys.userInfo());
 
-  console.log('User Data:', userData?.data.email);
+  // Helper to detect mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+  // Function to close sidebar on mobile
+  const handleMenuClick = useCallback(() => {
+    if (isMobile) setSidebarOpen(false);
+  }, [isMobile]);
 
   return (
-    <SidebarProvider>
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <Sidebar>
         <SidebarHeader className='md:px-10 md:pt-9 px-5 pt-6 pb-4'>
           <LogoIcon height={40} />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            {/* <SidebarMenuItem></SidebarMenuItem> */}
             {links.map((item, index) => {
               return (
                 <SidebarMenuItem
                   key={index}
                   onClick={() => {
-                    if (item.action) {
-                      item.action();
-                    }
+                    if (item.action) item.action();
+                    handleMenuClick();
                   }}
                   data-active={pathname === item.href}
                   className={`py-1 border-t border-[#D9D9D9] data-[active=true]:border-[#FF0066] peer/${
@@ -95,7 +101,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
       <div className='flex flex-col w-full lg:container mx-auto'>
         <div className='bg-primary lg:hidden p-4 w-full'>
-          <SidebarTrigger />
+          <SidebarTrigger onClick={() => setSidebarOpen(true)} />
         </div>
         <div className='border-b-[2px] border-[#F6F3FB] hidden md:block'>
           <div
@@ -128,4 +134,4 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default AdminLayout;
+export default CashierLayout;

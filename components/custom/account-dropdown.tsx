@@ -35,7 +35,7 @@ export function AccountDropdown() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className='min-w-64 mt-8 relative z-50'
+        className='md:min-w-64 md:mt-8 mt-1 relative z-50'
         align='center'>
         {access_token ? (
           <>

@@ -45,8 +45,8 @@ export default function Home() {
               className='h-[2.75rem] md:h-[2.75rem] border-none w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 flex-1'
               placeholder='Search gift card.....'
             />
-            <div className='bg-[#990099] rounded-full py-[0.625rem] px-4 flex justify-center items-center ml-auto'>
-              <SearchIcon className='text-white' />
+            <div className='bg-[#990099] rounded-full p-[0.625rem] flex justify-center items-center ml-auto'>
+              <SearchIcon color='#fff' className='text-white' />
             </div>
           </motion.div>
           <motion.h1

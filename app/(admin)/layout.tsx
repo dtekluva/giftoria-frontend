@@ -23,7 +23,7 @@ import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 const links = [
   {
@@ -73,8 +73,18 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
     queryClient.getQueryData(user_keys.userInfo());
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Helper to detect mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+  // Function to close sidebar on mobile
+  const handleMenuClick = useCallback(() => {
+    if (isMobile) setSidebarOpen(false);
+  }, [isMobile]);
+
   return (
-    <SidebarProvider>
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <Sidebar>
         <SidebarHeader className='md:px-10 md:pt-9 px-5 pt-6 pb-4'>
           <LogoIcon height={40} />
@@ -87,9 +97,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 <SidebarMenuItem
                   key={index}
                   onClick={() => {
-                    if (item.action) {
-                      item.action();
-                    }
+                    if (item.action) item.action();
+                    handleMenuClick();
                   }}
                   data-active={pathname === item.href}
                   className={`py-1 border-t border-[#D9D9D9] data-[active=true]:border-[#FF0066] peer/${
