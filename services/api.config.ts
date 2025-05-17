@@ -38,11 +38,11 @@ httpConfig.interceptors.response.use(
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BASE_API_URL}auth/token/refresh/`,
           {
-            refresh_token: refreshToken,
+            refresh: refreshToken,
           }
         );
 
-        const newAccessToken = response.data.access_token;
+        const newAccessToken = response.data.access;
 
         // Update cookies and retry the original request
         setCookie('access_token', newAccessToken);

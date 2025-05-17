@@ -454,6 +454,8 @@ export const useCashierLogin = () => {
     },
   });
 
+  const router = useRouter();
+
   const mutation = useMutation({
     mutationFn: cashierLogin,
     onSuccess: (data: any) => {
@@ -461,6 +463,8 @@ export const useCashierLogin = () => {
         setCookie('access_token', data.data.access);
         setCookie('refresh_token', data.data.refresh);
         setCookie('user_type', data.data.user_type);
+        router.push('/cashier/gift-cards');
+        return;
       }
     },
   });
@@ -479,14 +483,3 @@ export const useCashierLogin = () => {
     isLoading: mutation.isPending,
   };
 };
-
-// export const useLogin = () => {
-//   const router = useRouter();
-//   const queryClient = useQueryClient();
-//   const form = useForm<LoginType>({
-//     resolver: zodResolver(loginSchema),
-//     defaultValues: {
-//       email: '',
-//       password: '',
-//     },
-//   });
