@@ -1,9 +1,7 @@
 'use client';
-import BillIcon from '@/components/icon/bill-icon';
 import LoginIcon from '@/components/icon/login-icon';
 import LogoIcon from '@/components/icon/logo';
 import MoneyIcon from '@/components/icon/money-icon';
-import TransactionMinusIcon from '@/components/icon/transaction-minus-icon';
 import {
   Sidebar,
   SidebarContent,

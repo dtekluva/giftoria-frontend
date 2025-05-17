@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next/client';
+import { jwtDecode } from 'jwt-decode';
 
 export const httpConfig = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
@@ -26,12 +28,11 @@ httpConfig.interceptors.request.use(async (config) => {
 httpConfig.interceptors.response.use(
   (response) => response, // Pass through successful responses
   async (error) => {
+    const accessToken = getCookie('access_token') as string;
     const originalRequest = error.config;
 
     // Check if the error is due to an expired token
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Prevent infinite retry loops
-
+    if (isTokenExpired(accessToken)) {
       try {
         // Attempt to refresh the token
         const refreshToken = getCookie('refresh_token') as string;
@@ -59,3 +60,13 @@ httpConfig.interceptors.response.use(
     return Promise.reject(error); // Reject other errors
   }
 );
+
+function isTokenExpired(token: string): boolean {
+  try {
+    const decoded: { exp: number } = jwtDecode(token);
+    const now = Date.now() / 1000;
+    return decoded.exp < now;
+  } catch (e) {
+    return true; // Treat malformed tokens as expired
+  }
+}
