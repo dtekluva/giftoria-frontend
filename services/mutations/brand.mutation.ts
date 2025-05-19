@@ -39,6 +39,7 @@ export const useByCardsMutation = (selectedPayment?: string) => {
     mutationKey: ['buy-card', 'card'],
     onSuccess: (query) => {
       const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
+      saveItemToLocalStorage();
       if (cards && selectedPayment) {
         if (selectedPayment?.toLowerCase() === 'paystack') {
           payThroughPayStack(query.data.payment_reference);
@@ -55,11 +56,13 @@ export const useByCardsMutation = (selectedPayment?: string) => {
   const saveItemToLocalStorage = () => {
     const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
     form.trigger();
+
     if (!form.formState.isValid) {
       toast.error('Please fill in all required fields');
       return;
     }
 
+    console.log('No cards found in local storage', cards);
     if (!cards) {
       localStorageStore.setItem('cards', {
         cards: [form.getValues()],
@@ -97,8 +100,6 @@ export const useByCardsMutation = (selectedPayment?: string) => {
       router.push('/auth/sign-in');
       return;
     }
-
-    saveItemToLocalStorage();
 
     const res = mutation.mutateAsync({
       cards: [

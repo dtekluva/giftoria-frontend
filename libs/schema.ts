@@ -147,8 +147,8 @@ export const uploadCompanyDetailSchema = z.object({
           'image/jpg',
           'image/gif',
           'image/webp',
-        ].includes(file.type),
-      'Upload CAC document must be a valid image file (JPG, PNG, JPEG, GIF, WEBP)'
+        ].includes(file?.type),
+      'Upload Com;AC document must be a valid image file (JPG, PNG, JPEG, GIF, WEBP)'
     ),
   terms_and_conditions: z.boolean().refine((value) => value === true, {
     message: 'You must accept the terms and conditions',

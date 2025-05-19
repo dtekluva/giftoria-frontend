@@ -176,7 +176,7 @@ export const fetchCompanyOrderHistory = async () => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiCompanyDetailsResponse>
-  >('/branch/company_order_history/');
+  >('/branch/company_branch_order_history/');
 };
 
 export const payViaPayStack = async (reference: string) => {

@@ -32,12 +32,12 @@ httpConfig.interceptors.response.use(
     const originalRequest = error.config;
 
     // Check if the error is due to an expired token
-    if (isTokenExpired(accessToken)) {
+    if (accessToken && isTokenExpired(accessToken)) {
       try {
         // Attempt to refresh the token
         const refreshToken = getCookie('refresh_token') as string;
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_API_URL}auth/token/refresh/`,
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}auth/token/refresh`,
           {
             refresh: refreshToken,
           }
