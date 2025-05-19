@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { buyCardSchema, BuyCardType } from '@/libs/schema';
+'use client';
+import {
+  buyCardSchema,
+  BuyCardType,
+  requestPayWithdrawalSchema,
+} from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
 import { BuyMultipleCard, IBuyCardAgain } from '@/libs/types/brand.types';
@@ -217,5 +222,14 @@ export const usePayBrand = () => {
     isPaying: mutation.isPending,
     payThroughBank,
     isPayingBank: bankMutation.isPending,
+  };
+};
+
+export const useRequestWithdrawal = () => {
+  const form = useForm({
+    resolver: zodResolver(requestPayWithdrawalSchema),
+  });
+  return {
+    form,
   };
 };

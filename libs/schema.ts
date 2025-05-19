@@ -211,7 +211,37 @@ export const updateUserInfoSchema = z.object({
     .max(255, 'Phone number must be less than 255 characters'),
 });
 
+export const requestPayWithdrawalSchema = z.object({
+  bank_name: z
+    .string()
+    .min(1, 'Bank name is required')
+    .max(255, 'Bank name must be less than 255 characters'),
+  account_number: z
+    .string()
+    .min(1, 'Account number is required')
+    .max(255, 'Account number must be less than 255 characters'),
+  account_holder: z
+    .string()
+    .min(1, 'Account holder name is required')
+    .max(255, 'Account holder name must be less than 255 characters'),
+  available_amount: z
+    .string()
+    .min(1, 'Available amount is required')
+    .max(255, 'Available amount must be less than 255 characters'),
+  requested_amount: z
+    .string()
+    .min(1, 'Requested amount is required')
+    .max(255, 'Requested amount must be less than 255 characters'),
+  description: z
+    .string()
+    .min(1, 'Description is required')
+    .max(255, 'Description must be less than 255 characters'),
+});
+
 //TYPES
+export type RequestPayWithdrawalType = z.infer<
+  typeof requestPayWithdrawalSchema
+>;
 export type UpdateUserInfoType = z.infer<typeof updateUserInfoSchema>;
 export type BranchDetailsType = z.infer<typeof branchDetailsSchema>;
 export type CompanyDetailsType = z.infer<typeof companyDetailsSchema>;
