@@ -157,8 +157,8 @@ function OrderSummary() {
                 <Label
                   key={index}
                   htmlFor={`payment-${index}`}
-                  className='flex-1'>
-                  <div className='border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
+                  className='flex-1 h-full border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
+                  <div className=''>
                     <div className='flex items-start gap-4'>
                       <RadioGroupItem
                         value={item.name}

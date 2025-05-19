@@ -15,22 +15,22 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useByCardsMutation } from '@/services/mutations/brand.mutation';
-// import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
+import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
-// import { usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 function GiftCardDetails() {
   const { form, onSubmit, isLoading, saveItemToLocalStorage } =
     useByCardsMutation();
 
-  // const cardId = usePathname()?.split('/').pop();
-  // const { query } = useGetBrandCardByIdQuery(cardId ?? '');
+  const cardId = usePathname()?.split('/').pop();
+  const { query } = useGetBrandCardByIdQuery(cardId ?? '');
 
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
       <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
         <Image
-          src={'https://placehold.co/500x300.png'}
+          src={query?.data?.image ?? ''}
           width={500}
           className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
           height={300}

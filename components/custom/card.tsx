@@ -3,14 +3,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export function Card({ data }: { data: ICard }) {
+  console.log(data);
   return (
     <Link
       href={`/gift-card/${data.id}`}
       className='p-5 border-[0.01875rem] border-[#D9D9D9] rounded-[1.875rem] max-w-[320px] mx-auto w-full cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out'>
       <Image
-        src={data.image ?? 'https://placehold.co/280x140.png'}
+        src={data?.image ?? ''}
         width={280}
-        className='w-full'
+        className='w-full rounded-[1.875rem] h-[140px] object-cover'
         height={140}
         alt=''
       />
