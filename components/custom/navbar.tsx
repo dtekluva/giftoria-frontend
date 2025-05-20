@@ -2,40 +2,42 @@
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import LogoIcon from '../icon/logo';
 import MobileLogoIcon from '../icon/mobile-logo';
 import ShoppingCartIcon from '../icon/shopping-cart-icon';
 import { Input } from '../ui/input';
 import { AccountDropdown } from './account-dropdown';
 import { getCookie } from 'cookies-next/client';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 function NavBar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { scrollY } = useScroll();
   const pathname = usePathname();
   const router = useRouter();
-
   const access_token = getCookie('access_token');
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
+  const backgroundColor = useTransform(
+    scrollY,
+    [0, 100],
+    pathname === '/' ? ['transparent', '#4a014a'] : ['#4a014a', '#4a014a'] // Always primary color for non-landing pages
+  );
 
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const boxShadow = useTransform(
+    scrollY,
+    [0, 100],
+    pathname === '/'
+      ? ['none', '0 4px 6px -1px rgb(0 0 0 / 0.1)']
+      : ['0 4px 6px -1px rgb(0 0 0 / 0.1)', '0 4px 6px -1px rgb(0 0 0 / 0.1)'] // Always shadow for non-landing pages
+  );
 
   return (
-    <div
-      className={`fixed top-0 w-full z-[99999] transition-colors duration-300 ${
-        isScrolled ? 'bg-primary shadow-md' : ''
-      } ${
-        pathname != '/'
-          ? `bg-primary relative shadow-md ${isScrolled ? 'relative' : ''}`
-          : ''
+    <motion.div
+      style={{
+        backgroundColor,
+        boxShadow,
+      }}
+      className={`fixed top-0 w-full z-[99999] ${
+        pathname != '/' ? `bg-primary relative shadow-md` : ''
       }`}>
       <div className='px-[30px] py-6 lg:px-[50px] flex flex-row items-center lg:justify-between container mx-auto'>
         <Link className='cursor-pointer' href={'/'}>
@@ -78,7 +80,7 @@ function NavBar() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
