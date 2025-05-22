@@ -96,6 +96,13 @@ export const getAllBrandCards = async () => {
   >('/brand/all_cards/?page_size=8&page=1');
 };
 
+export const searchAllBrands = async ({ search }: { search: string }) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiAllBrandCardsResponse>
+  >(`/brand/all_cards/?search=${search}`);
+};
+
 export const getBrandCardById = async (id: string) => {
   return await httpConfig.get<AxiosError, AxiosResponse<ICard>>(
     `/brand/fetch_single_brand/?brand_id=${id}`

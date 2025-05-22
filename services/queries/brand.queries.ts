@@ -9,6 +9,7 @@ import {
   getAllCardSales,
   getBrandCardById,
   getCardSalesById,
+  searchAllBrands,
 } from '../api';
 import { ApiAllBrandCardsResponse, ICard } from '@/libs/types/brand.types';
 import { AxiosResponse } from 'axios';
@@ -31,6 +32,14 @@ export const brand_keys = {
     'card',
     'sales',
     id,
+  ],
+  search_all_brands: (search: string) => [
+    ...brand_keys.all,
+    'card',
+    'sales',
+    {
+      search,
+    },
   ],
 } as const;
 
@@ -110,6 +119,27 @@ export const useGetBrandCardSalesQuery = ({
   return {
     query,
     prefetchQuery,
+  };
+};
+export const useSearchAllBrands = ({
+  search = '',
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  const query = useQuery({
+    queryKey: brand_keys.search_all_brands(search),
+    queryFn: () =>
+      searchAllBrands({
+        search,
+      }),
+    select: (data) => data.data,
+    placeholderData: keepPreviousData,
+  });
+
+  return {
+    query,
   };
 };
 
