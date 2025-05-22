@@ -89,11 +89,21 @@ export const cashierLogin = async (data: CashierLoginType) => {
 };
 
 /// Brand API SERVICES
-export const getAllBrandCards = async () => {
+export const getAllBrandCards = async ({
+  search = '',
+  showAllCards = false,
+}: {
+  search?: string;
+  showAllCards?: boolean;
+}) => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
-  >('/brand/all_cards/?page_size=8&page=1');
+  >(
+    `/brand/all_cards/?${
+      showAllCards ? '' : 'page_size=8&page=1'
+    }&search=${search}`
+  );
 };
 
 export const searchAllBrands = async ({ search }: { search: string }) => {

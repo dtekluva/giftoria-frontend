@@ -31,7 +31,7 @@ export default function Home() {
     },
   };
 
-  const { query } = useGetAllBrandCardsQuery();
+  const { query } = useGetAllBrandCardsQuery({ search: '' });
   const router = useRouter();
 
   return (

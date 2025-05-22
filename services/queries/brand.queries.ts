@@ -16,6 +16,10 @@ import { AxiosResponse } from 'axios';
 
 export const brand_keys = {
   all: ['brands', 'all_cards'],
+  allSearch: (search: string, showAllCards: boolean) => [
+    ...brand_keys.all,
+    { search, showAllCards },
+  ],
   brand: (id: string) => [...brand_keys.all, id],
   brand_card_sales: (search: string, page: number, page_size: number) => [
     ...brand_keys.all,
@@ -43,11 +47,18 @@ export const brand_keys = {
   ],
 } as const;
 
-export const useGetAllBrandCardsQuery = () => {
+export const useGetAllBrandCardsQuery = ({
+  search = '',
+  showAllCards = false,
+}: {
+  search?: string;
+  showAllCards?: boolean;
+}) => {
   const query = useQuery({
-    queryKey: brand_keys.all,
-    queryFn: getAllBrandCards,
+    queryKey: brand_keys.allSearch(search, showAllCards),
+    queryFn: () => getAllBrandCards({ search, showAllCards }),
     select: (data) => data.data,
+    placeholderData: keepPreviousData,
   });
 
   return {

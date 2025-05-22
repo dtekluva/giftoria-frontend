@@ -12,6 +12,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useSearchAllBrands } from '@/services/queries/brand.queries';
 import { useState } from 'react';
 import { ICard } from '@/libs/types/brand.types';
+import Image from 'next/image';
 
 function NavBar() {
   const { scrollY } = useScroll();
@@ -93,17 +94,15 @@ function NavBar() {
                   key={brand.id}
                   className='px-4 py-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200 flex items-center border-b last:border-b-0'
                   onMouseDown={() => {
-                    router.push(
-                      `/gift-card?search=${encodeURIComponent(
-                        brand.brand_name
-                      )}`
-                    );
+                    router.push(`/gift-card/${brand.id}`);
                     setShowSuggestions(false);
                     setSearch(brand.brand_name);
                   }}>
                   {brand.image && (
-                    <img
+                    <Image
                       src={brand.image}
+                      width={40}
+                      height={40}
                       alt={brand.brand_name}
                       className='w-10 h-10 mr-2 rounded'
                     />
