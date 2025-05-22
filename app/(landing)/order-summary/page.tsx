@@ -1,7 +1,8 @@
 'use client';
 import Clipboard from '@/components/custom/clipboard';
-import FilterSearchIcon from '@/components/icon/filter-search-icon';
+import BankTransferIcon from '@/components/icon/bank-transfer-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
+import PaystackIcon from '@/components/icon/paystack-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +17,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BuyMultipleCard } from '@/libs/types/brand.types';
 import { useByAllCardsMutation } from '@/services/mutations/brand.mutation';
 import { getCookie } from 'cookies-next/client';
-import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -25,15 +25,14 @@ import { toast } from 'sonner';
 const paymentService = [
   {
     name: 'Paystack',
-    image: 'https://placehold.co/225x120.png',
+    icon: <PaystackIcon />,
     description: '',
     type: 'paystack',
   },
   {
     name: 'Bank Transfer',
-    image: '', // You can add an image if you want
-    description:
-      'Use the account number displayed below to transfer funds to your wallet',
+    icon: <BankTransferIcon />,
+
     type: 'transfer',
   },
 ];
@@ -101,7 +100,7 @@ function OrderSummary() {
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
       <div className='lg:flex justify-between items-center'>
         <h1 className='md:text-2xl font-bold text-base'>Order Summary</h1>
-        <div className='p-3 pl-3 px-5 border rounded-[12px] border-[#E2E6EE] flex gap-2 items-center max-w-[90%] mx-auto mt-4 lg:mt-0 lg:max-w-[290px] lg:mx-0'>
+        {/* <div className='p-3 pl-3 px-5 border rounded-[12px] border-[#E2E6EE] flex gap-2 items-center max-w-[90%] mx-auto mt-4 lg:mt-0 lg:max-w-[290px] lg:mx-0'>
           <div>
             <SearchIcon />
           </div>
@@ -112,7 +111,7 @@ function OrderSummary() {
           <div className='pl-4 border-l border-[#93A3C0]'>
             <FilterSearchIcon />
           </div>
-        </div>
+        </div> */}
       </div>
       <ul className='mt-4 md:mt-6 space-y-4'>
         {cards?.cards?.map((card, index) => (
@@ -141,11 +140,13 @@ function OrderSummary() {
               </p>
             </div>
             <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
-              <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
-                <article className='text-[6px] md:text-[10px]'>
-                  {card.message}
-                </article>
-              </div>
+              {card.message && (
+                <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
+                  <article className='text-[6px] md:text-[10px]'>
+                    {card.message}
+                  </article>
+                </div>
+              )}
               <div className='md:flex-none flex-1 text-end'>
                 <p className='text-sm md:text-base font-bold'>
                   ₦{card.card_amount.toLocaleString()}
@@ -181,7 +182,7 @@ function OrderSummary() {
                 <Label
                   key={index}
                   htmlFor={`payment-${index}`}
-                  className='flex-1 h-full border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
+                  className='flex-1 h-full border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer items-start'>
                   <div className=''>
                     <div className='flex items-start gap-4'>
                       <RadioGroupItem
@@ -192,45 +193,9 @@ function OrderSummary() {
                         {item.name}
                       </h4>
                     </div>
-                    {item.image && (
-                      <div className='flex items-center space-x-4'>
-                        <Image
-                          src={item.image}
-                          width={225}
-                          height={120}
-                          alt={item.name}
-                        />
-                      </div>
-                    )}
-                    {item.type === 'transfer' && (
-                      <div>
-                        <p className='mt-1 md:mt-[6px] font-dm-sans text-[8px] md:text-xs text-[#4E4E4E]'>
-                          {item.description}
-                        </p>
-                        <div className='mt-3 md:mt-5 md:space-y-3 space-y-2'>
-                          <div className='flex items-center gap-4 justify-between'>
-                            <p className='text-xs font-montserrat'>
-                              Bank name:
-                            </p>
-                            <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
-                              Providus Bank
-                            </p>
-                          </div>
-                          <Clipboard
-                            title='Account number:'
-                            value='9131200194'
-                          />
-                          <div className='flex items-center gap-4 justify-between'>
-                            <p className='text-xs font-montserrat'>
-                              Account name:
-                            </p>
-                            <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
-                              Giftoria
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    <div className='max-w-fit mx-auto mt-2'>
+                      {item.icon && item.icon}
+                    </div>
                   </div>
                 </Label>
               ))}
