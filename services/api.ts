@@ -93,7 +93,7 @@ export const getAllBrandCards = async () => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
-  >('/brand/all_cards');
+  >('/brand/all_cards/?page_size=8&page=1');
 };
 
 export const getBrandCardById = async (id: string) => {
