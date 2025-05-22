@@ -4,10 +4,17 @@ import FilterSearchIcon from '@/components/icon/filter-search-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'; // Adjust import path as needed
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BuyMultipleCard } from '@/libs/types/brand.types';
-import { useByCardsMutation } from '@/services/mutations/brand.mutation';
+import { useByAllCardsMutation } from '@/services/mutations/brand.mutation';
 import { getCookie } from 'cookies-next/client';
 import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -39,12 +46,23 @@ function OrderSummary() {
     paymentService[0].name
   );
 
-  const { deleteItemFromLocalStorage, buyAllCards } =
-    useByCardsMutation(selectedPayment);
+  const {
+    buyAllCard,
+    payingThroughBank,
+    deleteItemFromLocalStorage,
+    bankData,
+    mutation,
+  } = useByAllCardsMutation(selectedPayment);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const referenceId = useSearchParams()?.get('reference');
 
   const access_token = getCookie('access_token');
+
+  useEffect(() => {
+    if (selectedPayment.toLowerCase() !== 'paystack')
+      setShowSuccessModal(mutation.isSuccess);
+  }, [mutation.isSuccess, selectedPayment]);
 
   // Load cards from localStorage when the component mounts
   useEffect(() => {
@@ -67,6 +85,17 @@ function OrderSummary() {
   };
 
   const router = useRouter();
+
+  // Simulate payment success callback
+  const handlePayment = async () => {
+    if (!access_token) {
+      toast.error('Please sign in to continue');
+      router.push('/auth/sign-in');
+      return;
+    }
+
+    await buyAllCard();
+  };
 
   return (
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
@@ -214,18 +243,82 @@ function OrderSummary() {
           </div>
           <div className='flex justify-center mt-7 md:mt-10 px-4'>
             <Button
-              onClick={() => {
-                if (!access_token) {
-                  toast.error('Please sign in to continue');
-                  router.push('/auth/sign-in');
-                  return;
-                }
-                buyAllCards();
-              }}
+              onClick={handlePayment}
               className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
               Proceed to payment
             </Button>
           </div>
+
+          {/* Success Modal */}
+          <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Bank Transfer Details</DialogTitle>
+              </DialogHeader>
+              <div className='py-4 text-center'>
+                {payingThroughBank ? (
+                  // Skeleton loader
+                  <div className='space-y-4'>
+                    <div className='h-6 bg-gray-200 rounded w-2/3 mx-auto animate-pulse' />
+                    <div className='h-4 bg-gray-200 rounded w-1/2 mx-auto animate-pulse' />
+                    <div className='h-4 bg-gray-200 rounded w-1/2 mx-auto animate-pulse' />
+                    <div className='h-4 bg-gray-200 rounded w-1/2 mx-auto animate-pulse' />
+                  </div>
+                ) : bankData?.payment_details?.data?.data?.account_details ? (
+                  // Show actual bank details
+                  <div className='space-y-3'>
+                    <p className='text-lg font-semibold mb-2'>
+                      Please transfer to the account below:
+                    </p>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-medium'>Bank Name:</span>
+                      <span className='font-bold'>
+                        {
+                          bankData.payment_details.data.data.account_details
+                            .bank_name
+                        }
+                      </span>
+                    </div>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-medium'>Account Name:</span>
+                      <span className='font-bold'>
+                        {
+                          bankData.payment_details.data.data.account_details
+                            .account_name
+                        }
+                      </span>
+                    </div>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-medium'>Account Number:</span>
+                      <Clipboard
+                        title=''
+                        value={
+                          bankData.payment_details.data.data.account_details
+                            .account_number
+                        }
+                      />
+                    </div>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-medium'>Reference:</span>
+                      <span className='font-bold'>
+                        {
+                          bankData.payment_details.data.data.account_details
+                            .request_reference
+                        }
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <p className='text-red-500'>Unable to fetch bank details.</p>
+                )}
+              </div>
+              <DialogFooter>
+                <Button onClick={() => setShowSuccessModal(false)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </>
       )}
     </div>

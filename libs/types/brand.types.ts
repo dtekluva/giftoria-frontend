@@ -90,14 +90,36 @@ export interface ApiBranchResponse {
   results: Branch[]; // Array of branch objects
 }
 
-export interface PaymentDetails {
+export interface AccountDetails {
+  company: string;
+  sub_company: string | null;
+  account_name: string;
+  account_number: string;
+  bank_name: string;
+  bank_code: string;
+  request_reference: string;
+  request_active: boolean;
+}
+
+export interface PaymentDetailsData {
+  message: string;
+  account_details: AccountDetails;
+}
+
+export interface PaymentDetailsInnerData {
+  status: string;
+  status_code: number;
+  data: PaymentDetailsData;
+}
+
+export interface PaymentDetailsOuter {
+  status_code: number;
   status: boolean;
-  details: string;
-  payment_link: string;
+  data: PaymentDetailsInnerData;
 }
 
 export interface ApiPaymentSetupResponse {
   status: boolean;
   message: string;
-  payment_details: PaymentDetails;
+  payment_details: PaymentDetailsOuter;
 }

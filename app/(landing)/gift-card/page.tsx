@@ -18,7 +18,7 @@ function GiftCardPage() {
           Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
-              className='p-5 border-[0.01875rem] border-[#D9D9D9] rounded-[1.875rem] max-w-[320px] mx-auto w-full animate-pulse'>
+              className='p-5 border-[0.01875rem] border-[#D9D9D9] md:rounded-[1.875rem] max-w-[320px] mx-auto w-full animate-pulse'>
               {/* Image placeholder */}
               <div className='w-full h-[140px] bg-gray-300 rounded-md'></div>
 

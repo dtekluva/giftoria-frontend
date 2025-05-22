@@ -37,8 +37,8 @@ function NavBar() {
         boxShadow,
       }}
       className={`fixed top-0 w-full z-[99999] ${
-        pathname != '/' ? `bg-primary relative shadow-md` : ''
-      }`}>
+        pathname != '/' ? `bg-primary shadow-md` : ''
+      } `}>
       <div className='px-[30px] py-6 lg:px-[50px] flex flex-row items-center lg:justify-between container mx-auto'>
         <Link className='cursor-pointer' href={'/'}>
           <LogoIcon width={80} height={30} className='hidden lg:block' />

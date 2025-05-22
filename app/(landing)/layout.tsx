@@ -6,7 +6,8 @@ function LandingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className='min-h-screen flex flex-col'>
       <NavBar />
-      {children}
+
+      <div className='mt-20'>{children}</div>
       <Footer />
     </div>
   );
