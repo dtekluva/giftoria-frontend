@@ -246,9 +246,11 @@ function OrderSummary() {
 
           {/* Success Modal */}
           <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-            <DialogContent>
+            <DialogContent className='font-dm-sans'>
               <DialogHeader>
-                <DialogTitle>Bank Transfer Details</DialogTitle>
+                <DialogTitle className='text-base'>
+                  Bank Transfer Details
+                </DialogTitle>
               </DialogHeader>
               <div className='py-4 text-center'>
                 {payingThroughBank ? (
@@ -262,29 +264,35 @@ function OrderSummary() {
                 ) : bankData?.payment_details?.data?.data?.account_details ? (
                   // Show actual bank details
                   <div className='space-y-3'>
-                    <p className='text-lg font-semibold mb-2'>
+                    <p className='text-sm font-semibold mb-2'>
                       Please transfer to the account below:
                     </p>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-medium'>Bank Name:</span>
-                      <span className='font-bold'>
+                    <div className='flex items-center justify-between gap-4'>
+                      <span className='font-medium text-xs text-left'>
+                        Bank Name:
+                      </span>
+                      <span className='font-bold text-sm text-right'>
                         {
                           bankData.payment_details.data.data.account_details
                             .bank_name
                         }
                       </span>
                     </div>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-medium'>Account Name:</span>
-                      <span className='font-bold'>
+                    <div className='flex items-center justify-between gap-4'>
+                      <span className='font-medium text-xs text-left'>
+                        Account Name:
+                      </span>
+                      <span className='font-bold text-sm text-right'>
                         {
                           bankData.payment_details.data.data.account_details
                             .account_name
                         }
                       </span>
                     </div>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-medium'>Account Number:</span>
+                    <div className='flex items-center justify-between gap-4'>
+                      <span className='font-medium text-xs text-left'>
+                        Account Number:
+                      </span>
                       <Clipboard
                         title=''
                         value={
@@ -293,9 +301,11 @@ function OrderSummary() {
                         }
                       />
                     </div>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-medium'>Reference:</span>
-                      <span className='font-bold'>
+                    <div className='flex items-center justify-between gap-4'>
+                      <span className='font-medium text-xs text-left'>
+                        Reference:
+                      </span>
+                      <span className='font-bold text-sm text-right'>
                         {
                           bankData.payment_details.data.data.account_details
                             .request_reference
