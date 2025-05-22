@@ -75,7 +75,9 @@ export const useGetBrandCardByIdQuery = (id: string) => {
     enabled: !!id,
     placeholderData: (): ICard | any => {
       const allBrandCards: AxiosResponse<ApiAllBrandCardsResponse> | undefined =
-        queryClient.getQueryData(brand_keys.all);
+        queryClient.getQueryData(brand_keys.allSearch('', false)) ??
+        queryClient.getQueryData(brand_keys.allSearch('', true));
+
       if (allBrandCards) {
         const card = allBrandCards.data?.results?.find((card) => {
           return card.id === id;

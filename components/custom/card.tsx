@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export function Card({ data }: { data: ICard }) {
-  console.log(data);
   return (
     <Link
       href={`/gift-card/${data.id}`}

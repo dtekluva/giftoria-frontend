@@ -32,13 +32,17 @@ function GiftCardDetails() {
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
       <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
-        <Image
-          src={query?.data?.image ?? ''}
-          width={500}
-          className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
-          height={300}
-          alt=''
-        />
+        {query.isPending ? (
+          <div className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] bg-gray-300'></div>
+        ) : (
+          <Image
+            src={query?.data?.image ?? ''}
+            width={500}
+            className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
+            height={300}
+            alt=''
+          />
+        )}
         <p className='lg:leading-[40px] md:leading-[20px] leading-[18px] lg:text-xl md:text-sm text-xs max-w-[585px]'>
           Looking for the perfect gift? Whether it’s fashion, electronics, home
           essentials, beauty products, or more, you’ll find it all with our
