@@ -120,12 +120,7 @@ function OrderSummary() {
             key={index}
             className='lg:flex items-center justify-between space-y-4 lg:space-y-0 gap-4 pb-6 border-b'>
             <div className='flex items-center gap-4 font-montserrat'>
-              <Image
-                src={'https://placehold.co/160x100.png'}
-                width={160}
-                height={100}
-                alt=''
-              />
+              <Image src={card.image ?? ''} width={160} height={100} alt='' />
               <div className='space-y-2 md:space-y-3'>
                 <p className='text-sm font-medium'>₦{card.card_amount}</p>
                 <p className='text-xs font-dm-sans'>{card.recipient_name}</p>

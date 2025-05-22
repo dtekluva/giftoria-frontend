@@ -107,6 +107,7 @@ export const buyCardSchema = z.object({
   for_who: z.string().min(1, 'For who is required'),
   occasion: z.string().min(1, 'Occasion is required'),
   message: z.string().optional(),
+  image: z.string().optional(),
 });
 export const uploadCompanyDetailSchema = z.object({
   business_type: z

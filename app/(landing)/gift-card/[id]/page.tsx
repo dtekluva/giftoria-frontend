@@ -17,15 +17,18 @@ import { Textarea } from '@/components/ui/textarea';
 import { useByCardsMutation } from '@/services/mutations/brand.mutation';
 import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 
 function GiftCardDetails() {
-  const { form, onSubmit, isLoading, saveItemToLocalStorage } =
-    useByCardsMutation();
+  const { form, onSubmit } = useByCardsMutation();
 
   const cardId = usePathname()?.split('/').pop();
   const { query } = useGetBrandCardByIdQuery(cardId ?? '');
-  const router = useRouter();
+
+  useEffect(() => {
+    form.setValue('image', query?.data?.image ?? '');
+  }, [query?.data?.image, form]);
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
       <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
@@ -164,8 +167,7 @@ function GiftCardDetails() {
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-base font-sans'
                 variant={'outline'}
-                type='submit'
-                disabled={isLoading}>
+                type='submit'>
                 <AddingShoppingIcon />
                 Add to cart and continue shoppping
               </Button>
@@ -248,9 +250,8 @@ function GiftCardDetails() {
               </div>
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl mt-auto'
-                type='submit'
-                disabled={isLoading}>
-                {isLoading ? 'Processing...' : 'Proceed to make payment'}
+                type='submit'>
+                Proceed to make payment
               </Button>
             </div>
           </div>
