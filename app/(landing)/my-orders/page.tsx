@@ -78,7 +78,7 @@ function MyOrderPage() {
                   </div>
                   <div className='flex items-center gap-4 font-montserrat'>
                     <Image
-                      src={'https://placehold.co/160x100.png'}
+                      src={order?.brand_image ?? ''}
                       width={160}
                       height={100}
                       className='max-[380px]:w-[100px]'

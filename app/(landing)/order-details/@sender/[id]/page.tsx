@@ -40,7 +40,7 @@ function Page() {
         <div>
           <div className='flex items-center gap-4 font-montserrat'>
             <Image
-              src={'https://placehold.co/160x100.png'}
+              src={query.data?.brand_image ?? ''}
               width={160}
               height={100}
               className='max-[380px]:w-[100px]'
