@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import {
+  bankTransferCompeleted,
   getAllBrandCards,
   getAllCardSales,
   getBrandCardById,
@@ -13,6 +14,9 @@ import {
 } from '../api';
 import { ApiAllBrandCardsResponse, ICard } from '@/libs/types/brand.types';
 import { AxiosResponse } from 'axios';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 export const brand_keys = {
   all: ['brands', 'all_cards'],
@@ -163,6 +167,35 @@ export const useGetSingleCardSalesQuery = (id: string) => {
     select: (data) => data.data,
     enabled: !!id,
   });
+
+  return {
+    query,
+  };
+};
+
+export const useBankTransferCompeleted = () => {
+  const reference = useSearchParams().get('reference');
+  const router = useRouter();
+  const query = useQuery({
+    queryKey: ['bank_transfer_completed'],
+    queryFn: () => bankTransferCompeleted(reference as string),
+    select: (data) => data.data,
+    enabled: !!reference,
+
+    refetchInterval: (query) =>
+      query.state.data?.data.status ? false : 2 * 60 * 100, // 2 minutes
+  });
+
+  useEffect(() => {
+    if (query.data?.status) {
+      toast.success(
+        'Transaction completed successfully, redirecting to order page'
+      );
+      setTimeout(() => {
+        router.push('/my-orders');
+      }, 2000);
+    }
+  }, [query.data?.status, router]);
 
   return {
     query,

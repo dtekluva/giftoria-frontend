@@ -209,3 +209,10 @@ export const payViaBank = async (reference: string) => {
     AxiosResponse<ApiPaymentSetupResponse>
   >(`/brand/pay_via_bank_transfer/?reference=${reference}`);
 };
+
+export const bankTransferCompeleted = async (reference: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiPaymentSetupResponse>
+  >(`/wema/bank_transfer_completed/?reference=${reference}`);
+};

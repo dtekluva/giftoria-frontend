@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'; // Adjust import path as needed
@@ -18,6 +17,7 @@ import { BuyMultipleCard } from '@/libs/types/brand.types';
 import { useByAllCardsMutation } from '@/services/mutations/brand.mutation';
 import { getCookie } from 'cookies-next/client';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -277,16 +277,27 @@ function OrderSummary() {
                         }
                       </span>
                     </div>
+
+                    <div className='modal-footer flex justify-end mt-4'>
+                      <Link
+                        href={`/loading-transaction?reference=${bankData.payment_details.data.data.account_details.request_reference}`}
+                        className='text-[#990099] underline font-semibold hover:text-[#7a007a] transition bg-transparent border-0 p-0 shadow-none cursor-pointer'
+                        // onClick={handleTransferConfirmation} // <-- define this handler in your component
+                      >
+                        I have made the transfer
+                      </Link>
+                    </div>
                   </div>
                 ) : (
                   <p className='text-red-500'>Unable to fetch bank details.</p>
                 )}
               </div>
-              <DialogFooter>
+
+              {/* <DialogFooter>
                 <Button onClick={() => setShowSuccessModal(false)}>
                   Close
                 </Button>
-              </DialogFooter>
+              </DialogFooter> */}
             </DialogContent>
           </Dialog>
         </>

@@ -1,10 +1,14 @@
+'use client';
 import HomeIcon from '@/components/icon/home-icon';
 import { TextShimmer } from '@/components/ui/text-shimmer';
+import { useBankTransferCompeleted } from '@/services/queries/brand.queries';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 function LoadingTransactions() {
+  useBankTransferCompeleted();
+
   return (
     <div className='flex flex-col h-screen w-full'>
       <Link
