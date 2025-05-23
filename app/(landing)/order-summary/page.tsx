@@ -1,23 +1,17 @@
 'use client';
-import Clipboard from '@/components/custom/clipboard';
 import BankTransferIcon from '@/components/icon/bank-transfer-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import PaystackIcon from '@/components/icon/paystack-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'; // Adjust import path as needed
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BuyMultipleCard } from '@/libs/types/brand.types';
 import { useByAllCardsMutation } from '@/services/mutations/brand.mutation';
+
+import { BankTransferModal } from '@/components/custom/bank-transfer-modal';
 import { getCookie } from 'cookies-next/client';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -95,6 +89,26 @@ function OrderSummary() {
 
     await buyAllCard();
   };
+
+  // Handler for confirming transfer
+  // const handleConfirmTransfer = async () => {
+  //   setLoadingTransfer(true);
+  //   useBankTransferCompeleted()
+  //   try {
+  //     // Fire the request (simulate what you do in loading-transaction)
+  //     const reference =
+  //       bankData?.payment_details?.data?.data?.account_details
+  //         ?.request_reference;
+  //     if (reference) {
+  //       await bankTransferCompeleted(reference);
+
+  //     }
+  //   } catch (e) {
+  //     console.error('Error confirming transfer:', e);
+  //   } finally {
+  //     setLoadingTransfer(false);
+  //   }
+  // };
 
   return (
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
@@ -208,98 +222,30 @@ function OrderSummary() {
               Proceed to payment
             </Button>
           </div>
-
-          {/* Success Modal */}
-          <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-            <DialogContent className='font-dm-sans'>
-              <DialogHeader>
-                <DialogTitle className='text-base'>
-                  Bank Transfer Details
-                </DialogTitle>
-              </DialogHeader>
-              <div className='py-4 text-center'>
-                {payingThroughBank ? (
-                  // Skeleton loader
-                  <div className='space-y-4'>
-                    <div className='h-6 bg-gray-200 rounded w-2/3 mx-auto animate-pulse' />
-                    <div className='h-4 bg-gray-200 rounded w-1/2 mx-auto animate-pulse' />
-                    <div className='h-4 bg-gray-200 rounded w-1/2 mx-auto animate-pulse' />
-                    <div className='h-4 bg-gray-200 rounded w-1/2 mx-auto animate-pulse' />
-                  </div>
-                ) : bankData?.payment_details?.data?.data?.account_details ? (
-                  // Show actual bank details
-                  <div className='space-y-3'>
-                    <p className='text-sm font-semibold mb-2'>
-                      Please transfer to the account below:
-                    </p>
-                    <div className='flex items-center justify-between gap-4'>
-                      <span className='font-medium text-xs text-left'>
-                        Bank Name:
-                      </span>
-                      <span className='font-bold text-sm text-right'>
-                        {
-                          bankData.payment_details.data.data.account_details
-                            .bank_name
-                        }
-                      </span>
-                    </div>
-                    <div className='flex items-center justify-between gap-4'>
-                      <span className='font-medium text-xs text-left'>
-                        Account Name:
-                      </span>
-                      <span className='font-bold text-sm text-right'>
-                        {
-                          bankData.payment_details.data.data.account_details
-                            .account_name
-                        }
-                      </span>
-                    </div>
-                    <div className='flex items-center justify-between gap-4'>
-                      <span className='font-medium text-xs text-left'>
-                        Account Number:
-                      </span>
-                      <Clipboard
-                        title=''
-                        value={
-                          bankData.payment_details.data.data.account_details
-                            .account_number
-                        }
-                      />
-                    </div>
-                    <div className='flex items-center justify-between gap-4'>
-                      <span className='font-medium text-xs text-left'>
-                        Reference:
-                      </span>
-                      <span className='font-bold text-sm text-right'>
-                        {
-                          bankData.payment_details.data.data.account_details
-                            .request_reference
-                        }
-                      </span>
-                    </div>
-
-                    <div className='modal-footer flex justify-end mt-4'>
-                      <Link
-                        href={`/loading-transaction?reference=${bankData.payment_details.data.data.account_details.request_reference}`}
-                        className='text-[#990099] underline font-semibold hover:text-[#7a007a] transition bg-transparent border-0 p-0 shadow-none cursor-pointer'
-                        // onClick={handleTransferConfirmation} // <-- define this handler in your component
-                      >
-                        I have made the transfer
-                      </Link>
-                    </div>
-                  </div>
-                ) : (
-                  <p className='text-red-500'>Unable to fetch bank details.</p>
-                )}
-              </div>
-
-              {/* <DialogFooter>
-                <Button onClick={() => setShowSuccessModal(false)}>
-                  Close
-                </Button>
-              </DialogFooter> */}
-            </DialogContent>
-          </Dialog>
+          <BankTransferModal
+            open={showSuccessModal}
+            payingThroughBank={payingThroughBank}
+            onOpenChange={setShowSuccessModal}
+            details={
+              bankData?.payment_details?.data?.data?.account_details
+                ? {
+                    bank_name:
+                      bankData.payment_details.data.data.account_details
+                        .bank_name,
+                    account_name:
+                      bankData.payment_details.data.data.account_details
+                        .account_name,
+                    account_number:
+                      bankData.payment_details.data.data.account_details
+                        .account_number,
+                    request_reference:
+                      bankData.payment_details.data.data.account_details
+                        .request_reference,
+                  }
+                : null
+            }
+          />
+          ;
         </>
       )}
     </div>

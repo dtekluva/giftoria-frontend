@@ -1,20 +1,18 @@
 'use client';
+import { Card } from '@/components/custom/card';
 import FAQ from '@/components/custom/faq';
+import { GiftCardSearchBar } from '@/components/custom/gift-card-search-bar';
 import CardTickIcon from '@/components/icon/card-tick-icon';
 import GlobeIcon from '@/components/icon/global-icon';
 import LocalMailIcon from '@/components/icon/local-mail-icon';
 import MailIcon from '@/components/icon/mail-icon';
 import MoneyRemoveIcon from '@/components/icon/money-remove-icon';
 import ReceiveIcon from '@/components/icon/receive-icon';
-import SearchIcon from '@/components/icon/search-icon';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { useGetAllBrandCardsQuery } from '@/services/queries/brand.queries';
-import { Card } from '@/components/custom/card';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { GiftCardSearchBar } from '@/components/custom/gift-card-search-bar';
 
 export default function Home() {
   const fadeInUp = {

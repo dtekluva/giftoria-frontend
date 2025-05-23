@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ApiAllBrandCardsResponse, ICard } from '@/libs/types/brand.types';
 import {
   keepPreviousData,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import {
   bankTransferCompeleted,
   getAllBrandCards,
@@ -12,11 +16,6 @@ import {
   getCardSalesById,
   searchAllBrands,
 } from '../api';
-import { ApiAllBrandCardsResponse, ICard } from '@/libs/types/brand.types';
-import { AxiosResponse } from 'axios';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
-import { useEffect } from 'react';
 
 export const brand_keys = {
   all: ['brands', 'all_cards'],
@@ -173,23 +172,27 @@ export const useGetSingleCardSalesQuery = (id: string) => {
   };
 };
 
-export const useBankTransferCompeleted = () => {
-  const reference = useSearchParams().get('reference');
+export const useBankTransferCompeleted = (
+  enabled: boolean,
+  reference: string
+) => {
   const router = useRouter();
+
+  console.log('reference', reference, enabled);
   const query = useQuery({
     queryKey: ['bank_transfer_completed'],
     queryFn: () => bankTransferCompeleted(reference as string),
     select: (data) => data.data,
-    enabled: !!reference,
+    enabled: !!reference && enabled,
 
     refetchInterval(query) {
       if (query.state.data?.data.status) {
         toast.success('Payment completed successfully');
         router.push('/my-orders');
-        return false;
+        return !enabled && false;
       }
-      console.log('Hi dear');
-      return 2 * 60 * 100; // 2 minutes
+
+      return 2 * 60 * 10; // 2 minutes
     },
   });
 

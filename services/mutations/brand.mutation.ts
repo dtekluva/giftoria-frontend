@@ -206,7 +206,7 @@ export const usePayBrand = () => {
   const mutation = useMutation({
     mutationFn: payViaPayStack,
     mutationKey: ['pay', 'card'],
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       router.push(data.data.payment_details.payment_link);
     },
   });
