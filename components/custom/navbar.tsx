@@ -1,8 +1,8 @@
 'use client';
-import { ICard } from '@/libs/types/brand.types';
+import { Category, ICard } from '@/libs/types/brand.types';
 import {
-  useSearchAllBrands,
   useGetCategoriesQuery,
+  useSearchAllBrands,
 } from '@/services/queries/brand.queries';
 import { getCookie } from 'cookies-next/client';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -10,12 +10,11 @@ import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import LogoIcon from '../icon/logo';
 import MobileLogoIcon from '../icon/mobile-logo';
 import ShoppingCartIcon from '../icon/shopping-cart-icon';
 import { Input } from '../ui/input';
-import { AccountDropdown } from './account-dropdown';
 import {
   Select,
   SelectContent,
@@ -23,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Category } from '@/services/api';
+import { AccountDropdown } from './account-dropdown';
 
 function NavBar() {
   const { scrollY } = useScroll();

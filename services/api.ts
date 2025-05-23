@@ -22,6 +22,7 @@ import {
   ApiBranchResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
+  ApiCategoryResponse,
   ApiCompanyDetailsResponse,
   ApiPaymentSetupResponse,
   BuyMultipleCard,
@@ -102,26 +103,12 @@ export const getAllBrandCards = async ({
   >(
     `/brand/all_cards/?${
       showAllCards ? '' : 'page_size=8&page=1'
-    }&search=${search}&categories=0b94b45e-18b3-4ebd-8ea2-b0c3684ad517`
+    }&search=${search}`
   );
 };
 
-// Export Category interface
-export interface Category {
-  id: string;
-  category_name: string;
-  is_active: boolean;
-}
-
-export interface CategoryResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Category[];
-}
-
 export const fetchCategories = async () => {
-  return await httpConfig.get<AxiosError, AxiosResponse<CategoryResponse>>(
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiCategoryResponse>>(
     '/brand/fetch_category/'
   );
 };

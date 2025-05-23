@@ -123,3 +123,17 @@ export interface ApiPaymentSetupResponse {
   message: string;
   payment_details: PaymentDetailsOuter;
 }
+
+// Export Category interface
+export interface Category {
+  id: string;
+  category_name: string;
+  is_active: boolean;
+}
+
+export interface ApiCategoryResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Category[];
+}
