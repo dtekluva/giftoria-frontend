@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import { useGetAllBrandCardsQuery } from '@/services/queries/brand.queries';
 import { Card } from '@/components/custom/card';
 import { useRouter } from 'next/navigation';
+import { GiftCardSearchBar } from '@/components/custom/gift-card-search-bar';
 
 export default function Home() {
   const fadeInUp = {
@@ -41,18 +42,12 @@ export default function Home() {
         variants={fadeInUp}>
         <div className='bg-[#160032]/70 flex flex-col pt-20 md:pt-32 px-4 md:px-10 md:pb-[10.25rem] pb-20'>
           <motion.div
-            className='lg:hidden flex relative bg-white z-50 rounded-full overflow-hidden max-w-[70%] mx-auto w-full'
+            className='lg:hidden flex bg-white z-50 rounded-full overflow-hidden max-w-[70%] mx-auto w-full'
             variants={fadeInUp}>
-            <Input
-              className='h-[2.75rem] md:h-[2.75rem] border-none w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 flex-1'
-              placeholder='Search gift card.....'
-            />
-            <div className='bg-[#990099] rounded-full p-[0.625rem] flex justify-center items-center ml-auto'>
-              <SearchIcon color='#fff' className='text-white' />
-            </div>
+            <GiftCardSearchBar />
           </motion.div>
           <motion.h1
-            className='mt-12 md:mt-14 text-white text-center text-2xl md:text-4xl lg:text-6xl font-semibold'
+            className='mt-8 md:mt-14 text-white text-center text-2xl md:text-4xl lg:text-6xl font-semibold'
             variants={fadeInUp}>
             Gifting done with style
           </motion.h1>

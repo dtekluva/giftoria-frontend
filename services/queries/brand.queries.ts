@@ -182,20 +182,16 @@ export const useBankTransferCompeleted = () => {
     select: (data) => data.data,
     enabled: !!reference,
 
-    refetchInterval: (query) =>
-      query.state.data?.data.status ? false : 2 * 60 * 100, // 2 minutes
-  });
-
-  useEffect(() => {
-    if (query.data?.status) {
-      toast.success(
-        'Transaction completed successfully, redirecting to order page'
-      );
-      setTimeout(() => {
+    refetchInterval(query) {
+      if (query.state.data?.data.status) {
+        toast.success('Payment completed successfully');
         router.push('/my-orders');
-      }, 2000);
-    }
-  }, [query.data?.status, router]);
+        return false;
+      }
+      console.log('Hi dear');
+      return 2 * 60 * 100; // 2 minutes
+    },
+  });
 
   return {
     query,

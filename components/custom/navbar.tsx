@@ -1,18 +1,18 @@
 'use client';
+import { ICard } from '@/libs/types/brand.types';
+import { useSearchAllBrands } from '@/services/queries/brand.queries';
+import { getCookie } from 'cookies-next/client';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { SearchIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import LogoIcon from '../icon/logo';
 import MobileLogoIcon from '../icon/mobile-logo';
 import ShoppingCartIcon from '../icon/shopping-cart-icon';
 import { Input } from '../ui/input';
 import { AccountDropdown } from './account-dropdown';
-import { getCookie } from 'cookies-next/client';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useSearchAllBrands } from '@/services/queries/brand.queries';
-import { useState } from 'react';
-import { ICard } from '@/libs/types/brand.types';
-import Image from 'next/image';
 
 function NavBar() {
   const { scrollY } = useScroll();
@@ -112,6 +112,13 @@ function NavBar() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+          {showSuggestions && search && suggestions.length === 0 && (
+            <div className='absolute z-[9999999] top-20 right-40 md:min-w-[300px] mt-1 bg-white border rounded shadow-lg max-h-60 overflow-y-auto flex items-center justify-center py-4'>
+              <span className='text-gray-500 text-sm'>
+                No gift cards found for &quot;{search}&quot;
+              </span>
             </div>
           )}
           <div className='flex flex-row gap-3 lg:gap-8 ml-7'>
