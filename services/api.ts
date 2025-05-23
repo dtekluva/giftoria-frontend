@@ -102,15 +102,43 @@ export const getAllBrandCards = async ({
   >(
     `/brand/all_cards/?${
       showAllCards ? '' : 'page_size=8&page=1'
-    }&search=${search}`
+    }&search=${search}&categories=0b94b45e-18b3-4ebd-8ea2-b0c3684ad517`
   );
 };
 
-export const searchAllBrands = async ({ search }: { search: string }) => {
+// Export Category interface
+export interface Category {
+  id: string;
+  category_name: string;
+  is_active: boolean;
+}
+
+export interface CategoryResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Category[];
+}
+
+export const fetchCategories = async () => {
+  return await httpConfig.get<AxiosError, AxiosResponse<CategoryResponse>>(
+    '/brand/fetch_category/'
+  );
+};
+
+export const searchAllBrands = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
-  >(`/brand/all_cards/?search=${search}`);
+  >(`/brand/all_cards/?search=${search}&page=${page}&page_size=${page_size}`);
 };
 
 export const getBrandCardById = async (id: string) => {

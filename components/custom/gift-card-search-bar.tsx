@@ -34,7 +34,7 @@ export function GiftCardSearchBar({ onSelect }: GiftCardSearchBarProps) {
             setShowSuggestions(false);
           }
         }}
-        className='max-h-11 border-none w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
+        className='max-h-11 border-none focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
         placeholder='Search gift card.....'
       />
 

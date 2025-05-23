@@ -15,6 +15,7 @@ import {
   getBrandCardById,
   getCardSalesById,
   searchAllBrands,
+  fetchCategories,
 } from '../api';
 
 export const brand_keys = {
@@ -40,14 +41,17 @@ export const brand_keys = {
     'sales',
     id,
   ],
-  search_all_brands: (search: string) => [
+  search_all_brands: (search: string, page: number, page_size: number) => [
     ...brand_keys.all,
     'card',
     'sales',
     {
       search,
+      page,
+      page_size,
     },
   ],
+  categories: ['brands', 'categories'],
 } as const;
 
 export const useGetAllBrandCardsQuery = ({
@@ -139,16 +143,20 @@ export const useGetBrandCardSalesQuery = ({
 };
 export const useSearchAllBrands = ({
   search = '',
+  page = 1,
+  page_size = 10,
 }: {
   search?: string;
   page?: number;
   page_size?: number;
 }) => {
   const query = useQuery({
-    queryKey: brand_keys.search_all_brands(search),
+    queryKey: brand_keys.search_all_brands(search, page, page_size),
     queryFn: () =>
       searchAllBrands({
         search,
+        page,
+        page_size,
       }),
     select: (data) => data.data,
     placeholderData: keepPreviousData,
@@ -194,6 +202,18 @@ export const useBankTransferCompeleted = (
 
       return 2 * 60 * 10; // 2 minutes
     },
+  });
+
+  return {
+    query,
+  };
+};
+
+export const useGetCategoriesQuery = () => {
+  const query = useQuery({
+    queryKey: brand_keys.categories,
+    queryFn: fetchCategories,
+    select: (data) => data.data,
   });
 
   return {
