@@ -43,7 +43,7 @@
     "react-hook-form": "^7.56.1",
     "react-sticky-el": "^2.1.1",
     "sonner": "^2.0.3",
-    "tailwind-merge": "^3.0.2",
+    "tailwind-merge": "^3.3.0",
     "tw-animate-css": "^1.2.5",
     "vaul": "^1.1.2",
     "zod": "^3.24.3"

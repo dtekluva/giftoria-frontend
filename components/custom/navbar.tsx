@@ -146,7 +146,7 @@ function NavBar() {
                 </>
               )}
             </ul>
-            <div className='flex items-center gap-11 lg:ml-[111px]'>
+            <div className='flex items-center gap-11 lg:ml-[111px] ml-auto'>
               {isScrolled && isSuccess && (
                 <>
                   <Select onValueChange={handleCategoryChange}>
