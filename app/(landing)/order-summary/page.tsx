@@ -1,7 +1,5 @@
 'use client';
-import BankTransferIcon from '@/components/icon/bank-transfer-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
-import PaystackIcon from '@/components/icon/paystack-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -19,14 +17,12 @@ import { toast } from 'sonner';
 const paymentService = [
   {
     name: 'Paystack',
-    icon: <PaystackIcon />,
-    description: '',
+    description: 'Pay securely with your card',
     type: 'paystack',
   },
   {
     name: 'Bank Transfer',
-    icon: <BankTransferIcon />,
-
+    description: 'Pay directly from your bank account',
     type: 'transfer',
   },
 ];
@@ -196,19 +192,24 @@ function OrderSummary() {
                 <Label
                   key={index}
                   htmlFor={`payment-${index}`}
-                  className='flex-1 h-full border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer items-start'>
-                  <div className=''>
-                    <div className='flex items-start gap-4'>
-                      <RadioGroupItem
-                        value={item.name}
-                        id={`payment-${index}`}
-                      />
+                  className={`flex-1 h-full border rounded-[12px] p-4 md:p-6 space-y-3 cursor-pointer transition-all duration-200 ${
+                    selectedPayment === item.name
+                      ? 'border-primary bg-primary/5'
+                      : 'border-[#E2E6EE] hover:border-primary/50'
+                  }`}>
+                  <div className='flex items-start gap-4'>
+                    <RadioGroupItem
+                      value={item.name}
+                      id={`payment-${index}`}
+                      className='mt-1'
+                    />
+                    <div>
                       <h4 className='text-sm md:text-base font-bold'>
                         {item.name}
                       </h4>
-                    </div>
-                    <div className='max-w-fit mx-auto mt-2'>
-                      {item.icon && item.icon}
+                      <p className='text-xs text-gray-500 mt-1'>
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </Label>
