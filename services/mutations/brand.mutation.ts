@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 import {
   buyCardAgainbyId,
   buyCardbyId,
+  getAIMessage,
   payViaBank,
   payViaPayStack,
 } from '../api';
@@ -248,5 +249,27 @@ export const useRequestWithdrawal = () => {
   });
   return {
     form,
+  };
+};
+
+export const useGetAIMessage = () => {
+  const mutation = useMutation({
+    mutationFn: getAIMessage,
+    mutationKey: ['ai-message'],
+  });
+
+  const generateMessage = async (message: string) => {
+    try {
+      const response = await mutation.mutateAsync({ message });
+      return response.data.message;
+    } catch {
+      toast.error('Failed to generate AI message');
+      return null;
+    }
+  };
+
+  return {
+    generateMessage,
+    isGenerating: mutation.isPending,
   };
 };

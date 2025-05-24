@@ -231,3 +231,16 @@ export const bankTransferCompeleted = async (reference: string) => {
     AxiosResponse<ApiPaymentSetupResponse>
   >(`/wema/bank_transfer_completed/?reference=${reference}`);
 };
+
+// Add interface for AI message response
+interface ApiAIMessageResponse {
+  message: string;
+}
+
+// Update the getAIMessage function
+export const getAIMessage = async (data: { message: string }) => {
+  return await httpConfig.post<AxiosError, AxiosResponse<ApiAIMessageResponse>>(
+    '/brand/get_ai_message/',
+    data
+  );
+};
