@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { Checkbox } from '../ui/checkbox';
+import { Button } from '../ui/button';
+import PreviousChevronLeftIcon from '../icon/previous-chevron-left-icon';
+import NextChevronRightIcon from '../icon/next-chevron-right-icon';
+import MenuIcon from '../icon/menu-icon';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 const historyData = [
   {
@@ -21,11 +26,37 @@ const historyData = [
   // ...add more if needed
 ];
 
-const TransactionHistoryTable = () => {
+const TransactionHistoryTable = ({
+  data = historyData,
+  header,
+  currentPage,
+  totalPages,
+  onNextPage,
+  onPreviousPage,
+  prefetchQuery,
+  next,
+  showAction,
+  action,
+}: {
+  data?: {
+    [key: string]: string;
+  }[];
+  header?: {
+    key: string;
+    title: string;
+  }[];
+  currentPage: number;
+  totalPages: number;
+  onNextPage: () => void;
+  onPreviousPage: () => void;
+  prefetchQuery: () => void;
+  next?: boolean;
+  showAction?: boolean;
+  action?: (id: string) => void;
+}) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const handleCheckboxChange = (index: number) => {
-    console.log(index, 'this is the index');
     setSelectedRows(
       (prevSelectedRows) =>
         prevSelectedRows.includes(index)
@@ -35,10 +66,10 @@ const TransactionHistoryTable = () => {
   };
 
   const handleSelectAll = () => {
-    if (selectedRows.length === historyData.length) {
+    if (selectedRows.length === data.length) {
       setSelectedRows([]); // Uncheck all
     } else {
-      setSelectedRows(historyData.map((_, index) => index)); // Check all
+      setSelectedRows(data.map((_, index) => index)); // Check all
     }
   };
 
@@ -51,26 +82,28 @@ const TransactionHistoryTable = () => {
               <tr className='font-montserrat'>
                 <th className='py-4 px-4'>
                   <Checkbox
-                    checked={selectedRows.length === historyData.length}
+                    checked={selectedRows.length === data.length}
                     onCheckedChange={handleSelectAll}
                     className='z-999 relative cursor-pointer'
                     aria-label='Select all rows'
                   />
                 </th>
 
-                <th className='py-6 px-4 text-left font-medium'>Id</th>
-                <th className='py-6 px-4 text-left font-medium'>Date/Time</th>
-                <th className='py-6 px-4 text-left font-medium'>Order No.</th>
-                <th className='py-6 px-4 text-left font-medium'>
-                  Store Address
-                </th>
-                <th className='py-6 px-4 text-left font-medium'>Total Value</th>
-                <th className='py-6 px-4 text-left font-medium'>Redeemed</th>
-                <th className='py-6 px-4 text-left font-medium'>Balance</th>
+                <th className='py-6 px-4 text-left font-medium'>S/N</th>
+
+                {header?.map((item, index) => (
+                  <th key={index} className='py-6 px-4 text-left font-medium'>
+                    {item.title}
+                  </th>
+                ))}
+
+                {showAction && (
+                  <th className='py-6 px-4 text-left font-medium'>Action</th>
+                )}
               </tr>
             </thead>
             <tbody className='text-gray-700'>
-              {historyData.map((item, index) => (
+              {data.map((item, index) => (
                 <tr
                   key={index}
                   className='border-b hover:bg-gray-50 font-dm-sans'>
@@ -82,71 +115,94 @@ const TransactionHistoryTable = () => {
                       aria-label={`Select row ${index + 1}`}
                     />
                   </th>
-                  <td className='py-[36px] px-4'>{index + 1}</td>
-                  <td className='py-[36px] px-4'>{item.dateTime}</td>
-                  <td className='py-[36px] px-4'>{item.orderNo}</td>
-                  <td className='py-[36px] px-4'>{item.storeAddress}</td>
-                  <td className='py-[36px] px-4'>{item.totalValue}</td>
-                  <td className='py-[36px] px-4'>{item.redeemed}</td>
-                  <td className='py-[36px] px-4'>{item.balance}</td>
+
+                  <td className='py-4 px-4 text-sm font-semibold'>
+                    {index + 1}
+                  </td>
+
+                  {header?.map((headerItem, headerIndex) => (
+                    <td key={headerIndex} className='py-[36px] px-4 text-sm'>
+                      {item[headerItem.key]}
+                    </td>
+                  ))}
+
+                  {showAction && (
+                    <td className='py-4 px-4 text-sm'>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button className='bg-white border text-white hover:bg-white rounded-md px-4 py-2'>
+                            <MenuIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent align='end' className='w-80'>
+                          <ul>
+                            <li
+                              onClick={() => {
+                                console.log(item);
+                                action?.(item.id);
+                              }}>
+                              <button className='flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 cursor-pointer'>
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </PopoverContent>
+                      </Popover>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {/* <div className='block md:hidden space-y-4'>
-        <div className='bg-white rounded-lg shadow-md p-4 text-sm'>
-          <p>
-            <span className='font-medium'>Date/Time:</span> 2/10/2023 - 4:30PM
-          </p>
-          <p>
-            <span className='font-medium'>Order No.:</span> GFT - XYZ123456
-          </p>
-          <p>
-            <span className='font-medium'>Store Address:</span> No. 5 Shomolu,
-            Obanikoro, Lagos
-          </p>
-          <p>
-            <span className='font-medium'>Total Value:</span> ₦400,000.00
-          </p>
-          <p>
-            <span className='font-medium'>Redeemed:</span> ₦400,000.00
-          </p>
-          <p>
-            <span className='font-medium'>Balance:</span> ₦10,000
-          </p>
-        </div>
-      </div> */}
-
-        {historyData.map((data, index) => (
+        {data.map((data, index) => (
           <div key={index} className='block md:hidden mt-4'>
             <div className='bg-white rounded-lg p-4 text-sm space-y-5 border'>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Date/Time:</span>{' '}
-                2/10/2023 - 4:30PM
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Order No.:</span> GFT -
-                XYZ123456
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Store Address:</span>{' '}
-                No. 5 Shomolu, Obanikoro, Lagos
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Total Value:</span>{' '}
-                ₦400,000.00
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Redeemed:</span>{' '}
-                ₦400,000.00
-              </p>
-              <p className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>Balance:</span> ₦10,000
-              </p>
+              {Object.entries(data).map(([key, value], index) => (
+                <p
+                  key={index}
+                  className='flex justify-between font-dm-sans gap-1 text-xs'>
+                  <span className='font-medium capitalize font-dm-sans'>
+                    {key.replace(/_/g, ' ')}:
+                  </span>{' '}
+                  {value}
+                </p>
+              ))}
             </div>
           </div>
         ))}
+        {/* Pagination Controls */}
+        <div className='flex justify-between items-center mt-6 mb-6'>
+          <Button
+            onClick={onPreviousPage}
+            disabled={currentPage === 1}
+            className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+              currentPage === 1
+                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+            }`}>
+            <PreviousChevronLeftIcon />
+            Previous
+          </Button>
+          <p className='text-sm text-gray-600'>
+            Page {currentPage} of {totalPages}
+          </p>
+          <Button
+            onClick={onNextPage}
+            onMouseEnter={() => {
+              if (next) {
+                prefetchQuery();
+              }
+            }}
+            disabled={!next}
+            className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+              !next
+                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+            }`}>
+            Next <NextChevronRightIcon />
+          </Button>
+        </div>
       </div>
     </>
   );

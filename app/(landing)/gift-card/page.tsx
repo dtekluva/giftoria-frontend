@@ -1,13 +1,20 @@
 'use client';
 import { Card } from '@/components/custom/card';
 import { useGetAllBrandCardsQuery } from '@/services/queries/brand.queries';
+import { useSearchParams } from 'next/navigation';
 function GiftCardPage() {
-  const { query } = useGetAllBrandCardsQuery();
+  const userSearch = useSearchParams().get('search');
+
+  const { query } = useGetAllBrandCardsQuery({
+    search: userSearch ?? '',
+    showAllCards: true,
+  });
+
   return (
     <div className='md:py-10 md:px-10 px-4 py-5 container mx-auto'>
       <div className='bg-pink-100 rounded-[8px] py-4 px-10 md:py-7'>
         <h1 className='text-center text-sm md:text-3xl font-semibold'>
-          Explore our collection of our gift cards
+          Explore our collection of our gift cards {userSearch}
         </h1>
         <p className='text-center font-dm-sans md:mt-2 text-[10px] md:text-xl'>
           Gift you love ones with gift they truely desire
@@ -18,7 +25,7 @@ function GiftCardPage() {
           Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
-              className='p-5 border-[0.01875rem] border-[#D9D9D9] rounded-[1.875rem] max-w-[320px] mx-auto w-full animate-pulse'>
+              className='p-5 border-[0.01875rem] border-[#D9D9D9] md:rounded-[1.875rem] max-w-[320px] mx-auto w-full animate-pulse'>
               {/* Image placeholder */}
               <div className='w-full h-[140px] bg-gray-300 rounded-md'></div>
 

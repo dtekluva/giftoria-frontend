@@ -69,6 +69,16 @@ export const loginSchema = z.object({
     .min(1, { message: 'Password is required' })
     .max(60, 'Password must be less than 60 characters'),
 });
+export const cashierLoginSchema = z.object({
+  branch_id: z
+    .string()
+    .min(1, { message: 'Branch ID is required' })
+    .max(50, 'Branch ID must be less than 50 characters'),
+  password: z
+    .string()
+    .min(1, { message: 'Password is required' })
+    .max(60, 'Password must be less than 60 characters'),
+});
 
 export const changePasswordScheme = z.object({
   old_password: z
@@ -96,7 +106,8 @@ export const buyCardSchema = z.object({
     .max(11, 'Recepient phone number must be less than 11 characters'),
   for_who: z.string().min(1, 'For who is required'),
   occasion: z.string().min(1, 'Occasion is required'),
-  message: z.string().min(1, 'Message is required'),
+  message: z.string().optional(),
+  image: z.string().optional(),
 });
 export const uploadCompanyDetailSchema = z.object({
   business_type: z
@@ -137,16 +148,111 @@ export const uploadCompanyDetailSchema = z.object({
           'image/jpg',
           'image/gif',
           'image/webp',
-        ].includes(file.type),
-      'Upload CAC document must be a valid image file (JPG, PNG, JPEG, GIF, WEBP)'
+        ].includes(file?.type),
+      'Upload Com;AC document must be a valid image file (JPG, PNG, JPEG, GIF, WEBP)'
     ),
   terms_and_conditions: z.boolean().refine((value) => value === true, {
     message: 'You must accept the terms and conditions',
   }),
 });
 
-//TYPES
+export const companyDetailsSchema = z.object({
+  company_name: z
+    .string()
+    .min(1, 'Company name is required')
+    .max(50, 'Company name must be less than 50 characters'),
+  company_email: z.string().email('Invalid email address'),
+  phone_number: z
+    .string()
+    .min(1, 'Phone number is required')
+    .max(15, 'Phone number must be less than 15 characters'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(60, 'Password must be less than 60 characters'),
+});
 
+export const branchDetailsSchema = z.object({
+  branch_name: z
+    .string()
+    .min(1, 'Branch name is required')
+    .max(50, 'Branch name must be less than 50 characters'),
+  branch_address: z
+    .string()
+    .min(1, 'Branch address is required')
+    .max(255, 'Branch address must be less than 255 characters'),
+  branch_id: z
+    .string()
+    .min(1, 'Branch ID is required')
+    .max(50, 'Branch ID must be less than 50 characters'),
+  branch_password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(60, 'Password must be less than 60 characters'),
+  is_active: z.boolean().optional(),
+});
+
+export const updateUserInfoSchema = z.object({
+  email: z
+    .string()
+    .email('Invalid email address')
+    .min(1, 'Email is required')
+    .max(254, 'Email must be less than 254 characters'),
+  first_name: z
+    .string()
+    .min(1, 'First name is required')
+    .max(255, 'First name must be less than 255 characters'),
+  last_name: z
+    .string()
+    .min(1, 'Last name is required')
+    .max(255, 'Last name must be less than 255 characters'),
+  phone_number: z
+    .string()
+    .min(1, 'Phone number is required')
+    .max(255, 'Phone number must be less than 255 characters'),
+});
+
+export const requestPayWithdrawalSchema = z.object({
+  bank_name: z
+    .string()
+    .min(1, 'Bank name is required')
+    .max(255, 'Bank name must be less than 255 characters'),
+  account_number: z
+    .string()
+    .min(1, 'Account number is required')
+    .max(255, 'Account number must be less than 255 characters'),
+  account_holder: z
+    .string()
+    .min(1, 'Account holder name is required')
+    .max(255, 'Account holder name must be less than 255 characters'),
+  available_amount: z
+    .string()
+    .min(1, 'Available amount is required')
+    .max(255, 'Available amount must be less than 255 characters'),
+  requested_amount: z
+    .string()
+    .min(1, 'Requested amount is required')
+    .max(255, 'Requested amount must be less than 255 characters'),
+  description: z
+    .string()
+    .min(1, 'Description is required')
+    .max(255, 'Description must be less than 255 characters'),
+});
+
+export const cardBalanceSchema = z.object({
+  card_value: z.string().min(1, 'Card valu e is required'),
+  shopping_value: z.string().min(1, 'Card valu e is required'),
+  card_balance: z.string().min(1, 'Card valu e is required'),
+});
+
+//TYPES
+export type CardBalanceType = z.infer<typeof cardBalanceSchema>;
+export type RequestPayWithdrawalType = z.infer<
+  typeof requestPayWithdrawalSchema
+>;
+export type UpdateUserInfoType = z.infer<typeof updateUserInfoSchema>;
+export type BranchDetailsType = z.infer<typeof branchDetailsSchema>;
+export type CompanyDetailsType = z.infer<typeof companyDetailsSchema>;
 export type UploadCompanyDetailType = z.infer<typeof uploadCompanyDetailSchema>;
 export type BuyCardType = z.infer<typeof buyCardSchema>;
 export type ChangePasswordType = z.infer<typeof changePasswordScheme>;
@@ -157,3 +263,4 @@ export type SendVerificationCodeType = z.infer<
   typeof sendVerificationCodeSchema
 >;
 export type LoginType = z.infer<typeof loginSchema>;
+export type CashierLoginType = z.infer<typeof cashierLoginSchema>;

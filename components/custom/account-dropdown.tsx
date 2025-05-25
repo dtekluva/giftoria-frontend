@@ -35,7 +35,7 @@ export function AccountDropdown() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className='min-w-64 mt-3 relative z-50'
+        className='md:min-w-64 md:mt-8 mt-1 relative z-50'
         align='center'>
         {access_token ? (
           <>
@@ -43,7 +43,9 @@ export function AccountDropdown() {
               My Account
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
+            <DropdownMenuItem
+              onClick={() => router.push('/profile')}
+              className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
               My Profile
             </DropdownMenuItem>
             <DropdownMenuSeparator />

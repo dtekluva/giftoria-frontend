@@ -8,6 +8,9 @@ export const showToast = <T>(
     loading: messages.loading,
     success: messages.success,
     error: (error) => {
+      if (error.status === 500) {
+        return 'Internal server error';
+      }
       if (error?.response) {
         const errorKey = Object.keys(error.response.data)[1];
         const firstErrorKey = Object.keys(error.response.data)[0];
@@ -15,10 +18,10 @@ export const showToast = <T>(
           error.response.data[errorKey] || error.response.data[firstErrorKey];
 
         if (errorMessage) {
-          return errorMessage;
+          return errorMessage ?? 'An error occurred';
         }
       }
-      return messages.error;
+      return messages.error ?? 'An error occurred';
     },
   });
 };

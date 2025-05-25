@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import {
+  cashierLoginSchema,
+  CashierLoginType,
   changePasswordScheme,
   ChangePasswordType,
   createAdminAccountSchema,
@@ -8,15 +10,18 @@ import {
   type CreateUserAccountType,
   loginSchema,
   type LoginType,
+  updateUserInfoSchema,
+  UpdateUserInfoType,
   uploadCompanyDetailSchema,
   UploadCompanyDetailType,
   verifyEmailSchema,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
+import { ApiUserInfoResponse } from '@/libs/types/auth.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -24,13 +29,17 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import {
   adminSignUp,
+  cashierLogin,
   changePassword,
+  fetUserDetails,
   login,
   sendVerificationCode,
+  updateUserProfile,
   uploadCompanyDetail,
   userSignUp,
   verifyEmail,
 } from '../api';
+import { user_keys } from '../queries/user.queries';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -292,7 +301,7 @@ export const useSendVerificationCode = () => {
 
 export const useLogin = () => {
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -303,11 +312,21 @@ export const useLogin = () => {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data.status) {
         setCookie('access_token', data.data.access);
         setCookie('refresh_token', data.data.refresh);
+        setCookie('user_type', data.data.user_type);
         setCookie('password', form.getValues('password'));
+        await queryClient.prefetchQuery({
+          queryKey: ['userInfo'],
+          queryFn: () => fetUserDetails(),
+        });
+
+        if (data.data.user_type === 'MERCHANT') {
+          router.push('/admin/gift-cards');
+          return;
+        }
         router.push('/');
       }
     },
@@ -366,6 +385,96 @@ export const useChangePassword = () => {
       loading: 'Changing password...',
       success: 'Password changed successfully',
       error: 'An error occurred while changing the password',
+    });
+  };
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useUpdateUserProfile = () => {
+  const queryClient = useQueryClient();
+  const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
+    queryClient.getQueryData(user_keys.userInfo());
+
+  const form = useForm<UpdateUserInfoType>({
+    resolver: zodResolver(updateUserInfoSchema),
+    defaultValues: {
+      first_name: userData?.data.first_name || '',
+      last_name: userData?.data.last_name || '',
+      email: userData?.data.email || '',
+      phone_number: userData?.data.phone_number || '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: updateUserProfile,
+    onSuccess: async (data, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: user_keys.userInfo(),
+      });
+      queryClient.setQueryData(user_keys.userInfo(), (oldData: any) => {
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            first_name: variables.first_name,
+            last_name: variables.last_name,
+            email: variables.email,
+            phone_number: variables.phone_number,
+          },
+        };
+      });
+    },
+  });
+  const onSubmit = (data: UpdateUserInfoType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Updating profile...',
+      success: 'Profile updated successfully',
+      error: 'An error occurred while updating the profile',
+    });
+  };
+
+  return {
+    form,
+    onSubmit,
+    userData,
+  };
+};
+
+export const useCashierLogin = () => {
+  const form = useForm<CashierLoginType>({
+    resolver: zodResolver(cashierLoginSchema),
+    defaultValues: {
+      branch_id: '',
+      password: '',
+    },
+  });
+
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: cashierLogin,
+    onSuccess: (data: any) => {
+      if (data.status) {
+        setCookie('access_token', data.data.access);
+        setCookie('refresh_token', data.data.refresh);
+        setCookie('user_type', data.data.user_type);
+        router.push('/cashier/gift-cards');
+        return;
+      }
+    },
+  });
+
+  const onSubmit = (data: CashierLoginType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Logging in...',
+      success: 'Login successful',
+      error: 'Something went wrong',
     });
   };
   return {

@@ -30,7 +30,7 @@ function Page() {
         </h1>
       </div>
 
-      <TransactionStepper activeStep={2} />
+      <TransactionStepper data={query.data} activeStep={2} />
       <div className='md:mt-[105px] mt-8 md:pb-10 border-b pb-4 border-[#FAFAFA]'>
         <p className='font-albert-sans italic text-[10px] md:text-sm text-end md:text-start'>
           2 year gurantee included
@@ -40,7 +40,7 @@ function Page() {
         <div>
           <div className='flex items-center gap-4 font-montserrat'>
             <Image
-              src={'https://placehold.co/160x100.png'}
+              src={query.data?.brand_image ?? ''}
               width={160}
               height={100}
               className='max-[380px]:w-[100px]'

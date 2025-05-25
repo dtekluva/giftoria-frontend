@@ -27,11 +27,8 @@ export interface IBuyCardAgain {
 export interface ApiBuyCardResponse {
   status: boolean;
   message: string;
-  payment_details: {
-    status: boolean;
-    details: string;
-    payment_link: string;
-  };
+  payment_reference: string;
+  amount: number;
 }
 
 export interface CardSale {
@@ -62,4 +59,81 @@ export interface ApiCardSalesResponse {
   next: string | null;
   previous: string | null;
   results: CardSale[];
+}
+
+export interface ApiCompanyDetailsResponse {
+  message: string; // Response message
+  status: boolean; // Indicates if the request was successful
+  balance: number; // Company balance
+  company_name: string; // Name of the company
+  company_address: string | null; // Address of the company (nullable)
+  business_type: string | null; // Type of business (nullable)
+  registration_number: string | null; // CAC registration number (nullable)
+  tin_number: string | null; // Tax Identification Number (nullable)
+  date_of_incorporation: string | null; // Date of incorporation (nullable)
+  cac_documents: string | null; // URL or reference to CAC documents (nullable)
+}
+
+export interface Branch {
+  id: string; // Unique identifier for the branch
+  branch_name: string; // Name of the branch
+  branch_address: string; // Address of the branch
+  branch_id: string; // Branch ID
+  branch_password: string; // Password for the branch
+  is_active: boolean; // Indicates if the branch is active
+}
+
+export interface ApiBranchResponse {
+  count: number; // Total number of branches
+  next: string | null; // URL for the next page of results
+  previous: string | null; // URL for the previous page of results
+  results: Branch[]; // Array of branch objects
+}
+
+export interface AccountDetails {
+  company: string;
+  sub_company: string | null;
+  account_name: string;
+  account_number: string;
+  bank_name: string;
+  bank_code: string;
+  request_reference: string;
+  request_active: boolean;
+}
+
+export interface PaymentDetailsData {
+  message: string;
+  account_details: AccountDetails;
+}
+
+export interface PaymentDetailsInnerData {
+  status: string;
+  status_code: number;
+  data: PaymentDetailsData;
+}
+
+export interface PaymentDetailsOuter {
+  status_code: number;
+  status: boolean;
+  data: PaymentDetailsInnerData;
+}
+
+export interface ApiPaymentSetupResponse {
+  status: boolean;
+  message: string;
+  payment_details: PaymentDetailsOuter;
+}
+
+// Export Category interface
+export interface Category {
+  id: string;
+  category_name: string;
+  is_active: boolean;
+}
+
+export interface ApiCategoryResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Category[];
 }

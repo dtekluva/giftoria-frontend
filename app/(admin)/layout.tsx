@@ -14,6 +14,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { ApiUserInfoResponse } from '@/libs/types/auth.types';
+import { user_keys } from '@/services/queries/user.queries';
+import { useQueryClient } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
+import { deleteCookie } from 'cookies-next/client';
 import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -54,16 +59,27 @@ const links = [
     icon: <LoginIcon />,
     label: 'Sign Out',
     href: '#',
+    action: () => {
+      deleteCookie('access_token');
+      deleteCookie('refresh_token');
+      deleteCookie('password');
+    },
   },
 ];
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const queryClient = useQueryClient();
+  const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
+    queryClient.getQueryData(user_keys.userInfo());
+
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className='md:px-10 md:pt-9 px-5 pt-6 pb-4'>
-          <LogoIcon height={40} />
+          <Link href={'/'}>
+            <LogoIcon height={40} />
+          </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -72,6 +88,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               return (
                 <SidebarMenuItem
                   key={index}
+                  onClick={() => {
+                    if (item.action) item.action();
+                  }}
                   data-active={pathname === item.href}
                   className={`py-1 border-t border-[#D9D9D9] data-[active=true]:border-[#FF0066] peer/${
                     index + 1
@@ -110,8 +129,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 className='rounded-full'
               />
               <div>
-                <h2 className='font-bold text-sm'>Shopybee</h2>
-                <p className='text-[10px] text-[#818181]'>shopybee@gmail.com</p>
+                <h2 className='font-bold text-sm'>
+                  {userData?.data.first_name} {userData?.data.last_name}
+                </h2>
+                <p className='text-[10px] text-[#818181]'>
+                  {userData?.data.email}
+                </p>
               </div>
             </div>
           </div>
