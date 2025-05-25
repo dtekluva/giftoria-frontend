@@ -17,7 +17,7 @@ import { toast } from 'sonner';
 const paymentService = [
   {
     name: 'Paystack',
-    description: 'Pay securely with your card',
+    description: 'Pay securely with paystack',
     type: 'paystack',
   },
   {

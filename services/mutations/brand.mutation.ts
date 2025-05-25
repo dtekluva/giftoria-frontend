@@ -3,6 +3,8 @@
 import {
   buyCardSchema,
   BuyCardType,
+  cardBalanceSchema,
+  CardBalanceType,
   requestPayWithdrawalSchema,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
@@ -271,5 +273,40 @@ export const useGetAIMessage = () => {
   return {
     generateMessage,
     isGenerating: mutation.isPending,
+  };
+};
+
+export const useCardBalanceMutation = () => {
+  const form = useForm<CardBalanceType>({
+    resolver: zodResolver(cardBalanceSchema),
+    defaultValues: {
+      card_value: '',
+      shopping_value: '',
+      card_balance: '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (data: CardBalanceType) => {
+      // TODO: Replace with actual API call
+      return Promise.resolve(data);
+    },
+    mutationKey: ['card-balance'],
+  });
+
+  const onSubmit = async (data: CardBalanceType) => {
+    try {
+      await mutation.mutateAsync(data);
+      toast.success('Card balance updated successfully');
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to update card balance');
+    }
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
   };
 };

@@ -239,7 +239,14 @@ export const requestPayWithdrawalSchema = z.object({
     .max(255, 'Description must be less than 255 characters'),
 });
 
+export const cardBalanceSchema = z.object({
+  card_value: z.string().min(1, 'Card valu e is required'),
+  shopping_value: z.string().min(1, 'Card valu e is required'),
+  card_balance: z.string().min(1, 'Card valu e is required'),
+});
+
 //TYPES
+export type CardBalanceType = z.infer<typeof cardBalanceSchema>;
 export type RequestPayWithdrawalType = z.infer<
   typeof requestPayWithdrawalSchema
 >;
