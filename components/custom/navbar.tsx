@@ -215,7 +215,9 @@ function NavBar() {
                 <li>
                   <Link href={'/gift-card'}>Gift Cards</Link>
                 </li>
-                <li>Card Balance</li>
+                <li>
+                  <Link href={'/card-balance'}>Card Balance</Link>
+                </li>
               </>
             )}
           </ul>
