@@ -22,7 +22,7 @@ const paymentService = [
   },
   {
     name: 'Bank Transfer',
-    description: 'Pay directly from your bank account',
+    description: 'Pay directly from your bank',
     type: 'transfer',
   },
 ];

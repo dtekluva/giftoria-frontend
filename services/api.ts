@@ -244,3 +244,22 @@ export const getAIMessage = async (data: { message: string }) => {
     data
   );
 };
+
+// Add interface for card redemption response
+interface ApiCardRedemptionResponse {
+  status: boolean;
+  message: string;
+  data: {
+    card_number: string;
+    balance: number;
+    brand_name: string;
+    expiry_date: string;
+  };
+}
+
+export const redeemCardByNumber = async (card_number: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCardRedemptionResponse>
+  >(`/branch/branch_redeem_card/?card_number=${card_number}`);
+};

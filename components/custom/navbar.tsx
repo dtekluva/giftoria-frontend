@@ -150,7 +150,7 @@ function NavBar() {
               {isScrolled && isSuccess && (
                 <>
                   <Select onValueChange={handleCategoryChange}>
-                    <SelectTrigger className='md:min-w-[275px] min-w-[150px] text-black font-dm-sans bg-white rounded-full h-full border-white'>
+                    <SelectTrigger className='md:min-w-[275px] md:min-h-11 max-h-11 min-w-[150px] text-black font-dm-sans bg-white rounded-full h-full border-white'>
                       <SelectValue placeholder='Category' />
                     </SelectTrigger>
                     <SelectContent className='z-[9999999999] text-black text-base font-dm-sans'>
