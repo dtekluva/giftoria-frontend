@@ -13,17 +13,21 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import PayStackIcon from '@/components/icon/paystack-icon';
+import BankTransferIcon from '@/components/icon/bank-transfer-icon';
 
 const paymentService = [
   {
     name: 'Paystack',
     description: 'Pay securely with paystack',
     type: 'paystack',
+    icon: <PayStackIcon />,
   },
   {
     name: 'Bank Transfer',
     description: 'Pay directly from your bank',
     type: 'transfer',
+    icon: <BankTransferIcon />,
   },
 ];
 
@@ -187,7 +191,7 @@ function OrderSummary() {
             <RadioGroup
               value={selectedPayment}
               onValueChange={setSelectedPayment}
-              className='mt-5 md:mt-7 max-[380px]:grid-cols-1 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,270px))] gap-4'>
+              className='mt-5 md:mt-7 max-[380px]:grid-cols-1 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,280px))] gap-4'>
               {paymentService.map((item, index) => (
                 <Label
                   key={index}
@@ -197,20 +201,17 @@ function OrderSummary() {
                       ? 'border-primary bg-primary/5'
                       : 'border-[#E2E6EE] hover:border-primary/50'
                   }`}>
-                  <div className='flex items-start gap-4'>
+                  <div className='flex items-center gap-4'>
                     <RadioGroupItem
                       value={item.name}
                       id={`payment-${index}`}
                       className='mt-1'
                     />
-                    <div>
-                      <h4 className='text-sm md:text-base font-bold'>
-                        {item.name}
-                      </h4>
-                      <p className='text-xs text-gray-500 mt-1'>
-                        {item.description}
-                      </p>
-                    </div>
+
+                    <h4 className='text-sm md:text-base font-bold'>
+                      {item.name}
+                    </h4>
+                    {item.icon}
                   </div>
                 </Label>
               ))}
