@@ -16,6 +16,7 @@ import {
   getCardSalesById,
   searchAllBrands,
   fetchCategories,
+  redeemCardByNumber,
 } from '../api';
 
 export const brand_keys = {
@@ -194,7 +195,7 @@ export const useBankTransferCompeleted = (
     enabled: !!reference && enabled,
 
     refetchInterval(query) {
-      if (query.state.data?.data.status) {
+      if (query.state.data?.data.status && enabled) {
         toast.success('Payment completed successfully');
         router.push('/my-orders');
         return !enabled && false;
@@ -214,6 +215,19 @@ export const useGetCategoriesQuery = () => {
     queryKey: brand_keys.categories,
     queryFn: fetchCategories,
     select: (data) => data.data,
+  });
+
+  return {
+    query,
+  };
+};
+
+export const useRedeemCardQuery = (card_number: string) => {
+  const query = useQuery({
+    queryKey: ['redeem_card', card_number],
+    queryFn: () => redeemCardByNumber(card_number),
+    select: (data) => data.data,
+    enabled: !!card_number,
   });
 
   return {
