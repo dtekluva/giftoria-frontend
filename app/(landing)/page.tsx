@@ -1,18 +1,18 @@
 'use client';
+import { Card } from '@/components/custom/card';
 import FAQ from '@/components/custom/faq';
+import { GiftCardSearchBar } from '@/components/custom/gift-card-search-bar';
 import CardTickIcon from '@/components/icon/card-tick-icon';
 import GlobeIcon from '@/components/icon/global-icon';
 import LocalMailIcon from '@/components/icon/local-mail-icon';
 import MailIcon from '@/components/icon/mail-icon';
 import MoneyRemoveIcon from '@/components/icon/money-remove-icon';
 import ReceiveIcon from '@/components/icon/receive-icon';
-import SearchIcon from '@/components/icon/search-icon';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { useGetAllBrandCardsQuery } from '@/services/queries/brand.queries';
-import { Card } from '@/components/custom/card';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const fadeInUp = {
@@ -30,27 +30,22 @@ export default function Home() {
     },
   };
 
-  const { query } = useGetAllBrandCardsQuery();
+  const { query } = useGetAllBrandCardsQuery({ search: '' });
+  const router = useRouter();
 
   return (
     <motion.div initial='hidden' animate='visible' variants={staggerContainer}>
       <motion.section
-        className='relative md:bg-[url(/assets/hero-desktop-bg.png)] bg-[url(/assets/hero-mobile-bg.png)] bg-cover bg-no-repeat bg-center'
+        className='relative md:bg-[url(/assets/hero-desktop-bg.png)] bg-[url(/assets/hero-mobile-bg.png)] bg-cover bg-no-repeat bg-center -mt-20'
         variants={fadeInUp}>
         <div className='bg-[#160032]/70 flex flex-col pt-20 md:pt-32 px-4 md:px-10 md:pb-[10.25rem] pb-20'>
           <motion.div
-            className='lg:hidden flex relative bg-white z-50 rounded-full overflow-hidden max-w-[70%] mx-auto w-full'
+            className='lg:hidden flex bg-white z-50 rounded-full overflow-hidden max-w-[70%] mx-auto w-full'
             variants={fadeInUp}>
-            <Input
-              className='h-[2.75rem] md:h-[2.75rem] border-none w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 flex-1'
-              placeholder='Search gift card.....'
-            />
-            <div className='bg-[#990099] rounded-full p-[0.625rem] flex justify-center items-center ml-auto'>
-              <SearchIcon color='#fff' className='text-white' />
-            </div>
+            <GiftCardSearchBar />
           </motion.div>
           <motion.h1
-            className='mt-12 md:mt-14 text-white text-center text-2xl md:text-4xl lg:text-6xl font-semibold'
+            className='mt-8 md:mt-14 text-white text-center text-2xl md:text-4xl lg:text-6xl font-semibold'
             variants={fadeInUp}>
             Gifting done with style
           </motion.h1>
@@ -63,6 +58,9 @@ export default function Home() {
           </motion.p>
           <motion.div className='flex justify-center' variants={fadeInUp}>
             <Button
+              onClick={() => {
+                router.push('/gift-card');
+              }}
               className='w-full mt-8 md:mt-10 lg:mt-14 max-w-[9rem] md:max-w-[20rem] lg:max-w-[32rem] mx-auto 
             h-[2.5rem] md:h-[3rem] lg:h-[4.375rem] 
             text-sm md:text-base lg:text-xl 
@@ -97,6 +95,9 @@ export default function Home() {
         </div>
         <div className='flex justify-center mt-7 md:mt-10 px-20'>
           <Button
+            onClick={() => {
+              router.push('/gift-card');
+            }}
             className='w-full max-w-[21.25rem] 
             h-[2.5rem] md:h-[3rem] lg:h-[3.9375rem] 
             text-sm md:text-base lg:text-xl 
@@ -149,6 +150,7 @@ export default function Home() {
         </div>
         <div className='flex justify-center mt-8 md:mt-10 px-20 pb-[1.875rem] md:pb-[3.75rem]'>
           <Button
+            variant={'default'}
             className='w-full max-w-[21.25rem] 
             h-[2.5rem] md:h-[3rem] lg:h-[3.9375rem] 
             text-sm md:text-base lg:text-xl 

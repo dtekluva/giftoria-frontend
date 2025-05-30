@@ -22,6 +22,7 @@ import {
   ApiBranchResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
+  ApiCategoryResponse,
   ApiCompanyDetailsResponse,
   ApiPaymentSetupResponse,
   BuyMultipleCard,
@@ -89,11 +90,42 @@ export const cashierLogin = async (data: CashierLoginType) => {
 };
 
 /// Brand API SERVICES
-export const getAllBrandCards = async () => {
+export const getAllBrandCards = async ({
+  search = '',
+  showAllCards = false,
+}: {
+  search?: string;
+  showAllCards?: boolean;
+}) => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
-  >('/brand/all_cards');
+  >(
+    `/brand/all_cards/?${
+      showAllCards ? '' : 'page_size=8&page=1'
+    }&search=${search}`
+  );
+};
+
+export const fetchCategories = async () => {
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiCategoryResponse>>(
+    '/brand/fetch_category/'
+  );
+};
+
+export const searchAllBrands = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiAllBrandCardsResponse>
+  >(`/brand/all_cards/?search=${search}&page=${page}&page_size=${page_size}`);
 };
 
 export const getBrandCardById = async (id: string) => {
@@ -191,4 +223,43 @@ export const payViaBank = async (reference: string) => {
     AxiosError,
     AxiosResponse<ApiPaymentSetupResponse>
   >(`/brand/pay_via_bank_transfer/?reference=${reference}`);
+};
+
+export const bankTransferCompeleted = async (reference: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiPaymentSetupResponse>
+  >(`/wema/bank_transfer_completed/?reference=${reference}`);
+};
+
+// Add interface for AI message response
+interface ApiAIMessageResponse {
+  message: string;
+}
+
+// Update the getAIMessage function
+export const getAIMessage = async (data: { message: string }) => {
+  return await httpConfig.post<AxiosError, AxiosResponse<ApiAIMessageResponse>>(
+    '/brand/get_ai_message/',
+    data
+  );
+};
+
+// Add interface for card redemption response
+interface ApiCardRedemptionResponse {
+  status: boolean;
+  message: string;
+  data: {
+    card_number: string;
+    balance: number;
+    brand_name: string;
+    expiry_date: string;
+  };
+}
+
+export const redeemCardByNumber = async (card_number: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCardRedemptionResponse>
+  >(`/branch/branch_redeem_card/?card_number=${card_number}`);
 };

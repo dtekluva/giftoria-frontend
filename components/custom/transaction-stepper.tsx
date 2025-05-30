@@ -9,8 +9,14 @@ import {
 import TransactionEnvelopeIcon from '../icon/transaction-envelope-icon';
 import TransactionPendingIcon from '../icon/transaction-pending-icon';
 import TransactionStepperRedeemedIcon from '../icon/transaction-stepper-redeemed';
+import { CardSale } from '@/libs/types/brand.types';
+import { formatCustomDate } from '@/utils/dateFormat';
 
-function TransactionStepper(props: Partial<StepperContextValue>) {
+function TransactionStepper(
+  props: Partial<StepperContextValue> & {
+    data?: CardSale;
+  }
+) {
   return (
     <div className='mx-auto max-w-xl space-y-8 text-center min-w-[300px]'>
       <Stepper orientation='horizontal' defaultValue={props?.activeStep || 2}>
@@ -23,7 +29,7 @@ function TransactionStepper(props: Partial<StepperContextValue>) {
                   Sent
                 </p>
                 <p className='text-[8px] md:text-xs text-[#4A4A68]'>
-                  2/10/2023 - 4:30PM
+                  {formatCustomDate(props.data?.sent_date ?? '')}
                 </p>
               </div>
             </StepperIndicator>
@@ -39,7 +45,7 @@ function TransactionStepper(props: Partial<StepperContextValue>) {
                   Pending{' '}
                 </p>
                 <p className='text-[8px] md:text-xs text-[#4A4A68]'>
-                  2/10/2023 - 4:30PM
+                  {formatCustomDate(props.data?.assigned_date ?? '')}
                 </p>
               </div>
             </StepperIndicator>
@@ -55,7 +61,9 @@ function TransactionStepper(props: Partial<StepperContextValue>) {
                   Redeemed
                 </p>
                 <p className='text-[8px] md:text-xs text-[#4A4A68]'>
-                  2/10/2023 - 4:30PM
+                  {props.data?.redeemed_date
+                    ? formatCustomDate(props.data?.redeemed_date ?? '')
+                    : 'Not redeemed'}
                 </p>
               </div>
             </StepperIndicator>

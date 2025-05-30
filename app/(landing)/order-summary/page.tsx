@@ -1,33 +1,33 @@
 'use client';
-import Clipboard from '@/components/custom/clipboard';
-import FilterSearchIcon from '@/components/icon/filter-search-icon';
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BuyMultipleCard } from '@/libs/types/brand.types';
-import { useByCardsMutation } from '@/services/mutations/brand.mutation';
+import { useByAllCardsMutation } from '@/services/mutations/brand.mutation';
+
+import { BankTransferModal } from '@/components/custom/bank-transfer-modal';
 import { getCookie } from 'cookies-next/client';
-import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import PayStackIcon from '@/components/icon/paystack-icon';
+import BankTransferIcon from '@/components/icon/bank-transfer-icon';
 
 const paymentService = [
   {
     name: 'Paystack',
-    image: 'https://placehold.co/225x120.png',
-    description: '',
+    description: 'Pay securely with paystack',
     type: 'paystack',
+    icon: <PayStackIcon />,
   },
   {
     name: 'Bank Transfer',
-    image: '', // You can add an image if you want
-    description:
-      'Use the account number displayed below to transfer funds to your wallet',
+    description: 'Pay directly from your bank',
     type: 'transfer',
+    icon: <BankTransferIcon />,
   },
 ];
 
@@ -39,12 +39,23 @@ function OrderSummary() {
     paymentService[0].name
   );
 
-  const { deleteItemFromLocalStorage, buyAllCards } =
-    useByCardsMutation(selectedPayment);
+  const {
+    buyAllCard,
+    payingThroughBank,
+    deleteItemFromLocalStorage,
+    bankData,
+    mutation,
+  } = useByAllCardsMutation(selectedPayment);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const referenceId = useSearchParams()?.get('reference');
 
   const access_token = getCookie('access_token');
+
+  useEffect(() => {
+    if (selectedPayment.toLowerCase() !== 'paystack')
+      setShowSuccessModal(mutation.isSuccess);
+  }, [mutation.isSuccess, selectedPayment]);
 
   // Load cards from localStorage when the component mounts
   useEffect(() => {
@@ -68,11 +79,42 @@ function OrderSummary() {
 
   const router = useRouter();
 
+  // Simulate payment success callback
+  const handlePayment = async () => {
+    if (!access_token) {
+      toast.error('Please sign in to continue');
+      router.push('/auth/sign-in');
+      return;
+    }
+
+    await buyAllCard();
+  };
+
+  // Handler for confirming transfer
+  // const handleConfirmTransfer = async () => {
+  //   setLoadingTransfer(true);
+  //   useBankTransferCompeleted()
+  //   try {
+  //     // Fire the request (simulate what you do in loading-transaction)
+  //     const reference =
+  //       bankData?.payment_details?.data?.data?.account_details
+  //         ?.request_reference;
+  //     if (reference) {
+  //       await bankTransferCompeleted(reference);
+
+  //     }
+  //   } catch (e) {
+  //     console.error('Error confirming transfer:', e);
+  //   } finally {
+  //     setLoadingTransfer(false);
+  //   }
+  // };
+
   return (
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
       <div className='lg:flex justify-between items-center'>
         <h1 className='md:text-2xl font-bold text-base'>Order Summary</h1>
-        <div className='p-3 pl-3 px-5 border rounded-[12px] border-[#E2E6EE] flex gap-2 items-center max-w-[90%] mx-auto mt-4 lg:mt-0 lg:max-w-[290px] lg:mx-0'>
+        {/* <div className='p-3 pl-3 px-5 border rounded-[12px] border-[#E2E6EE] flex gap-2 items-center max-w-[90%] mx-auto mt-4 lg:mt-0 lg:max-w-[290px] lg:mx-0'>
           <div>
             <SearchIcon />
           </div>
@@ -83,7 +125,7 @@ function OrderSummary() {
           <div className='pl-4 border-l border-[#93A3C0]'>
             <FilterSearchIcon />
           </div>
-        </div>
+        </div> */}
       </div>
       <ul className='mt-4 md:mt-6 space-y-4'>
         {cards?.cards?.map((card, index) => (
@@ -91,12 +133,7 @@ function OrderSummary() {
             key={index}
             className='lg:flex items-center justify-between space-y-4 lg:space-y-0 gap-4 pb-6 border-b'>
             <div className='flex items-center gap-4 font-montserrat'>
-              <Image
-                src={'https://placehold.co/160x100.png'}
-                width={160}
-                height={100}
-                alt=''
-              />
+              <Image src={card.image ?? ''} width={160} height={100} alt='' />
               <div className='space-y-2 md:space-y-3'>
                 <p className='text-sm font-medium'>₦{card.card_amount}</p>
                 <p className='text-xs font-dm-sans'>{card.recipient_name}</p>
@@ -117,11 +154,13 @@ function OrderSummary() {
               </p>
             </div>
             <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
-              <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
-                <article className='text-[6px] md:text-[10px]'>
-                  {card.message}
-                </article>
-              </div>
+              {card.message && (
+                <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
+                  <article className='text-[6px] md:text-[10px]'>
+                    {card.message}
+                  </article>
+                </div>
+              )}
               <div className='md:flex-none flex-1 text-end'>
                 <p className='text-sm md:text-base font-bold'>
                   ₦{card.card_amount.toLocaleString()}
@@ -152,61 +191,27 @@ function OrderSummary() {
             <RadioGroup
               value={selectedPayment}
               onValueChange={setSelectedPayment}
-              className='mt-5 md:mt-7 max-[380px]:grid-cols-1 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,270px))] gap-4'>
+              className='mt-5 md:mt-7 max-[380px]:grid-cols-1 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,280px))] gap-4'>
               {paymentService.map((item, index) => (
                 <Label
                   key={index}
                   htmlFor={`payment-${index}`}
-                  className='flex-1 h-full border border-[#E2E6EE] rounded-[12px] p-2 md:p-6  md:space-y-5 space-y-3 cursor-pointer'>
-                  <div className=''>
-                    <div className='flex items-start gap-4'>
-                      <RadioGroupItem
-                        value={item.name}
-                        id={`payment-${index}`}
-                      />
-                      <h4 className='text-sm md:text-base font-bold'>
-                        {item.name}
-                      </h4>
-                    </div>
-                    {item.image && (
-                      <div className='flex items-center space-x-4'>
-                        <Image
-                          src={item.image}
-                          width={225}
-                          height={120}
-                          alt={item.name}
-                        />
-                      </div>
-                    )}
-                    {item.type === 'transfer' && (
-                      <div>
-                        <p className='mt-1 md:mt-[6px] font-dm-sans text-[8px] md:text-xs text-[#4E4E4E]'>
-                          {item.description}
-                        </p>
-                        <div className='mt-3 md:mt-5 md:space-y-3 space-y-2'>
-                          <div className='flex items-center gap-4 justify-between'>
-                            <p className='text-xs font-montserrat'>
-                              Bank name:
-                            </p>
-                            <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
-                              Providus Bank
-                            </p>
-                          </div>
-                          <Clipboard
-                            title='Account number:'
-                            value='9131200194'
-                          />
-                          <div className='flex items-center gap-4 justify-between'>
-                            <p className='text-xs font-montserrat'>
-                              Account name:
-                            </p>
-                            <p className='text-[10px] md:text-sm font-bold font-dm-sans text-[#556575]'>
-                              Giftoria
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                  className={`flex-1 h-full border rounded-[12px] p-4 md:p-6 space-y-3 cursor-pointer transition-all duration-200 ${
+                    selectedPayment === item.name
+                      ? 'border-primary bg-primary/5'
+                      : 'border-[#E2E6EE] hover:border-primary/50'
+                  }`}>
+                  <div className='flex items-center gap-4'>
+                    <RadioGroupItem
+                      value={item.name}
+                      id={`payment-${index}`}
+                      className='mt-1'
+                    />
+
+                    <h4 className='text-sm md:text-base font-bold'>
+                      {item.name}
+                    </h4>
+                    {item.icon}
                   </div>
                 </Label>
               ))}
@@ -214,18 +219,35 @@ function OrderSummary() {
           </div>
           <div className='flex justify-center mt-7 md:mt-10 px-4'>
             <Button
-              onClick={() => {
-                if (!access_token) {
-                  toast.error('Please sign in to continue');
-                  router.push('/auth/sign-in');
-                  return;
-                }
-                buyAllCards();
-              }}
+              onClick={handlePayment}
               className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
               Proceed to payment
             </Button>
           </div>
+          <BankTransferModal
+            open={showSuccessModal}
+            payingThroughBank={payingThroughBank}
+            onOpenChange={setShowSuccessModal}
+            details={
+              bankData?.payment_details?.data?.data?.account_details
+                ? {
+                    bank_name:
+                      bankData.payment_details.data.data.account_details
+                        .bank_name,
+                    account_name:
+                      bankData.payment_details.data.data.account_details
+                        .account_name,
+                    account_number:
+                      bankData.payment_details.data.data.account_details
+                        .account_number,
+                    request_reference:
+                      bankData.payment_details.data.data.account_details
+                        .request_reference,
+                  }
+                : null
+            }
+          />
+          ;
         </>
       )}
     </div>

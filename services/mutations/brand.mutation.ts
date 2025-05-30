@@ -3,28 +3,35 @@
 import {
   buyCardSchema,
   BuyCardType,
+  cardBalanceSchema,
+  CardBalanceType,
   requestPayWithdrawalSchema,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
-import { BuyMultipleCard, IBuyCardAgain } from '@/libs/types/brand.types';
+import {
+  ApiPaymentSetupResponse,
+  BuyMultipleCard,
+  IBuyCardAgain,
+} from '@/libs/types/brand.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next/client';
 import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   buyCardAgainbyId,
   buyCardbyId,
+  getAIMessage,
   payViaBank,
   payViaPayStack,
 } from '../api';
 
-export const useByCardsMutation = (selectedPayment?: string) => {
+export const useByCardsMutation = () => {
   const cardId = usePathname()?.split('/').pop();
-  const router = useRouter();
-  const { payThroughPayStack, payThroughBank } = usePayBrand();
+
   const form = useForm<BuyCardType>({
     resolver: zodResolver(buyCardSchema),
     defaultValues: {
@@ -35,26 +42,6 @@ export const useByCardsMutation = (selectedPayment?: string) => {
       recipient_phone_number: '',
       for_who: '',
       occasion: '',
-      message: '',
-    },
-  });
-
-  const mutation = useMutation({
-    mutationFn: buyCardbyId,
-    mutationKey: ['buy-card', 'card'],
-    onSuccess: (query) => {
-      const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
-      saveItemToLocalStorage();
-      if (cards && selectedPayment) {
-        if (selectedPayment?.toLowerCase() === 'paystack') {
-          payThroughPayStack(query.data.payment_reference);
-        } else {
-          payThroughBank(query.data.payment_reference);
-        }
-        return;
-      }
-
-      router.push(`/order-summary?reference=${query.data.payment_reference}`);
     },
   });
 
@@ -62,9 +49,9 @@ export const useByCardsMutation = (selectedPayment?: string) => {
     const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
     form.trigger();
 
-    if (!form.formState.isValid) {
+    if (Object.keys(form.formState.errors)[0]) {
       toast.error('Please fill in all required fields');
-      return;
+      return false;
     }
 
     console.log('No cards found in local storage', cards);
@@ -82,6 +69,7 @@ export const useByCardsMutation = (selectedPayment?: string) => {
       });
     }
     toast.success('Card added to cart');
+    return true;
   };
 
   const deleteItemFromLocalStorage = (id: number | string) => {
@@ -98,68 +86,95 @@ export const useByCardsMutation = (selectedPayment?: string) => {
     }
   };
 
-  const onSubmit = (data: BuyCardType) => {
-    const accessToken = getCookie('access_token');
-    if (!accessToken) {
-      toast.error('Please sign in to continue');
-      router.push('/auth/sign-in');
-      return;
-    }
-
-    const res = mutation.mutateAsync({
-      cards: [
-        {
-          ...data,
-          card_amount: data.card_amount.split(',').join(''),
-        },
-      ],
-      password: getCookie('password') ?? '',
-    });
-
-    showToast(res, {
-      success: 'Processing card payment',
-      error: 'Error processing card',
-      loading: 'Processing card payment...',
-    });
-  };
-
-  const buyAllCards = () => {
-    const storedCards: BuyMultipleCard = JSON.parse(
-      localStorage.getItem('cards') ?? 'null'
-    );
-
-    const res = mutation.mutateAsync({
-      ...storedCards,
-      cards: storedCards.cards.map((card) => ({
-        ...card,
-        card_amount: card.card_amount.split(',').join(''),
-      })),
-    });
-    showToast(res, {
-      success: 'Processing card payment',
-      error: 'Error processing card',
-      loading: 'Processing card payment...',
-    });
+  const onSubmit = () => {
+    return saveItemToLocalStorage();
   };
 
   return {
     form,
     onSubmit,
     saveItemToLocalStorage,
-    isLoading: mutation.isPending,
     deleteItemFromLocalStorage,
-    buyAllCards,
+  };
+};
+
+export const useByAllCardsMutation = (selectedPayment: string) => {
+  const {
+    payThroughPayStack,
+    payThroughBank,
+    isPaying,
+    isPayingBank,
+    bankData,
+  } = usePayBrand();
+  const mutation = useMutation({
+    mutationFn: buyCardbyId,
+    mutationKey: ['buy-all-card', 'card'],
+    onSuccess: (query) => {
+      const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
+      if (cards && selectedPayment) {
+        if (selectedPayment?.toLowerCase() === 'paystack') {
+          payThroughPayStack(query.data.payment_reference);
+        } else {
+          payThroughBank(query.data.payment_reference);
+        }
+        return;
+      }
+    },
+  });
+
+  const buyAllCard = () => {
+    const cards = JSON.parse(
+      localStorageStore.getItem('cards') ?? 'null'
+    ) as BuyMultipleCard;
+
+    const formattedCards = {
+      cards: cards.cards.map((card) => {
+        return {
+          ...card,
+          card_amount: card.card_amount.split(',').join(''),
+        };
+      }),
+      password: getCookie('password') ?? '',
+    };
+
+    const res = mutation.mutateAsync(formattedCards);
+
+    showToast(res, {
+      success: 'Card purchased successfully',
+      error: 'Error purchasing card',
+      loading: 'Purchasing card...',
+    });
+  };
+
+  const deleteItemFromLocalStorage = (id: number | string) => {
+    const cards = JSON.parse(
+      localStorageStore.getItem('cards') as any
+    ) as BuyMultipleCard;
+    if (cards) {
+      const newCards = cards.cards.filter((_, index) => index !== id);
+
+      localStorageStore.setItem('cards', {
+        cards: newCards,
+        password: getCookie('password') ?? '',
+      });
+    }
+  };
+
+  return {
+    isLoading: mutation.isPending,
+    buyAllCard,
+    payingThroughPayStack: isPaying,
+    payingThroughBank: isPayingBank,
+    deleteItemFromLocalStorage,
+    bankData,
+    mutation,
   };
 };
 
 export const useBuyCardById = () => {
-  const router = useRouter();
   const mutation = useMutation({
     mutationFn: buyCardAgainbyId,
     mutationKey: ['buy-card-again', 'card'],
-    onSuccess: (data) => {
-      router.push(`/order-summary?reference=${data.data.payment_reference}`);
-    },
   });
 
   const buyCard = (data: Partial<IBuyCardAgain>) => {
@@ -183,10 +198,13 @@ export const useBuyCardById = () => {
 
 export const usePayBrand = () => {
   const router = useRouter();
+  const [bankData, setBankData] = useState<null | ApiPaymentSetupResponse>(
+    null
+  );
   const mutation = useMutation({
     mutationFn: payViaPayStack,
     mutationKey: ['pay', 'card'],
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       router.push(data.data.payment_details.payment_link);
     },
   });
@@ -195,17 +213,12 @@ export const usePayBrand = () => {
     mutationFn: payViaBank,
     mutationKey: ['pay', 'bank'],
     onSuccess: (data) => {
-      router.push(data.data.payment_details.payment_link);
+      setBankData(data.data);
     },
   });
 
-  const payThroughBank = (reference: string) => {
-    const res = bankMutation.mutateAsync(reference);
-    showToast(res, {
-      success: 'Payment successful',
-      error: 'Error processing payment',
-      loading: 'Processing payment...',
-    });
+  const payThroughBank = async (reference: string) => {
+    await bankMutation.mutateAsync(reference);
   };
 
   const payThroughPayStack = (reference: string) => {
@@ -222,6 +235,8 @@ export const usePayBrand = () => {
     isPaying: mutation.isPending,
     payThroughBank,
     isPayingBank: bankMutation.isPending,
+    bankData,
+    setBankData,
   };
 };
 
@@ -231,5 +246,62 @@ export const useRequestWithdrawal = () => {
   });
   return {
     form,
+  };
+};
+
+export const useGetAIMessage = () => {
+  const mutation = useMutation({
+    mutationFn: getAIMessage,
+    mutationKey: ['ai-message'],
+  });
+
+  const generateMessage = async (message: string) => {
+    try {
+      const response = await mutation.mutateAsync({ message });
+      return response.data.message;
+    } catch {
+      toast.error('Failed to generate AI message');
+      return null;
+    }
+  };
+
+  return {
+    generateMessage,
+    isGenerating: mutation.isPending,
+  };
+};
+
+export const useCardBalanceMutation = () => {
+  const form = useForm<CardBalanceType>({
+    resolver: zodResolver(cardBalanceSchema),
+    defaultValues: {
+      card_value: '',
+      shopping_value: '',
+      card_balance: '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (data: CardBalanceType) => {
+      // TODO: Replace with actual API call
+      return Promise.resolve(data);
+    },
+    mutationKey: ['card-balance'],
+  });
+
+  const onSubmit = async (data: CardBalanceType) => {
+    try {
+      await mutation.mutateAsync(data);
+      toast.success('Card balance updated successfully');
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to update card balance');
+    }
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
   };
 };

@@ -6,7 +6,7 @@ interface GiftCardDetails {
 
 function GiftCardDetailsTable({ data }: { data: GiftCardDetails }) {
   return (
-    <div className='rounded-md md:px-6 flex-1'>
+    <div className='rounded-md flex-1'>
       <div className='overflow-x-auto'>
         <table className='min-w-full divide-y divide-gray-200'>
           <tbody className='divide-y divide-gray-200 font-dm-sans'>

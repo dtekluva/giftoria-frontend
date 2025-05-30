@@ -14,33 +14,79 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useByCardsMutation } from '@/services/mutations/brand.mutation';
+import {
+  useByCardsMutation,
+  useGetAIMessage,
+} from '@/services/mutations/brand.mutation';
 import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { getCookie } from 'cookies-next/client';
 
 function GiftCardDetails() {
-  const { form, onSubmit, isLoading, saveItemToLocalStorage } =
-    useByCardsMutation();
+  const { form, onSubmit, saveItemToLocalStorage } = useByCardsMutation();
+  const { generateMessage } = useGetAIMessage();
+  const [isGeneratingMessage, setIsGeneratingMessage] = useState(false);
 
   const cardId = usePathname()?.split('/').pop();
   const { query } = useGetBrandCardByIdQuery(cardId ?? '');
+  const router = useRouter();
+
+  useEffect(() => {
+    form.setValue('image', query?.data?.image ?? '');
+  }, [query?.data?.image, form]);
+
+  const handleGenerateMessage = async () => {
+    const message = form.getValues('message');
+
+    if (!message) {
+      toast.error('Please enter a message first');
+      return;
+    }
+
+    setIsGeneratingMessage(true);
+    const generatedMessage = await generateMessage(message);
+    if (generatedMessage) {
+      form.setValue('message', generatedMessage);
+    }
+    setIsGeneratingMessage(false);
+  };
+
+  const handleProceedToPayment = async () => {
+    const isValid = saveItemToLocalStorage();
+
+    if (isValid) {
+      const accessToken = getCookie('access_token');
+      if (!accessToken) {
+        toast.error('Please sign in to continue');
+        router.push('/auth/sign-in');
+      } else {
+        router.push('/order-summary');
+      }
+    }
+  };
 
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
-      <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
-        <Image
-          src={query?.data?.image ?? ''}
-          width={500}
-          className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
-          height={300}
-          alt=''
-        />
+      <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:grid grid-cols-2 gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
+        {query.isPending ? (
+          <div className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] bg-gray-300'></div>
+        ) : (
+          <Image
+            src={query?.data?.image ?? ''}
+            width={500}
+            className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
+            height={300}
+            alt=''
+          />
+        )}
         <p className='lg:leading-[40px] md:leading-[20px] leading-[18px] lg:text-xl md:text-sm text-xs max-w-[585px]'>
-          Looking for the perfect gift? Whether it’s fashion, electronics, home
-          essentials, beauty products, or more, you’ll find it all with our
-          exclusive gift cards! Looking for the perfect gift? Whether it’s
-          fashion
+          Looking for the perfect gift? Whether it&apos;s fashion, electronics,
+          home essentials, beauty products, or more, you&apos;ll find it all
+          with our exclusive gift cards! Looking for the perfect gift? Whether
+          it&apos;s fashion
         </p>
       </div>
       <Form {...form}>
@@ -163,10 +209,8 @@ function GiftCardDetails() {
               </div>
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-base font-sans'
-                variant={'outline'}
                 type='button'
-                onClick={saveItemToLocalStorage}
-                disabled={isLoading}>
+                onClick={() => form.handleSubmit(onSubmit)()}>
                 <AddingShoppingIcon />
                 Add to cart and continue shoppping
               </Button>
@@ -245,13 +289,18 @@ function GiftCardDetails() {
                     <br /> Let our AI help craft the perfect message for you!
                   </p>
                 </div>
-                <SendIcon />
+                <button
+                  onClick={handleGenerateMessage}
+                  disabled={isGeneratingMessage}
+                  className='cursor-pointer disabled:opacity-50'>
+                  <SendIcon />
+                </button>
               </div>
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl mt-auto'
-                type='submit'
-                disabled={isLoading}>
-                {isLoading ? 'Processing...' : 'Proceed to make payment'}
+                type='button'
+                onClick={form.handleSubmit(handleProceedToPayment)}>
+                Proceed to make payment
               </Button>
             </div>
           </div>
