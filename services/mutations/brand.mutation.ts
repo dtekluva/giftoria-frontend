@@ -18,6 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next/client';
 import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
@@ -27,11 +28,10 @@ import {
   payViaBank,
   payViaPayStack,
 } from '../api';
-import { useState } from 'react';
 
 export const useByCardsMutation = () => {
   const cardId = usePathname()?.split('/').pop();
-  const router = useRouter();
+
   const form = useForm<BuyCardType>({
     resolver: zodResolver(buyCardSchema),
     defaultValues: {
@@ -51,7 +51,7 @@ export const useByCardsMutation = () => {
 
     if (Object.keys(form.formState.errors)[0]) {
       toast.error('Please fill in all required fields');
-      return;
+      return false;
     }
 
     console.log('No cards found in local storage', cards);
@@ -69,6 +69,7 @@ export const useByCardsMutation = () => {
       });
     }
     toast.success('Card added to cart');
+    return true;
   };
 
   const deleteItemFromLocalStorage = (id: number | string) => {
@@ -86,13 +87,7 @@ export const useByCardsMutation = () => {
   };
 
   const onSubmit = () => {
-    const accessToken = getCookie('access_token');
-    if (!accessToken) {
-      toast.error('Please sign in to continue');
-      router.push('/auth/sign-in');
-      return;
-    }
-    saveItemToLocalStorage();
+    return saveItemToLocalStorage();
   };
 
   return {

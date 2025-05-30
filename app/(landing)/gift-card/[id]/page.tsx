@@ -20,17 +20,19 @@ import {
 } from '@/services/mutations/brand.mutation';
 import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { getCookie } from 'cookies-next/client';
 
 function GiftCardDetails() {
-  const { form, onSubmit } = useByCardsMutation();
+  const { form, onSubmit, saveItemToLocalStorage } = useByCardsMutation();
   const { generateMessage } = useGetAIMessage();
   const [isGeneratingMessage, setIsGeneratingMessage] = useState(false);
 
   const cardId = usePathname()?.split('/').pop();
   const { query } = useGetBrandCardByIdQuery(cardId ?? '');
+  const router = useRouter();
 
   useEffect(() => {
     form.setValue('image', query?.data?.image ?? '');
@@ -50,6 +52,20 @@ function GiftCardDetails() {
       form.setValue('message', generatedMessage);
     }
     setIsGeneratingMessage(false);
+  };
+
+  const handleProceedToPayment = async () => {
+    const isValid = saveItemToLocalStorage();
+
+    if (isValid) {
+      const accessToken = getCookie('access_token');
+      if (!accessToken) {
+        toast.error('Please sign in to continue');
+        router.push('/auth/sign-in');
+      } else {
+        router.push('/order-summary');
+      }
+    }
   };
 
   return (
@@ -193,8 +209,8 @@ function GiftCardDetails() {
               </div>
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-base font-sans'
-                variant={'outline'}
-                type='submit'>
+                type='button'
+                onClick={() => form.handleSubmit(onSubmit)()}>
                 <AddingShoppingIcon />
                 Add to cart and continue shoppping
               </Button>
@@ -282,7 +298,8 @@ function GiftCardDetails() {
               </div>
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-xl mt-auto'
-                type='submit'>
+                type='button'
+                onClick={form.handleSubmit(handleProceedToPayment)}>
                 Proceed to make payment
               </Button>
             </div>
