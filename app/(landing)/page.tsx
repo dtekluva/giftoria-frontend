@@ -150,11 +150,13 @@ export default function Home() {
         </div>
         <div className='flex justify-center mt-8 md:mt-10 px-20 pb-[1.875rem] md:pb-[3.75rem]'>
           <Button
-            variant={'default'}
+            onClick={() => {
+              router.push('/gift-card');
+            }}
             className='w-full max-w-[21.25rem] 
             h-[2.5rem] md:h-[3rem] lg:h-[3.9375rem] 
             text-sm md:text-base lg:text-xl 
-            font-semibold hover:bg-primary'>
+            font-semibold'>
             Shop gift card
           </Button>
         </div>
@@ -173,6 +175,9 @@ export default function Home() {
                 card transactions
               </p>
               <Button
+                onClick={() => {
+                  router.push('/auth/admin/sign-up');
+                }}
                 className='w-full md:w-auto 
             h-[2.5rem] md:h-[3rem] lg:h-[3.9375rem] 
             px-6 md:px-8 lg:px-10

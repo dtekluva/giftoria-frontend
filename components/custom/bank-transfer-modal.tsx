@@ -21,6 +21,7 @@ interface BankTransferModalProps {
   onOpenChange: (open: boolean) => void;
   details: BankTransferDetails | null;
   payingThroughBank: boolean;
+  amount?: number;
 }
 
 export function BankTransferModal({
@@ -28,6 +29,7 @@ export function BankTransferModal({
   onOpenChange,
   details,
   payingThroughBank,
+  amount = 0,
 }: BankTransferModalProps) {
   const [confirmTransfer, setConfirmTransfer] = useState(false);
 
@@ -78,6 +80,12 @@ export function BankTransferModal({
                     Account Number:
                   </span>
                   <Clipboard title='' value={details.account_number} />
+                </div>
+                <div className='flex items-center justify-between gap-4'>
+                  <span className='font-medium text-xs text-left'>Amount:</span>
+                  <span className='font-bold text-sm text-right'>
+                    ₦{amount.toLocaleString()}
+                  </span>
                 </div>
                 <div className='flex items-center justify-between gap-4'>
                   <span className='font-medium text-xs text-left'>
