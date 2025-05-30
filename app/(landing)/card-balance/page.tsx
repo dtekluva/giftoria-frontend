@@ -2,17 +2,17 @@
 
 import GiftCardDetailsTable from '@/components/custom/gift-card-details';
 import SendIcon from '@/components/icon/send-icon';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+// import { Button } from '@/components/ui/button';
+// import {
+//   Form,
+//   FormControl,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useCardBalanceMutation } from '@/services/mutations/brand.mutation';
+// import { useCardBalanceMutation } from '@/services/mutations/brand.mutation';
 import { useRedeemCardQuery } from '@/services/queries/brand.queries';
 import { useState } from 'react';
 
@@ -34,7 +34,7 @@ import { useState } from 'react';
 // };
 
 function Page() {
-  const { form, onSubmit, isLoading } = useCardBalanceMutation();
+  // const { form, onSubmit, isLoading } = useCardBalanceMutation();
   const [cardNumber, setCardNumber] = useState('');
   const { query } = useRedeemCardQuery(cardNumber);
 
@@ -102,7 +102,7 @@ function Page() {
       )}
 
       {/* Card Balance Form */}
-      <div className='md:pt-10 pt-[30px] md:border-t md:mt-6 mt-4'>
+      {/* <div className='md:pt-10 pt-[30px] md:border-t md:mt-6 mt-4'>
         <h1 className='font-semibold text-base font-montserrat mb-3 md:mb-8'>
           Redeem Gift
         </h1>
@@ -179,7 +179,7 @@ function Page() {
             </form>
           </Form>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
