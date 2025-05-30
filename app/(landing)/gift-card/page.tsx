@@ -17,7 +17,7 @@ function GiftCardPage() {
           Explore our collection of our gift cards {userSearch}
         </h1>
         <p className='text-center font-dm-sans md:mt-2 text-[10px] md:text-xl'>
-          Gift you love ones with gift they truely desire
+          Gift you love ones with gift they truly desire
         </p>
       </div>
       <div className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] md:px-[3.125rem] container mx-auto px-5'>

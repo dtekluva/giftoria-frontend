@@ -2,6 +2,7 @@
 
 import AuthCard from '@/components/custom/auth-card';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -11,7 +12,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useLogin } from '@/services/mutations/auth.mutations';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 function SignIn() {
@@ -43,27 +46,41 @@ function SignIn() {
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-base font-semibold text-gray-700'>
-                    Password
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type='password'
-                      isPassword
-                      {...field}
-                      placeholder='Please enter your password'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div>
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-base font-semibold text-gray-700'>
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type='password'
+                        isPassword
+                        {...field}
+                        placeholder='Please enter your password'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className='flex justify-between mt-3 '>
+                <div className='flex items-center gap-2'>
+                  <Checkbox id='keep-logged-in' />
+                  <Label className='text-[#667085]' htmlFor='keep-logged-in'>
+                    Keep me logged in
+                  </Label>
+                </div>
+                <Link
+                  className='text-primary font-semibold'
+                  href={'/auth/forgot-password'}>
+                  Reset Password
+                </Link>
+              </div>
+            </div>
 
             <Button
               type='submit'

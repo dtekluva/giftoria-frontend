@@ -226,6 +226,11 @@ function OrderSummary() {
           </div>
           <BankTransferModal
             open={showSuccessModal}
+            amount={
+              cards?.cards
+                ?.map((card) => +card.card_amount.split(',').join(''))
+                .reduce((a, b) => a + b, 0) ?? 0
+            }
             payingThroughBank={payingThroughBank}
             onOpenChange={setShowSuccessModal}
             details={
