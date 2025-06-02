@@ -116,6 +116,9 @@ export interface PaymentDetailsOuter {
   status_code: number;
   status: boolean;
   data: PaymentDetailsInnerData;
+  errors: {
+    message: string;
+  };
 }
 
 export interface ApiPaymentSetupResponse {

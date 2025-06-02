@@ -22,6 +22,7 @@ interface BankTransferModalProps {
   details: BankTransferDetails | null;
   payingThroughBank: boolean;
   amount?: number;
+  error?: string;
 }
 
 export function BankTransferModal({
@@ -30,6 +31,7 @@ export function BankTransferModal({
   details,
   payingThroughBank,
   amount = 0,
+  error,
 }: BankTransferModalProps) {
   const [confirmTransfer, setConfirmTransfer] = useState(false);
 
@@ -134,7 +136,9 @@ export function BankTransferModal({
               </div>
             </div>
           ) : (
-            <p className='text-red-500'>Unable to fetch bank details.</p>
+            <p className='text-red-500'>
+              {error || 'Unable to fetch bank details.'}
+            </p>
           )}
         </div>
       </DialogContent>
