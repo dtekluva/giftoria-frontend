@@ -12,6 +12,7 @@ import {
   UpdateUserInfoType,
   CashierLoginType,
   ForgotPasswordType,
+  ChangeForgotPasswordType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -72,6 +73,10 @@ export const changePassword = (data: ChangePasswordType) =>
 
 export const forgotPassword = async (data: ForgotPasswordType) => {
   return await httpConfig.post('/auth/forgot_password/', data);
+};
+
+export const changeForgotPassword = async (data: ChangeForgotPasswordType) => {
+  return await httpConfig.post('/auth/change_forgot_password/', data);
 };
 
 export const uploadCompanyDetail = async (data: UploadCompanyDetailType) => {
