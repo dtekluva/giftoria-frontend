@@ -52,7 +52,7 @@ function ForgotPassword() {
 
             <Button
               type='submit'
-              disabled={isLoading}
+              disabled={!form.formState.isValid || isLoading}
               className='text-base w-full  font-semibold md:h-[70px] h-[50px] mt-4'>
               Continue
             </Button>
