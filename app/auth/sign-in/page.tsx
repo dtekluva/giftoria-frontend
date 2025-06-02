@@ -85,7 +85,7 @@ function SignIn() {
             <Button
               type='submit'
               className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'
-              disabled={isLoading}>
+              disabled={!form.formState.isValid || isLoading}>
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
 
