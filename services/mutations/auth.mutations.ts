@@ -8,6 +8,8 @@ import {
   createAdminAccountSchema,
   createUserAccountSchema,
   type CreateUserAccountType,
+  forgotPasswordSchema,
+  ForgotPasswordType,
   loginSchema,
   type LoginType,
   updateUserInfoSchema,
@@ -32,6 +34,7 @@ import {
   cashierLogin,
   changePassword,
   fetUserDetails,
+  forgotPassword,
   login,
   sendVerificationCode,
   updateUserProfile,
@@ -385,6 +388,33 @@ export const useChangePassword = () => {
       loading: 'Changing password...',
       success: 'Password changed successfully',
       error: 'An error occurred while changing the password',
+    });
+  };
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useForgotPassword = () => {
+  const form = useForm<ForgotPasswordType>({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
+  const mutation = useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: () => {
+      toast.success('Password reset link sent to your email');
+    },
+  });
+
+  const onSubmit = (data: ForgotPasswordType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Sending password reset link...',
+      success: 'Password reset link sent successfully',
+      error: 'An error occurred while sending the password reset link',
     });
   };
   return {

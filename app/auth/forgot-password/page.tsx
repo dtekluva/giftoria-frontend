@@ -12,11 +12,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useChangePassword } from '@/services/mutations/auth.mutations';
+import { useForgotPassword } from '@/services/mutations/auth.mutations';
 import { useRouter } from 'next/navigation';
 
 function ForgotPassword() {
-  const { form, onSubmit } = useChangePassword();
+  const { form, onSubmit, isLoading } = useForgotPassword();
   const router = useRouter();
   return (
     <div className='w-full'>
@@ -32,7 +32,7 @@ function ForgotPassword() {
             className='md:space-y-7 space-y-4 font-dm-sans'>
             <FormField
               control={form.control}
-              name='new_password'
+              name='email'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='text-base font-semibold text-gray-700'>
@@ -40,7 +40,7 @@ function ForgotPassword() {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type='password'
+                      type='email'
                       {...field}
                       placeholder='Please enter your email'
                     />
@@ -52,11 +52,13 @@ function ForgotPassword() {
 
             <Button
               type='submit'
-              className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'>
+              disabled={isLoading}
+              className='text-base w-full  font-semibold md:h-[70px] h-[50px] mt-4'>
               Continue
             </Button>
             <Button
               variant={'outline'}
+              disabled={isLoading}
               type='button'
               onClick={() => router.push('/auth/sign-up')}
               className='text-sm font-bold md:text-base md:h-[70px] h-[50px] w-full'>
