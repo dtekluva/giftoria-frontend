@@ -91,7 +91,7 @@ function VerifyEmail() {
             <Button
               type='submit'
               className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'
-              disabled={mutation.isPending}>
+              disabled={!form.formState.isValid || mutation.isPending}>
               {mutation.isPending ? 'Verifying...' : 'Verify Code'}
             </Button>
             <Button
