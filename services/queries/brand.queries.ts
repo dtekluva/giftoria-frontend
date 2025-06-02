@@ -21,9 +21,13 @@ import {
 
 export const brand_keys = {
   all: ['brands', 'all_cards'],
-  allSearch: (search: string, showAllCards: boolean) => [
+  allSearch: (search: string, showAllCards: boolean, category?: string) => [
     ...brand_keys.all,
-    { search, showAllCards },
+    {
+      search,
+      showAllCards,
+      category,
+    },
   ],
   brand: (id: string) => [...brand_keys.all, id],
   brand_card_sales: (search: string, page: number, page_size: number) => [
@@ -58,13 +62,15 @@ export const brand_keys = {
 export const useGetAllBrandCardsQuery = ({
   search = '',
   showAllCards = false,
+  category = '',
 }: {
   search?: string;
   showAllCards?: boolean;
+  category?: string;
 }) => {
   const query = useQuery({
-    queryKey: brand_keys.allSearch(search, showAllCards),
-    queryFn: () => getAllBrandCards({ search, showAllCards }),
+    queryKey: brand_keys.allSearch(search, showAllCards, category),
+    queryFn: () => getAllBrandCards({ search, showAllCards, category }),
     select: (data) => data.data,
     placeholderData: keepPreviousData,
   });

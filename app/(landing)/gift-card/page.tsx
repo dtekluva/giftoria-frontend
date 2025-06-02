@@ -2,12 +2,15 @@
 import { Card } from '@/components/custom/card';
 import { useGetAllBrandCardsQuery } from '@/services/queries/brand.queries';
 import { useSearchParams } from 'next/navigation';
+import { parseAsString, useQueryState } from 'nuqs';
 function GiftCardPage() {
   const userSearch = useSearchParams().get('search');
+  const [category] = useQueryState('category', parseAsString);
 
   const { query } = useGetAllBrandCardsQuery({
     search: userSearch ?? '',
     showAllCards: true,
+    category: category ?? '',
   });
 
   return (

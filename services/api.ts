@@ -93,17 +93,19 @@ export const cashierLogin = async (data: CashierLoginType) => {
 export const getAllBrandCards = async ({
   search = '',
   showAllCards = false,
+  category = '',
 }: {
   search?: string;
   showAllCards?: boolean;
+  category?: string;
 }) => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
   >(
-    `/brand/all_cards/?${
-      showAllCards ? '' : 'page_size=8&page=1'
-    }&search=${search}`
+    `/brand/all_cards/?${showAllCards ? '' : 'page_size=8&page=1'}${
+      category ? `&category__category_name=${category}` : ''
+    }${search ? `&search=${search}` : ''}`
   );
 };
 

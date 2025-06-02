@@ -230,7 +230,9 @@ function NavBar() {
                   </SelectTrigger>
                   <SelectContent className='z-[9999999999] text-black text-base font-dm-sans'>
                     {categories.map((category: Category) => (
-                      <SelectItem key={category.id} value={category.id}>
+                      <SelectItem
+                        key={category.id}
+                        value={category.category_name}>
                         {category.category_name}
                       </SelectItem>
                     ))}
