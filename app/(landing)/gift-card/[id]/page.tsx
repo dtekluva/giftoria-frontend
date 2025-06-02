@@ -65,6 +65,9 @@ const RECIPIENTS = [
   'A Colleague',
   'A Mentor',
   'A Client',
+  'My Boss',
+  'My Colleague',
+  'My Pastor',
   'Myself',
   'Other',
 ];
