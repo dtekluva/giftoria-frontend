@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { useChangePassword } from '@/services/mutations/auth.mutations';
 
 function ResetPassword() {
-  const { form, onSubmit } = useChangePassword();
+  const { form, onSubmit, isLoading } = useChangePassword();
   return (
     <div className='w-full'>
       <AuthCard title='Reset Password'>
@@ -64,6 +64,7 @@ function ResetPassword() {
 
             <Button
               type='submit'
+              disabled={!form.formState.isValid || isLoading}
               className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'>
               Reset Password
             </Button>
