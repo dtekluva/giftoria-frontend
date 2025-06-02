@@ -21,6 +21,15 @@ export function middleware(req: NextRequest) {
   if (accessToken && url.pathname === '/auth/sign-in') {
     return NextResponse.redirect(new URL('/', req.url)); // Adjust the redirect URL as needed
   }
+
+  if (
+    accessToken &&
+    (url.pathname === '/auth/change-forgot-password' ||
+      url.pathname === '/auth/forgot-password')
+  ) {
+    return NextResponse.redirect(new URL('/', req.url)); // Adjust the redirect URL as needed
+  }
+
   if (accessToken && url.pathname === '/auth/cashier/sign-in') {
     return NextResponse.redirect(new URL('/', req.url)); // Adjust the redirect URL as needed
   }
