@@ -103,8 +103,11 @@ function GiftCardDetails() {
 
   const handleProceedToPayment = async () => {
     const isValid = saveItemToLocalStorage();
-
     if (isValid) {
+      // Force a cart update event
+      const event = new Event('cartUpdated');
+      window.dispatchEvent(event);
+
       const accessToken = getCookie('access_token');
       if (!accessToken) {
         toast.error('Please sign in to continue');
@@ -112,6 +115,23 @@ function GiftCardDetails() {
       } else {
         router.push('/order-summary');
       }
+    }
+  };
+
+  const handleAddToCart = () => {
+    const isValid = saveItemToLocalStorage();
+    if (isValid) {
+      // Force a cart update event
+      const event = new Event('cartUpdated');
+      window.dispatchEvent(event);
+
+      // Also trigger a storage event manually since it won't fire in the same window
+      const cartItems = localStorage.getItem('cards');
+      if (cartItems) {
+        localStorage.setItem('cards', cartItems);
+      }
+
+      router.push('/gift-card');
     }
   };
 
@@ -257,11 +277,7 @@ function GiftCardDetails() {
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-base font-sans'
                 type='button'
-                onClick={async () => {
-                  form.handleSubmit(onSubmit)();
-
-                  router.push('/gift-card');
-                }}>
+                onClick={handleAddToCart}>
                 <AddingShoppingIcon />
                 Add to cart and continue shoppping
               </Button>
