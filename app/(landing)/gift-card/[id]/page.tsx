@@ -257,7 +257,11 @@ function GiftCardDetails() {
               <Button
                 className='w-full md:h-[70px] h-10 font-semibold text-xs md:text-base font-sans'
                 type='button'
-                onClick={() => form.handleSubmit(onSubmit)()}>
+                onClick={async () => {
+                  form.handleSubmit(onSubmit)();
+
+                  router.push('/gift-card');
+                }}>
                 <AddingShoppingIcon />
                 Add to cart and continue shoppping
               </Button>
