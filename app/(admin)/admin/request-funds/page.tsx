@@ -48,7 +48,7 @@ function RequestFundPage() {
 
         <div className='border-y-[2px] border-[#F6F3FB] md:px-6 px-4 md:py-10 py-5'>
           <div className='container max-w-[1100px]'>
-            <div className='container max-w-full grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-stretch lg:gap-12 gap-4'>
+            <div className='container max-w-[700px] grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-stretch lg:gap-6 gap-4'>
               <Card
                 asChild
                 className='bg-[url(/assets/wallet-card-bg.png)] bg-cover bg-no-repeat rounded-[6px] py-3 px-4 flex items-center justify-between'>
@@ -87,7 +87,7 @@ function RequestFundPage() {
                 </div>
               </Card>
               <Card title='₦19,000,000' value='Total Redeemed card balance' />
-              <Card title='₦19,000,000' value='Pending balance' />
+              {/* <Card title='₦19,000,000' value='Pending balance' /> */}
             </div>
           </div>
         </div>
@@ -139,10 +139,10 @@ function Card({
 }
 
 function RequestWithdrawalForm() {
-  const { form } = useRequestWithdrawal();
+  const { form, isLoading, onSubmit } = useRequestWithdrawal();
 
   return (
-    <div className='px-7 py-10 md:px-0 md:py-1'>
+    <div className='px-7 py-10 md:px-0 md:py-1 font-dm-sans'>
       <h2 className='font-semibold text-base md:text-2xl'>
         Request Withdrawal
       </h2>
@@ -156,109 +156,132 @@ function RequestWithdrawalForm() {
       </div>
       <div className='md:mt-[30px] mt-6'>
         <Form {...form}>
-          <form className='md:space-y-7 space-y-4 font-dm-sans'>
-            <FormField
-              control={form.control}
-              name='bank_name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-base text-gray-700'>
-                    Bank Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder='Please enter your bank name'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='md:space-y-7 space-y-4 font-dm-sans'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <FormField
+                control={form.control}
+                name='account_number'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Account Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Enter account number'
+                        className='h-12'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='bank_name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bank Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Enter bank name'
+                        className='h-12'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='account_name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Account Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Enter account name'
+                        className='h-12'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='bank_code'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bank Code</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Enter bank code'
+                        className='h-12'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='amount'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='Enter amount'
+                        className='h-12'
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='password'
+                        placeholder='Enter your password'
+                        className='h-12'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
-              name='account_number'
+              name='narration'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-base text-gray-700'>
-                    Account Number
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder='Please enter your account number'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='account_holder'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-base text-gray-700'>
-                    Account Holder
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder='Please enter your account number'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='available_amount'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-base text-gray-700'>
-                    Available Amount
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder='Please enter your account number'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='requested_amount'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-base text-gray-700'>
-                    Requested Amount
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder='Please enter your account number'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='description'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Narration (Optional)</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Enter reason for description'
-                      className='min-h-[74px] md:min-h-[126px] resize-none text-xs'
+                      placeholder='Enter narration'
+                      className='min-h-[100px] resize-none'
                       {...field}
                     />
                   </FormControl>
@@ -266,10 +289,12 @@ function RequestWithdrawalForm() {
                 </FormItem>
               )}
             />
+
             <Button
               type='submit'
-              className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'>
-              Continue to payment
+              className='w-full h-12 font-semibold'
+              disabled={isLoading}>
+              {isLoading ? 'Processing...' : 'Request Withdrawal'}
             </Button>
           </form>
         </Form>

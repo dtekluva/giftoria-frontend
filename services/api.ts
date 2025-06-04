@@ -13,6 +13,7 @@ import {
   CashierLoginType,
   ForgotPasswordType,
   ChangeForgotPasswordType,
+  CompanyPayOutType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -242,6 +243,26 @@ export const bankTransferCompeleted = async (reference: string) => {
     AxiosError,
     AxiosResponse<ApiPaymentSetupResponse>
   >(`/wema/bank_transfer_completed/?reference=${reference}`);
+};
+
+// Add interface for company payout response
+interface ApiCompanyPayOutResponse {
+  status: boolean;
+  message: string;
+  data: {
+    reference: string;
+    amount: number;
+    bank_name: string;
+    account_number: string;
+    account_name: string;
+  };
+}
+
+export const companyPayOut = async (data: CompanyPayOutType) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiCompanyPayOutResponse>
+  >('/wema/company_pay_out/', data);
 };
 
 // Add interface for AI message response
