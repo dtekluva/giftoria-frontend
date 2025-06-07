@@ -14,6 +14,7 @@ import SendIcon from '@/components/icon/send-icon';
 import { Input } from '@/components/ui/input';
 // import { useCardBalanceMutation } from '@/services/mutations/brand.mutation';
 import { useRedeemCardQuery } from '@/services/queries/brand.queries';
+import { formatCustomDate } from '@/utils/dateFormat';
 import { useState } from 'react';
 
 // const giftCardDetails = {
@@ -77,18 +78,32 @@ function Page() {
         </div>
       )}
 
-      {query.data?.data && (
+      {query.data && (
         <div className='md:pt-10 pt-[30px] md:border-t md:mt-6 mt-4'>
-          <h1 className='font-semibold text-base font-montserrat md:px-12 mb-3 md:mb-8'>
+          <h1 className='font-semibold text-base font-montserrat md:px-6 mb-3 md:mb-8'>
             Gift Card Details
           </h1>
           <div className='lg:flex lg:gap-12'>
             <GiftCardDetailsTable
               data={{
-                'Gift Card Code': query.data.data.card_number,
-                'Gift Card Value': `₦${query.data.data.balance.toLocaleString()}`,
-                'Brand Name': query.data.data.brand_name,
-                'Expiry Date': query.data.data.expiry_date,
+                'Gift Card Code': query.data.card_number,
+                'Date created': formatCustomDate(query.data?.sent_date) ?? '',
+                'Gift Card Value': `₦${query.data.amount}`,
+                'Remaining Value': `₦${query.data.balance}`,
+                'Brand Name': query.data.brand_name,
+                'Expiry Date': query.data?.expiry_date ?? '',
+                Status: 'Sent',
+              }}
+            />
+            <GiftCardDetailsTable
+              data={{
+                'Sender name': query.data.sender_name,
+                'Sender Email': query.data.sender_email ?? '',
+                'Receiver Name': query.data.receiver_name,
+                'Receiver Email': query.data?.receiver_email ?? '',
+                'Receiver Phone Number':
+                  query.data?.receiver_phone_number ?? '',
+                'Date Issued': formatCustomDate(query.data.date_issued) ?? '',
               }}
             />
           </div>
