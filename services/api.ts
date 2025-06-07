@@ -11,6 +11,8 @@ import {
   BranchDetailsType,
   UpdateUserInfoType,
   CashierLoginType,
+  ForgotPasswordType,
+  ChangeForgotPasswordType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -69,6 +71,14 @@ export const updateUserProfile = async (data: UpdateUserInfoType) => {
 export const changePassword = (data: ChangePasswordType) =>
   httpConfig.put('/auth/change_password/', data);
 
+export const forgotPassword = async (data: ForgotPasswordType) => {
+  return await httpConfig.post('/auth/forgot_password/', data);
+};
+
+export const changeForgotPassword = async (data: ChangeForgotPasswordType) => {
+  return await httpConfig.post('/auth/change_forgot_password/', data);
+};
+
 export const uploadCompanyDetail = async (data: UploadCompanyDetailType) => {
   return await httpConfig.post<
     AxiosError,
@@ -93,17 +103,19 @@ export const cashierLogin = async (data: CashierLoginType) => {
 export const getAllBrandCards = async ({
   search = '',
   showAllCards = false,
+  category = '',
 }: {
   search?: string;
   showAllCards?: boolean;
+  category?: string;
 }) => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiAllBrandCardsResponse>
   >(
-    `/brand/all_cards/?${
-      showAllCards ? '' : 'page_size=8&page=1'
-    }&search=${search}`
+    `/brand/all_cards/?${showAllCards ? '' : 'page_size=8&page=1'}${
+      category ? `&category__category_name=${category}` : ''
+    }${search ? `&search=${search}` : ''}`
   );
 };
 

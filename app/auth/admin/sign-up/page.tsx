@@ -264,6 +264,7 @@ function VerifyEmail({
           </p>
           <Button
             type='submit'
+            disabled={!form.formState.isValid}
             className='text-base font-semibold md:h-[70px] h-[50px] mt-4'>
             Verify Code
           </Button>

@@ -15,6 +15,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   useByCardsMutation,
   useGetAIMessage,
 } from '@/services/mutations/brand.mutation';
@@ -24,6 +31,46 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { getCookie } from 'cookies-next/client';
+
+const OCCASIONS = [
+  'Birthday',
+  'Anniversary',
+  'Wedding',
+  'Graduation',
+  'Baby Shower',
+  "Father's Day",
+  "Valentine's Day",
+  'Christmas',
+  'Just Because',
+  'Congratulations',
+  'Thank You',
+  'Apology',
+  'Housewarming',
+  'Other',
+];
+
+const RECIPIENTS = [
+  'My Sister',
+  'My Brother',
+  'A Friend',
+  'My Partner',
+  'My Spouse',
+  'My Son',
+  'My Daughter',
+  'My Father',
+  'My Mother',
+  'My Uncle',
+  'My Aunty',
+  'My Grand Parents',
+  'A Colleague',
+  'A Mentor',
+  'A Client',
+  'My Boss',
+  'My Colleague',
+  'My Pastor',
+  'Myself',
+  'Other',
+];
 
 function GiftCardDetails() {
   const { form, onSubmit, saveItemToLocalStorage } = useByCardsMutation();
@@ -229,14 +276,22 @@ function GiftCardDetails() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Who is it for?</FormLabel>
-                        <FormControl>
-                          <Input
-                            id='for_who'
-                            placeholder='Who is it for?'
-                            className='md:h-12'
-                            {...field}
-                          />
-                        </FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className='min-h-12 w-full'>
+                              <SelectValue placeholder='Select recipient' />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className='font-dm-sans'>
+                            {RECIPIENTS.map((recipient) => (
+                              <SelectItem key={recipient} value={recipient}>
+                                {recipient}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -249,14 +304,22 @@ function GiftCardDetails() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>What is the occasion?</FormLabel>
-                        <FormControl>
-                          <Input
-                            id='occasion'
-                            placeholder='Occasion'
-                            className='md:h-12'
-                            {...field}
-                          />
-                        </FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className='min-h-12 w-full'>
+                              <SelectValue placeholder='Select occasion' />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className='font-dm-sans'>
+                            {OCCASIONS.map((occasion) => (
+                              <SelectItem key={occasion} value={occasion}>
+                                {occasion}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

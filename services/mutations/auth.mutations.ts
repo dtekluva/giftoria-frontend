@@ -8,6 +8,8 @@ import {
   createAdminAccountSchema,
   createUserAccountSchema,
   type CreateUserAccountType,
+  forgotPasswordSchema,
+  ForgotPasswordType,
   loginSchema,
   type LoginType,
   updateUserInfoSchema,
@@ -15,6 +17,8 @@ import {
   uploadCompanyDetailSchema,
   UploadCompanyDetailType,
   verifyEmailSchema,
+  changeForgotPasswordSchema,
+  ChangeForgotPasswordType,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
@@ -32,12 +36,14 @@ import {
   cashierLogin,
   changePassword,
   fetUserDetails,
+  forgotPassword,
   login,
   sendVerificationCode,
   updateUserProfile,
   uploadCompanyDetail,
   userSignUp,
   verifyEmail,
+  changeForgotPassword,
 } from '../api';
 import { user_keys } from '../queries/user.queries';
 
@@ -394,6 +400,36 @@ export const useChangePassword = () => {
   };
 };
 
+export const useForgotPassword = () => {
+  const form = useForm<ForgotPasswordType>({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: () => {
+      localStorage.setItem('email', form.getValues('email'));
+      router.push('/auth/change-forgot-password');
+    },
+  });
+
+  const onSubmit = (data: ForgotPasswordType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Sending password reset link...',
+      success: 'Password reset link sent successfully',
+      error: 'An error occurred while sending the password reset link',
+    });
+  };
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
 export const useUpdateUserProfile = () => {
   const queryClient = useQueryClient();
   const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
@@ -477,6 +513,43 @@ export const useCashierLogin = () => {
       error: 'Something went wrong',
     });
   };
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useChangeForgotPassword = () => {
+  const router = useRouter();
+  const form = useForm<ChangeForgotPasswordType>({
+    resolver: zodResolver(changeForgotPasswordSchema),
+    defaultValues: {
+      email: localStorage.getItem('email') as string,
+      otp_code: '',
+      password: '',
+      confirm_password: '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: changeForgotPassword,
+    onSuccess: (data) => {
+      if (data.status) {
+        router.push('/auth/sign-in');
+      }
+    },
+  });
+
+  const onSubmit = (data: ChangeForgotPasswordType) => {
+    const res = mutation.mutateAsync(data);
+    showToast(res, {
+      loading: 'Changing password...',
+      success: 'Password changed successfully',
+      error: 'An error occurred while changing the password',
+    });
+  };
+
   return {
     form,
     onSubmit,

@@ -11,30 +11,43 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useChangePassword } from '@/services/mutations/auth.mutations';
+import { useChangeForgotPassword } from '@/services/mutations/auth.mutations';
+import { localStorageStore } from '@/libs/store';
+import { useEffect } from 'react';
+import EditIcon from '@/components/icon/edit-icon';
 
-function ResetPassword() {
-  const { form, onSubmit, isLoading } = useChangePassword();
+function ChangeForgotPassword() {
+  const { form, onSubmit, isLoading } = useChangeForgotPassword();
+  const email = localStorageStore.getItem('verify-mail') as string;
+
+  useEffect(() => {
+    if (email) {
+      form.setValue('email', email);
+    }
+  }, [email, form]);
+
   return (
     <div className='w-full'>
-      <AuthCard title='Reset Password'>
+      <AuthCard title='Change Password'>
+        <EditIcon className='max-w-fit mx-auto -mt-8' />
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className='md:space-y-7 space-y-4 font-dm-sans'>
             <FormField
               control={form.control}
-              name='old_password'
+              name='otp_code'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='text-base font-semibold text-gray-700'>
-                    Old Password
+                    OTP Code
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type='password'
+                      type='text'
                       {...field}
-                      placeholder='Enter your old password'
+                      placeholder='Enter OTP code'
                     />
                   </FormControl>
                   <FormMessage />
@@ -44,7 +57,7 @@ function ResetPassword() {
 
             <FormField
               control={form.control}
-              name='new_password'
+              name='password'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='text-base font-semibold text-gray-700'>
@@ -54,7 +67,29 @@ function ResetPassword() {
                     <Input
                       type='password'
                       {...field}
+                      isPassword
                       placeholder='Enter your new password'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='confirm_password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-base font-semibold text-gray-700'>
+                    Confirm Password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='password'
+                      {...field}
+                      isPassword
+                      placeholder='Confirm your new password'
                     />
                   </FormControl>
                   <FormMessage />
@@ -66,7 +101,7 @@ function ResetPassword() {
               type='submit'
               disabled={!form.formState.isValid || isLoading}
               className='text-base w-full font-semibold md:h-[70px] h-[50px] mt-4'>
-              Reset Password
+              Change Password
             </Button>
           </form>
         </Form>
@@ -75,4 +110,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;
+export default ChangeForgotPassword;
