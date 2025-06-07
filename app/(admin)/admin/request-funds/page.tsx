@@ -21,6 +21,11 @@ import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
 import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { useDebounce } from '@/hooks/use-debounce';
 import { CompanyPayOutTransaction } from '@/libs/types/brand.types';
+import BulkMoneyIcon from '@/components/icon/bulk-money-icon';
+import OutlineEyeIcon from '@/components/icon/outline-eye-icon';
+
+import { useGetCompanyDashboardQuery } from '@/services/queries/company.queries';
+import { EyeClosedIcon } from 'lucide-react';
 
 const REQUEST_FUNDS_PAGE_SIZE = 10;
 
@@ -40,6 +45,8 @@ function RequestFundPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebounce(searchTerm, 500);
+
+  const { query: companyQuery } = useGetCompanyDashboardQuery();
 
   const { query, prefetchQuery } = useGetPayoutTransactionsQuery({
     search: debouncedSearch,
@@ -88,60 +95,71 @@ function RequestFundPage() {
         <div className='border-y-[2px] border-[#F6F3FB] md:px-6 px-4 md:py-10 py-5'>
           <div className='container max-w-[1100px]'>
             <div className='container max-w-[700px] grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-stretch lg:gap-6 gap-4'>
-              <Card
-                asChild
-                className='bg-[url(/assets/wallet-card-bg.png)] bg-cover bg-no-repeat rounded-[6px] py-3 px-4 flex items-center justify-between'>
-                <div>
-                  <h3 className='md:text-sm text-xs font-medium font-dm-sans text-white'>
-                    Account Balance
-                  </h3>
-                  <p className='md:text-2xl text-white text-xl font-semibold'>
-                    ₦50,000,000
-                  </p>
-                </div>
-                <div className='self-stretch flex flex-col justify-between gap-[58px]'>
-                  <Dialog>
-                    <DialogTrigger asChild className='hidden md:block'>
-                      <button className='text-white font-dm-sans text-[10px] py-2 px-3 border rounded-sm font-medium'>
-                        Request payout
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent className='sm:max-w-[620px] overflow-y-auto max-h-[90%]'>
-                      <RequestWithdrawalForm />
-                    </DialogContent>
-                  </Dialog>
-                  <Sheet>
-                    <SheetTrigger asChild className='md:hidden'>
-                      <button className='text-white font-dm-sans text-[10px] py-2 px-3 border rounded-sm font-medium'>
-                        Request payout
-                      </button>
-                    </SheetTrigger>
-                    <SheetContent
-                      className='max-h-full overflow-y-auto'
-                      side='bottom'>
-                      <RequestWithdrawalForm />
-                    </SheetContent>
-                  </Sheet>
-                  <p className='text-white'>182563802142</p>
-                </div>
-              </Card>
-              <Card title='₦19,000,000' value='Total Redeemed card balance' />
+              {companyQuery.isPending ? (
+                <>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </>
+              ) : (
+                <>
+                  <Card
+                    asChild
+                    className='bg-[url(/assets/wallet-card-bg.png)] bg-cover bg-no-repeat rounded-[6px] py-3 px-4 flex items-center justify-between'>
+                    <div>
+                      <h3 className='md:text-sm text-xs font-medium font-dm-sans text-white'>
+                        Account Balance
+                      </h3>
+                      <p className='md:text-2xl text-white text-xl font-semibold'>
+                        ₦{companyQuery.data?.balance?.toLocaleString()}
+                      </p>
+                    </div>
+                    <div className='self-stretch flex flex-col justify-between gap-[58px]'>
+                      <Dialog>
+                        <DialogTrigger asChild className='hidden md:block'>
+                          <button className='text-white font-dm-sans text-[10px] py-2 px-3 border rounded-sm font-medium'>
+                            Request payout
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-[620px] overflow-y-auto max-h-[90%]'>
+                          <RequestWithdrawalForm />
+                        </DialogContent>
+                      </Dialog>
+                      <Sheet>
+                        <SheetTrigger asChild className='md:hidden'>
+                          <button className='text-white font-dm-sans text-[10px] py-2 px-3 border rounded-sm font-medium'>
+                            Request payout
+                          </button>
+                        </SheetTrigger>
+                        <SheetContent
+                          className='max-h-full overflow-y-auto'
+                          side='bottom'>
+                          <RequestWithdrawalForm />
+                        </SheetContent>
+                      </Sheet>
+                      <p className='text-white'>182563802142</p>
+                    </div>
+                  </Card>
+                  <TotalSalesCard balance={companyQuery.data?.balance || 0} />
+                </>
+              )}
             </div>
           </div>
         </div>
-        <div className='container grid lg:flex gap-5 lg:items-center lg:justify-between py-4 md:px-6 px-4'>
+        <div className='container grid lg:flex gap-5 lg:items-center lg:justify-between pt-4 md:px-6 px-4'>
           <h1 className='md:text-xl text-base font-semibold'>
             Request Funds History
           </h1>
-          <SearchInput
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            placeholder='Search by reference, account name, or bank name'
-            className='md:max-w-fit md:mx-auto'
-          />
-          <Button className='md:h-16 col-span-full ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans font-semibold mt-5 md:mt-0'>
-            Request Funds
-          </Button>
+          <div className='md:flex items-center md:gap-5'>
+            <SearchInput
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder='Search by reference, account name, or bank name'
+              className='md:max-w-fit md:mx-auto'
+            />
+            <Button className='md:h-16 col-span-full ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans font-semibold mt-5 md:mt-0'>
+              Request Funds
+            </Button>
+          </div>
         </div>
         <div>
           {query.isPending ? (
@@ -390,6 +408,51 @@ function RequestWithdrawalForm() {
         </Form>
       </div>
     </div>
+  );
+}
+
+function CardSkeleton() {
+  return (
+    <div className='animate-pulse bg-gray-100 rounded-[6px] py-3 px-4 flex items-center justify-between min-h-[130px]'>
+      <div className='space-y-3'>
+        <div className='h-4 w-24 bg-gray-200 rounded'></div>
+        <div className='h-8 w-32 bg-gray-200 rounded'></div>
+      </div>
+      <div className='space-y-3'>
+        <div className='h-6 w-20 bg-gray-200 rounded'></div>
+        <div className='h-4 w-24 bg-gray-200 rounded'></div>
+      </div>
+    </div>
+  );
+}
+
+function TotalSalesCard({ balance }: { balance: number }) {
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+
+  return (
+    <Card
+      asChild
+      className='bg-[url(/assets/balance-card-bg.png)] font-sora bg-cover bg-no-repeat rounded-[6px] py-3 px-4 flex items-center justify-between'>
+      <div className='text-[#292D32]'>
+        <h3 className='md:text-sm font-nunito text-xs font-medium'>
+          Total Sales
+        </h3>
+        <p className='md:text-2xl text-[#032282] text-xl font-bold'>
+          {isBalanceVisible ? `₦${balance.toLocaleString()}` : '****'}
+        </p>
+        <p className='md:text-sm text-xs font-medium font-nunito'>Balance</p>
+      </div>
+      <div className='self-start flex flex-col items-center'>
+        <div className='p-2 bg-white rounded-full mb-7'>
+          <BulkMoneyIcon />
+        </div>
+        <button
+          onClick={() => setIsBalanceVisible(!isBalanceVisible)}
+          className='cursor-pointer hover:opacity-80 transition-opacity'>
+          {isBalanceVisible ? <OutlineEyeIcon /> : <EyeClosedIcon />}
+        </button>
+      </div>
+    </Card>
   );
 }
 
