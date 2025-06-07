@@ -267,6 +267,16 @@ export const cardBalanceSchema = z.object({
   card_balance: z.string().min(1, 'Card valu e is required'),
 });
 
+export const companyPayOutSchema = z.object({
+  account_number: z.string().min(1, { message: 'Account number is required' }),
+  bank_name: z.string().min(1, { message: 'Bank name is required' }),
+  account_name: z.string().min(1, { message: 'Account name is required' }),
+  bank_code: z.string().min(1, { message: 'Bank code is required' }),
+  amount: z.number().min(1, { message: 'Amount is required' }),
+  password: z.string().min(1, { message: 'Password is required' }),
+  narration: z.string().optional(),
+});
+
 //TYPES
 export type ForgotPasswordType = z.infer<typeof forgotPasswordSchema>;
 export type ChangeForgotPasswordType = z.infer<
@@ -290,3 +300,4 @@ export type SendVerificationCodeType = z.infer<
 >;
 export type LoginType = z.infer<typeof loginSchema>;
 export type CashierLoginType = z.infer<typeof cashierLoginSchema>;
+export type CompanyPayOutType = z.infer<typeof companyPayOutSchema>;

@@ -39,6 +39,7 @@ function NavBar() {
   const [search, setSearch] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
 
   const { query } = useSearchAllBrands({ search });
   const suggestions = query.data?.results || [];
@@ -46,6 +47,55 @@ function NavBar() {
   const { query: categoriesQuery } = useGetCategoriesQuery();
   const categories = categoriesQuery.data?.results || [];
   const isSuccess = categoriesQuery.isSuccess;
+
+  // Function to get cart count
+  const getCartCount = () => {
+    try {
+      const cartData = localStorage.getItem('cards');
+      if (cartData) {
+        const data = JSON.parse(cartData);
+        const items = data.cards || [];
+        return items.length;
+      }
+      return 0;
+    } catch (error) {
+      console.error('Error getting cart count:', error);
+      return 0;
+    }
+  };
+
+  // Update cart count on mount and when storage changes
+  useEffect(() => {
+    // Initial count
+    setCartItemsCount(getCartCount());
+
+    // Function to handle storage changes
+    const handleStorageChange = () => {
+      setCartItemsCount(getCartCount());
+    };
+
+    // Add event listeners
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('cartUpdated', handleStorageChange);
+    // Add a custom event listener for cart deletion
+    window.addEventListener('cartDeleted', handleStorageChange);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('cartUpdated', handleStorageChange);
+      window.removeEventListener('cartDeleted', handleStorageChange);
+    };
+  }, []);
+
+  // Add a polling mechanism to check for cart changes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCartItemsCount(getCartCount());
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Update scroll state
   useEffect(() => {
@@ -312,12 +362,21 @@ function NavBar() {
               )}
               <AccountDropdown />
             </div>
-            <ShoppingCartIcon
-              className='cursor-pointer'
-              onClick={() => {
-                router.push('/order-summary');
-              }}
-            />
+            <div className='relative'>
+              <ShoppingCartIcon
+                className='cursor-pointer'
+                onClick={() => {
+                  router.push('/order-summary');
+                }}
+              />
+              {cartItemsCount > 0 && (
+                <div
+                  className='absolute -top-1 -right-1 bg-[#FF0066] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center z-50 shadow-md'
+                  style={{ transform: 'translate(25%, -25%)' }}>
+                  {cartItemsCount}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

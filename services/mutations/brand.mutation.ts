@@ -5,7 +5,8 @@ import {
   BuyCardType,
   cardBalanceSchema,
   CardBalanceType,
-  requestPayWithdrawalSchema,
+  companyPayOutSchema,
+  CompanyPayOutType,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
@@ -27,6 +28,7 @@ import {
   getAIMessage,
   payViaBank,
   payViaPayStack,
+  companyPayOut,
 } from '../api';
 
 export const useByCardsMutation = () => {
@@ -241,11 +243,51 @@ export const usePayBrand = () => {
 };
 
 export const useRequestWithdrawal = () => {
-  const form = useForm({
-    resolver: zodResolver(requestPayWithdrawalSchema),
+  const form = useForm<CompanyPayOutType>({
+    resolver: zodResolver(companyPayOutSchema),
+    defaultValues: {
+      account_number: '',
+      bank_name: '',
+      account_name: '',
+      bank_code: '',
+      amount: 0,
+      password: '',
+      narration: '',
+    },
   });
+
+  const mutation = useMutation({
+    mutationFn: companyPayOut,
+    mutationKey: ['company-payout'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Withdrawal request successful');
+      form.reset();
+    },
+    onError: (error: any) => {
+      toast.error(
+        error.response?.data?.message || 'Failed to process withdrawal request'
+      );
+    },
+  });
+
+  const onSubmit = async (data: CompanyPayOutType) => {
+    try {
+      const res = mutation.mutateAsync(data);
+
+      showToast(res, {
+        success: 'Processing request',
+        error: 'Error processing request',
+        loading: 'Request withdrawed successfully',
+      });
+    } catch (error) {
+      console.error('Withdrawal request error:', error);
+    }
+  };
+
   return {
     form,
+    onSubmit,
+    isLoading: mutation.isPending,
   };
 };
 

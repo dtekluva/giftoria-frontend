@@ -49,7 +49,9 @@ const Table = <T extends Record<string, unknown>>({
                 </th>
               )}
               {headers.map((header, index) => (
-                <th key={index} className='py-6 px-4 text-left font-medium'>
+                <th
+                  key={index}
+                  className='py-6 px-4 text-left font-semibold text-xs'>
                   {header.title}
                 </th>
               ))}
@@ -72,8 +74,10 @@ const Table = <T extends Record<string, unknown>>({
                   </th>
                 )}
                 {headers.map((header, colIndex) => (
-                  <td key={colIndex} className='py-[36px] px-4'>
-                    {String(row[header.key] || '-')}
+                  <td key={colIndex} className='py-[36px] px-4  text-xs'>
+                    <span className='line-clamp-1'>
+                      {String(row[header.key] || '-')}
+                    </span>
                   </td>
                 ))}
               </tr>
@@ -90,7 +94,9 @@ const Table = <T extends Record<string, unknown>>({
               <p
                 key={colIndex}
                 className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>{header.title}:</span>
+                <span className='font-bold text-xs font-sans'>
+                  {header.title}:
+                </span>
                 {String(row[header.key] || '-')}
               </p>
             ))}

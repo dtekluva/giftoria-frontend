@@ -13,6 +13,7 @@ import {
   CashierLoginType,
   ForgotPasswordType,
   ChangeForgotPasswordType,
+  CompanyPayOutType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -26,6 +27,7 @@ import {
   ApiCardSalesResponse,
   ApiCategoryResponse,
   ApiCompanyDetailsResponse,
+  ApiCompanyPayOutTransactionResponse,
   ApiPaymentSetupResponse,
   BuyMultipleCard,
   CardSale,
@@ -220,7 +222,7 @@ export const fetchCompanyOrderHistory = async () => {
   return await httpConfig.get<
     AxiosError,
     AxiosResponse<ApiCompanyDetailsResponse>
-  >('/branch/company_branch_order_history/');
+  >('/branch/company_order_history/');
 };
 
 export const payViaPayStack = async (reference: string) => {
@@ -244,6 +246,26 @@ export const bankTransferCompeleted = async (reference: string) => {
   >(`/wema/bank_transfer_completed/?reference=${reference}`);
 };
 
+// Add interface for company payout response
+interface ApiCompanyPayOutResponse {
+  status: boolean;
+  message: string;
+  data: {
+    reference: string;
+    amount: number;
+    bank_name: string;
+    account_number: string;
+    account_name: string;
+  };
+}
+
+export const companyPayOut = async (data: CompanyPayOutType) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiCompanyPayOutResponse>
+  >('/wema/company_pay_out/', data);
+};
+
 // Add interface for AI message response
 interface ApiAIMessageResponse {
   message: string;
@@ -259,14 +281,33 @@ export const getAIMessage = async (data: { message: string }) => {
 
 // Add interface for card redemption response
 interface ApiCardRedemptionResponse {
-  status: boolean;
-  message: string;
-  data: {
-    card_number: string;
-    balance: number;
-    brand_name: string;
-    expiry_date: string;
-  };
+  id: string;
+  company: null;
+  sender: string;
+  receiver_email: string;
+  brand: string;
+  card_number: string;
+  amount: number;
+  balance: number;
+  expiry_date: null | string;
+  date_claimed: null | string;
+  date_redeemed: null | string;
+  is_claimed: boolean;
+  is_redeemed: boolean;
+  created_at: string;
+  brand_name: string;
+  brand_image: string | null;
+  sender_name: string;
+  receiver_name: string;
+  receiver_phone_number: string;
+  date_issued: string;
+  sent: boolean;
+  sent_date: string;
+  claimed: boolean;
+  claimed_date: string | null;
+  redeemed: boolean;
+  redeemed_date: string | null;
+  sender_email: string;
 }
 
 export const redeemCardByNumber = async (card_number: string) => {
@@ -274,4 +315,21 @@ export const redeemCardByNumber = async (card_number: string) => {
     AxiosError,
     AxiosResponse<ApiCardRedemptionResponse>
   >(`/branch/branch_redeem_card/?card_number=${card_number}`);
+};
+
+export const getPayoutTransactions = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyPayOutTransactionResponse>
+  >(
+    `/wema/payout_transaction/?search=${search}&page=${page}&page_size=${page_size}`
+  );
 };
