@@ -281,14 +281,33 @@ export const getAIMessage = async (data: { message: string }) => {
 
 // Add interface for card redemption response
 interface ApiCardRedemptionResponse {
-  status: boolean;
-  message: string;
-  data: {
-    card_number: string;
-    balance: number;
-    brand_name: string;
-    expiry_date: string;
-  };
+  id: string;
+  company: null;
+  sender: string;
+  receiver_email: string;
+  brand: string;
+  card_number: string;
+  amount: number;
+  balance: number;
+  expiry_date: null | string;
+  date_claimed: null | string;
+  date_redeemed: null | string;
+  is_claimed: boolean;
+  is_redeemed: boolean;
+  created_at: string;
+  brand_name: string;
+  brand_image: string | null;
+  sender_name: string;
+  receiver_name: string;
+  receiver_phone_number: string;
+  date_issued: string;
+  sent: boolean;
+  sent_date: string;
+  claimed: boolean;
+  claimed_date: string | null;
+  redeemed: boolean;
+  redeemed_date: string | null;
+  sender_email: string;
 }
 
 export const redeemCardByNumber = async (card_number: string) => {
