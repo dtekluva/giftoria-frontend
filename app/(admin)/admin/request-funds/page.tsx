@@ -15,30 +15,69 @@ import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
 import { useRequestWithdrawal } from '@/services/mutations/brand.mutation';
+import { useGetPayoutTransactionsQuery } from '@/services/queries/brand.queries';
+import { useState, useCallback } from 'react';
+import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
+import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
+import { useDebounce } from '@/hooks/use-debounce';
+import { CompanyPayOutTransaction } from '@/libs/types/brand.types';
 
-const historyData = [
-  {
-    id: 1,
-    dateTime: '2/10/2023 - 4:30PM',
-    desc: 'January/2025 payment',
-    amount: 'No. 5 Shomolu, Obanikoro, Lagos',
-    walletId: '182563802142',
-    sessionCode: 'R2GDRRS2232',
-    status: 'Success',
-  },
-];
+const REQUEST_FUNDS_PAGE_SIZE = 10;
 
 const headers = [
-  { key: 'id', title: 'Id' },
-  { key: 'dateTime', title: 'Date/Time' },
-  { key: 'desc', title: 'Description' },
+  { key: 'transaction_reference', title: 'Transaction Reference' },
   { key: 'amount', title: 'Amount' },
-  { key: 'walletId', title: 'Wallet ID' },
-  { key: 'sessionCode', title: 'Session code' },
+  { key: 'total_amount', title: 'Total Amount' },
+  { key: 'charges', title: 'Charges' },
   { key: 'status', title: 'Status' },
+  { key: 'account_name', title: 'Account Name' },
+  { key: 'bank_name', title: 'Bank Name' },
+  { key: 'account_number', title: 'Account Number' },
+  { key: 'created_at', title: 'Created At' },
 ];
 
 function RequestFundPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 500);
+
+  const { query, prefetchQuery } = useGetPayoutTransactionsQuery({
+    search: debouncedSearch,
+    page: currentPage,
+    page_size: REQUEST_FUNDS_PAGE_SIZE,
+  });
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleSearch = useCallback((value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
+  }, []);
+
+  // Transform the data to match the table's expected type
+  const tableData =
+    query.data?.results.map((transaction: CompanyPayOutTransaction) => ({
+      ...transaction,
+      amount: `₦${transaction.amount.toLocaleString()}`,
+      total_amount: `₦${transaction.total_amount.toLocaleString()}`,
+      charges: `₦${transaction.charges.toLocaleString()}`,
+      created_at: new Date(transaction.created_at).toLocaleDateString('en-NG', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    })) || [];
+
   return (
     <div>
       <div className='md:px-6'>
@@ -87,7 +126,6 @@ function RequestFundPage() {
                 </div>
               </Card>
               <Card title='₦19,000,000' value='Total Redeemed card balance' />
-              {/* <Card title='₦19,000,000' value='Pending balance' /> */}
             </div>
           </div>
         </div>
@@ -95,14 +133,66 @@ function RequestFundPage() {
           <h1 className='md:text-xl text-base font-semibold'>
             Request Funds History
           </h1>
-          <SearchInput className='md:max-w-fit md:mx-auto' />
+          <SearchInput
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+            placeholder='Search by reference, account name, or bank name'
+            className='md:max-w-fit md:mx-auto'
+          />
           <Button className='md:h-16 col-span-full ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans font-semibold mt-5 md:mt-0'>
             Request Funds
           </Button>
         </div>
         <div>
-          <Table headers={headers} data={historyData} selectable={true} />
+          {query.isPending ? (
+            <div className='animate-pulse'>
+              <div className='h-10 bg-gray-200 rounded mb-4'></div>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div
+                  key={index}
+                  className='h-16 bg-gray-100 rounded mb-2'></div>
+              ))}
+            </div>
+          ) : (
+            <Table headers={headers} data={tableData} selectable={true} />
+          )}
         </div>
+
+        {/* Pagination Controls */}
+        {query.data && (
+          <div className='flex justify-between items-center mt-6 px-6'>
+            <Button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+                currentPage === 1
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+              }`}>
+              <PreviousChevronLeftIcon />
+              Previous
+            </Button>
+            <p className='text-sm text-gray-600'>
+              Page {currentPage} of{' '}
+              {Math.ceil(query.data.count / REQUEST_FUNDS_PAGE_SIZE)}
+            </p>
+            <Button
+              onClick={handleNextPage}
+              onMouseEnter={() => {
+                if (query.data.next) {
+                  prefetchQuery();
+                }
+              }}
+              disabled={!query.data.next}
+              className={`h-10 px-4 text-sm font-medium font-dm-sans ${
+                !query.data.next
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
+              }`}>
+              Next <NextChevronRightIcon />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -142,11 +232,11 @@ function RequestWithdrawalForm() {
   const { form, isLoading, onSubmit } = useRequestWithdrawal();
 
   return (
-    <div className='px-7 py-10 md:px-0 md:py-1 font-dm-sans'>
-      <h2 className='font-semibold text-base md:text-2xl'>
+    <div className='px-7 py-10 md:px-0 md:py-1'>
+      <h2 className='font-semibold text-base md:text-2xl font-sans'>
         Request Withdrawal
       </h2>
-      <p className='text-xs md:text-base text-[#4A4A68] border-b pb-4'>
+      <p className='text-xs md:text-base text-[#4A4A68] font-dm-sans border-b pb-4'>
         Fill the details below to make request
       </p>
       <div>

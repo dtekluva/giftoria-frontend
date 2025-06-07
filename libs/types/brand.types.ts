@@ -140,3 +140,25 @@ export interface ApiCategoryResponse {
   previous: string | null;
   results: Category[];
 }
+
+export interface CompanyPayOutTransaction {
+  id: string;
+  transaction_reference: string;
+  amount: number;
+  total_amount: number;
+  charges: number;
+  status: string;
+  narration: string;
+  account_name: string;
+  bank_name: string;
+  account_number: string;
+  created_at: string;
+  is_reversed: boolean;
+}
+
+export interface ApiCompanyPayOutTransactionResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: CompanyPayOutTransaction[];
+}

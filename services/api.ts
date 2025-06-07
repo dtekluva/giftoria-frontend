@@ -27,6 +27,7 @@ import {
   ApiCardSalesResponse,
   ApiCategoryResponse,
   ApiCompanyDetailsResponse,
+  ApiCompanyPayOutTransactionResponse,
   ApiPaymentSetupResponse,
   BuyMultipleCard,
   CardSale,
@@ -295,4 +296,21 @@ export const redeemCardByNumber = async (card_number: string) => {
     AxiosError,
     AxiosResponse<ApiCardRedemptionResponse>
   >(`/branch/branch_redeem_card/?card_number=${card_number}`);
+};
+
+export const getPayoutTransactions = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyPayOutTransactionResponse>
+  >(
+    `/wema/payout_transaction/?search=${search}&page=${page}&page_size=${page_size}`
+  );
 };
