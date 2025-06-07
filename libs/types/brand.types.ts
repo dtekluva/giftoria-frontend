@@ -52,6 +52,7 @@ export interface CardSale {
   assigned_date: string;
   redeemed: boolean;
   redeemed_date: string | null;
+  sender_email: string;
 }
 
 export interface ApiCardSalesResponse {
