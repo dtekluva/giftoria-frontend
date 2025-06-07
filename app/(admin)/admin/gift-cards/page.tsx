@@ -9,9 +9,13 @@ import SmsStarIcon from '@/components/icon/sms-star-icon';
 import SMSTrackingIcon from '@/components/icon/sms-tracking-icon';
 import { Input } from '@/components/ui/input';
 import { useGetCompanyHistory } from '@/services/queries/company.queries';
+
 import React from 'react';
 
+
+
 function AdminPage() {
+
   const { query } = useGetCompanyHistory();
   console.log(query);
   return (
