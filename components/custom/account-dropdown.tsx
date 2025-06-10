@@ -55,7 +55,9 @@ export function AccountDropdown() {
               Orders
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
+            <DropdownMenuItem
+              onClick={() => router.push('/received-cards')}
+              className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
               My Received Gift Cards
             </DropdownMenuItem>
             <DropdownMenuSeparator />
