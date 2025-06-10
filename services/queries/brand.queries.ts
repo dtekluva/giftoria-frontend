@@ -18,6 +18,7 @@ import {
   fetchCategories,
   redeemCardByNumber,
   getPayoutTransactions,
+  getReceivedCardSales,
 } from '../api';
 
 export const brand_keys = {
@@ -35,6 +36,16 @@ export const brand_keys = {
     ...brand_keys.all,
     'card',
     'sales',
+    {
+      search,
+      page,
+      page_size,
+    },
+  ],
+  brand_received_card: (search: string, page: number, page_size: number) => [
+    ...brand_keys.all,
+    'card',
+    'received',
     {
       search,
       page,
@@ -144,6 +155,46 @@ export const useGetBrandCardSalesQuery = ({
   const prefetchQuery = () => {
     queryClient.prefetchQuery({
       queryKey: brand_keys.brand_card_sales(search, page + 1, page_size),
+      queryFn: () =>
+        getAllCardSales({
+          search: '',
+          page: page + 1,
+          page_size: page_size,
+        }),
+      staleTime: Infinity,
+    });
+  };
+
+  return {
+    query,
+    prefetchQuery,
+  };
+};
+export const useGetReceivedBrandCardSalesQuery = ({
+  search = '',
+  page = 2,
+  page_size = 4,
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: brand_keys.brand_received_card(search, page, page_size),
+    queryFn: () =>
+      getReceivedCardSales({
+        search,
+        page,
+        page_size,
+      }),
+    select: (data) => data.data,
+    placeholderData: keepPreviousData,
+  });
+
+  const prefetchQuery = () => {
+    queryClient.prefetchQuery({
+      queryKey: brand_keys.brand_received_card(search, page + 1, page_size),
       queryFn: () =>
         getAllCardSales({
           search: '',
