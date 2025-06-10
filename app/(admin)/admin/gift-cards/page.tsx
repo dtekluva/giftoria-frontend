@@ -1,5 +1,5 @@
 'use client';
-import OrderHistoryTable from '@/components/custom/order-history';
+import Table from '@/components/custom/table';
 import SearchInput from '@/components/custom/search-input';
 import SendIcon from '@/components/icon/send-icon';
 import SMSIcon from '@/components/icon/sms-icon';
@@ -16,14 +16,14 @@ import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-ico
 const PAGE_SIZE = 10;
 
 const tableHeaders = [
-  { key: 'transaction_id', label: 'Transaction ID' },
-  { key: 'card_number', label: 'Card Number' },
-  { key: 'amount', label: 'Amount' },
-  { key: 'card_value', label: 'Card Value' },
-  { key: 'balance', label: 'Balance' },
-  { key: 'status', label: 'Status' },
-  { key: 'store_address', label: 'Store Address' },
-  { key: 'created_at', label: 'Date' },
+  { key: 'transaction_id', title: 'Transaction ID' },
+  { key: 'card_number', title: 'Card Number' },
+  { key: 'amount', title: 'Amount' },
+  { key: 'card_value', title: 'Card Value' },
+  { key: 'balance', title: 'Balance' },
+  { key: 'status', title: 'Status' },
+  { key: 'store_address', title: 'Store Address' },
+  { key: 'created_at', title: 'Date' },
 ];
 
 function AdminPage() {
@@ -141,13 +141,14 @@ function AdminPage() {
               ))}
             </div>
           ) : (
-            <OrderHistoryTable
+            <Table
               headers={tableHeaders}
               data={
                 responseData?.results
                   ? formatTableData(responseData.results)
                   : []
               }
+              emptyStateMessage='No gift card transactions found'
             />
           )}
         </div>
