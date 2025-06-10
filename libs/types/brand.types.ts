@@ -100,6 +100,7 @@ export interface ApiCompanyDetailsResponse {
   status: boolean; // Indicates if the request was successful
   balance: number; // Company balance
   company_name: string; // Name of the company
+  total_sales: string | null;
   company_address: string | null; // Address of the company (nullable)
   business_type: string | null; // Type of business (nullable)
   registration_number: string | null; // CAC registration number (nullable)

@@ -139,7 +139,9 @@ function RequestFundPage() {
                       <p className='text-white'>182563802142</p>
                     </div>
                   </Card>
-                  <TotalSalesCard balance={companyQuery.data?.balance || 0} />
+                  <TotalSalesCard
+                    balance={companyQuery.data?.total_sales || 0}
+                  />
                 </>
               )}
             </div>
@@ -426,7 +428,7 @@ function CardSkeleton() {
   );
 }
 
-function TotalSalesCard({ balance }: { balance: number }) {
+function TotalSalesCard({ balance }: { balance: number | string }) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
   return (
