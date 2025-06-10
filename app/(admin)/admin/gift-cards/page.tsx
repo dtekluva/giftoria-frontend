@@ -223,7 +223,7 @@ function Card({
       {icon}
       <div className=''>
         <h3 className='md:text-2xl text-xl font-semibold text-[#0E0E2C]'>
-          {value}
+          {value || '--'}
         </h3>
         <p
           className={`text-sm font-dm-sans font-medium ${getTitleColor(
