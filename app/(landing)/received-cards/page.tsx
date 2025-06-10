@@ -180,7 +180,7 @@ function MyReceiveGiftCardPage() {
             Previous
           </Button>
           <p className='text-sm text-gray-600'>
-            Page {currentPage} of{' '}
+            Page {query.data?.count === 0 ? 0 : currentPage} of{' '}
             {(query?.data?.count / MY_ORDER_PAGE_SIZE).toFixed(0)}
           </p>
           <Button

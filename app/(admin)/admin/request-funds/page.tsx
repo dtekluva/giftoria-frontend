@@ -191,7 +191,7 @@ function RequestFundPage() {
               Previous
             </Button>
             <p className='text-sm text-gray-600'>
-              Page {currentPage} of{' '}
+              Page {query.data?.count === 0 ? 0 : currentPage} of{' '}
               {Math.ceil(query.data.count / REQUEST_FUNDS_PAGE_SIZE)}
             </p>
             <Button

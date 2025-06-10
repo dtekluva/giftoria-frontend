@@ -35,7 +35,7 @@ const Table = <T extends Record<string, unknown>>({
   };
 
   const EmptyState = () => (
-    <div className='flex flex-col items-center justify-center py-12 px-4'>
+    <div className='flex flex-col items-center justify-center py-12 px-4 font-dm-sans'>
       <div className='w-24 h-24 mb-6'>
         <svg
           className='w-full h-full text-gray-400'
@@ -50,10 +50,12 @@ const Table = <T extends Record<string, unknown>>({
           />
         </svg>
       </div>
-      <h3 className='text-xl font-semibold text-gray-900 mb-2'>
+      <h3 className='text-xl font-semibold text-gray-900 mb-2 font-montserrat'>
         No Data Found
       </h3>
-      <p className='text-gray-500 text-center'>{emptyStateMessage}</p>
+      <p className='text-gray-500 text-center font-montserrat'>
+        {emptyStateMessage}
+      </p>
     </div>
   );
 

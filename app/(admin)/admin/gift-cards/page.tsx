@@ -168,7 +168,8 @@ function AdminPage() {
               Previous
             </Button>
             <p className='text-sm text-gray-600'>
-              Page {currentPage} of {Math.ceil(responseData.count / PAGE_SIZE)}
+              Page {query.data?.data.count === 0 ? 0 : currentPage} of{' '}
+              {Math.ceil(responseData.count / PAGE_SIZE)}
             </p>
             <Button
               onClick={handleNextPage}
