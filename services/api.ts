@@ -23,6 +23,7 @@ import {
 import {
   ApiAllBrandCardsResponse,
   ApiBranchResponse,
+  ApiBrandCardTransactionResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
   ApiCategoryResponse,
@@ -231,11 +232,21 @@ export const fetchBranches = async ({
   );
 };
 
-export const fetchCompanyOrderHistory = async () => {
+export const fetchCompanyOrderHistory = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
   return await httpConfig.get<
     AxiosError,
-    AxiosResponse<ApiCompanyDetailsResponse>
-  >('/branch/company_order_history/');
+    AxiosResponse<ApiBrandCardTransactionResponse>
+  >(
+    `/branch/company_order_history/?search=${search}&page=${page}&page_size=${page_size}`
+  );
 };
 
 export const payViaPayStack = async (reference: string) => {

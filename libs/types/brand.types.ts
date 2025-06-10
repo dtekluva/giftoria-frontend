@@ -62,6 +62,39 @@ export interface ApiCardSalesResponse {
   results: CardSale[];
 }
 
+export type TransactionStatus = 'PENDING' | 'REDEEMED' | 'DECLINED';
+
+export interface StatusCount {
+  PENDING: number;
+  REDEEMED: number;
+  DECLINED: number;
+}
+
+export interface BrandCardTransaction {
+  id: string;
+  branch: string;
+  user: string;
+  brand: string;
+  card: string;
+  amount: number;
+  card_value: number;
+  balance: number;
+  transaction_id: string;
+  status: TransactionStatus;
+  redeemed: boolean;
+  created_at: string;
+  card_number: string;
+  store_address: string;
+}
+
+export interface ApiBrandCardTransactionResponse {
+  status_count: StatusCount;
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: BrandCardTransaction[];
+}
+
 export interface ApiCompanyDetailsResponse {
   message: string; // Response message
   status: boolean; // Indicates if the request was successful
