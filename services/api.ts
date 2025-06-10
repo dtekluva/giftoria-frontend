@@ -161,6 +161,19 @@ export const getAllCardSales = async ({
     `/brand/fetch_card_sales/?search=${search}&page=${page}&page_size=${page_size}`
   );
 };
+export const getReceivedCardSales = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiCardSalesResponse>>(
+    `/brand/fetch_assigned_cards/?search=${search}&page=${page}&page_size=${page_size}`
+  );
+};
 
 export const getCardSalesById = async (id: string) => {
   return await httpConfig.get<AxiosError, AxiosResponse<CardSale>>(
