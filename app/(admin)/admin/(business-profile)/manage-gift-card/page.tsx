@@ -10,6 +10,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -35,93 +43,143 @@ function ManageGiftCardPage() {
         <Dialog>
           <DialogTrigger asChild>
             <Button className='md:h-14 md:mx-7 mx-4 ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans md:font-sans rounded-[6px] font-semibold md:mt-0'>
-              Add Gift Card
+              Create Gift Card
             </Button>
           </DialogTrigger>
-          <DialogContent className='sm:max-w-[425px]'>
+          <DialogContent className='sm:max-w-[620px]'>
             <DialogHeader>
-              <DialogTitle>Add New Gift Card</DialogTitle>
+              <DialogTitle>Create Gift Card</DialogTitle>
             </DialogHeader>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-4 font-nunito'>
-              <div className='space-y-2'>
-                <label className='text-sm font-medium'>Brand Name</label>
-                <Input
-                  {...form.register('brand_name')}
-                  placeholder='Enter brand name'
-                />
-                {form.formState.errors.brand_name && (
-                  <p className='text-red-500 text-xs'>
-                    {form.formState.errors.brand_name.message}
-                  </p>
-                )}
-              </div>
+            <div className='px-7 py-10 md:px-0 md:py-1'>
+              <p className='text-xs md:text-base text-[#4A4A68] font-dm-sans border-b pb-4'>
+                Fill the details below to create a Gift Card
+              </p>
+              <div className='md:mt-[30px] mt-6'>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className='md:space-y-6 space-y-4 font-dm-sans'>
+                    <FormField
+                      control={form.control}
+                      name='brand_name'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Brand Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder='Enter brand name'
+                              className='md:h-12'
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-              <div className='space-y-2'>
-                <label className='text-sm font-medium'>Category</label>
-                <Select
-                  onValueChange={(value) => form.setValue('category', value)}
-                  value={form.watch('category')}>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Select category' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category: Category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.category_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {form.formState.errors.category && (
-                  <p className='text-red-500 text-xs'>
-                    {form.formState.errors.category.message}
-                  </p>
-                )}
-              </div>
+                    <FormField
+                      control={form.control}
+                      name='category'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Category</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}>
+                            <FormControl>
+                              <SelectTrigger className='h-12 w-full'>
+                                <SelectValue placeholder='Select category' />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {categories.map((category: Category) => (
+                                <SelectItem
+                                  key={category.id}
+                                  value={category.id}>
+                                  {category.category_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-              <div className='space-y-2'>
-                <label className='text-sm font-medium'>Minimum Amount</label>
-                <Input
-                  type='number'
-                  {...form.register('min_amount', { valueAsNumber: true })}
-                  placeholder='Enter minimum amount'
-                />
-                {form.formState.errors.min_amount && (
-                  <p className='text-red-500 text-xs'>
-                    {form.formState.errors.min_amount.message}
-                  </p>
-                )}
-              </div>
+                    <div className='flex gap-2'>
+                      <FormField
+                        control={form.control}
+                        name='min_amount'
+                        render={({ field }) => (
+                          <FormItem className='flex-1'>
+                            <FormLabel>Card Value(Minimum)</FormLabel>
+                            <FormControl>
+                              <Input
+                                type='number'
+                                placeholder='Enter minimum amount'
+                                className='md:h-12 flex-1'
+                                {...field}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value))
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              <div className='space-y-2'>
-                <label className='text-sm font-medium'>Maximum Amount</label>
-                <Input
-                  type='number'
-                  {...form.register('max_amount', { valueAsNumber: true })}
-                  placeholder='Enter maximum amount'
-                />
-                {form.formState.errors.max_amount && (
-                  <p className='text-red-500 text-xs'>
-                    {form.formState.errors.max_amount.message}
-                  </p>
-                )}
-              </div>
+                      <FormField
+                        control={form.control}
+                        name='max_amount'
+                        render={({ field }) => (
+                          <FormItem className='flex-1'>
+                            <FormLabel>Card Value(Maximum)</FormLabel>
+                            <FormControl>
+                              <Input
+                                type='number'
+                                placeholder='Enter maximum amount'
+                                className='md:h-12 flex-1'
+                                {...field}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value))
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name='is_active'
+                      render={({ field }) => (
+                        <FormItem className='flex items-center space-x-0'>
+                          <FormControl>
+                            <input
+                              type='checkbox'
+                              checked={field.value}
+                              onChange={field.onChange}
+                              className='rounded border-gray-300'
+                            />
+                          </FormControl>
+                          <FormLabel className='!mt-0'>Active</FormLabel>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-              <div className='flex items-center space-x-2'>
-                <input
-                  type='checkbox'
-                  {...form.register('is_active')}
-                  className='rounded border-gray-300'
-                />
-                <label className='text-sm font-medium'>Active</label>
+                    <Button
+                      type='submit'
+                      className='w-full h-12 font-semibold'
+                      disabled={isLoading}>
+                      {isLoading ? 'Creating...' : 'Create Gift Card'}
+                    </Button>
+                  </form>
+                </Form>
               </div>
-
-              <Button type='submit' className='w-full' disabled={isLoading}>
-                {isLoading ? 'Creating...' : 'Create Gift Card'}
-              </Button>
-            </form>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
