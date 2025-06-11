@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
@@ -64,9 +65,15 @@ interface GiftCardFormProps {
   mode: 'create' | 'edit';
   brandId?: string;
   initialData?: Brand;
+  onSuccess?: () => void;
 }
 
-function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
+function GiftCardForm({
+  mode,
+  brandId,
+  initialData,
+  onSuccess,
+}: GiftCardFormProps) {
   const { query: categoriesQuery } = useGetCategoriesQuery();
   const categories = categoriesQuery.data?.results || [];
   const createMutation = useCreateBrand();
@@ -79,17 +86,14 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
   // Set initial values if in edit mode
   React.useEffect(() => {
     if (mode === 'edit' && initialData) {
-      const formData: FormBrand = {
+      form.reset({
         brand_name: initialData.brand_name,
         category: initialData.category,
         min_amount: initialData.min_amount ?? 0,
         max_amount: initialData.max_amount ?? 0,
         is_active: initialData.is_active,
-        image: initialData.image
-          ? new File([JSON.stringify(initialData.image)], 'image.json')
-          : undefined,
-      };
-      form.reset(formData);
+        image: undefined,
+      });
       if (initialData.image) {
         setPreviewImage(initialData.image);
       }
@@ -108,6 +112,11 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
     }
   };
 
+  const handleSubmit = async (data: FormBrand) => {
+    await onSubmit(data);
+    onSuccess?.();
+  };
+
   return (
     <div className='px-7 py-10 md:px-0 md:py-1'>
       <h2 className='font-semibold text-base md:text-2xl font-sans'>
@@ -120,7 +129,7 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
       <div className='md:mt-[30px] mt-6'>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit as any)}
             className='md:space-y-6 space-y-4 font-dm-sans'>
             <FormField
               control={form.control}

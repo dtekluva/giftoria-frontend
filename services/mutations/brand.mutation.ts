@@ -430,12 +430,12 @@ export const useEditBrand = (brandId: string) => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: CreateBrandType) => editBrand({ ...data, id: brandId }),
+    mutationFn: (formData: FormData) => editBrand(formData),
     mutationKey: ['edit-brand'],
     onSuccess: (data) => {
       toast.success(data.data.message || 'Brand updated successfully');
-      form.reset();
       queryClient.invalidateQueries({ queryKey: ['brands'] });
+      queryClient.invalidateQueries({ queryKey: ['brand', brandId] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to update brand');
@@ -459,12 +459,7 @@ export const useEditBrand = (brandId: string) => {
       }
       formData.append('id', brandId);
 
-      const res = mutation.mutateAsync(formData as any);
-      showToast(res, {
-        success: 'Brand updated successfully',
-        error: 'Error updating brand',
-        loading: 'Updating brand...',
-      });
+      await mutation.mutateAsync(formData);
     } catch (error) {
       console.error('Update brand error:', error);
     }
