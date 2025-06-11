@@ -92,7 +92,7 @@ function GiftCardForm({
         min_amount: initialData.min_amount ?? 0,
         max_amount: initialData.max_amount ?? 0,
         is_active: initialData.is_active,
-        image: undefined,
+        image: initialData.image ? new File([], initialData.image) : undefined,
       });
       if (initialData.image) {
         setPreviewImage(initialData.image);
@@ -113,7 +113,24 @@ function GiftCardForm({
   };
 
   const handleSubmit = async (data: FormBrand) => {
-    await onSubmit(data);
+    const formData = new FormData();
+    formData.append('brand_name', data.brand_name);
+    formData.append('category', data.category);
+    if (data.min_amount !== undefined) {
+      formData.append('min_amount', data.min_amount.toString());
+    }
+    if (data.max_amount !== undefined) {
+      formData.append('max_amount', data.max_amount.toString());
+    }
+    formData.append('is_active', data.is_active?.toString() ?? 'true');
+    if (data.image) {
+      formData.append('image', data.image);
+    }
+    if (mode === 'edit' && brandId) {
+      formData.append('id', brandId);
+    }
+
+    await onSubmit(formData as any);
     onSuccess?.();
   };
 

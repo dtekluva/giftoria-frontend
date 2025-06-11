@@ -442,23 +442,8 @@ export const useEditBrand = (brandId: string) => {
     },
   });
 
-  const onSubmit = async (data: CreateBrandType) => {
+  const onSubmit = async (formData: FormData) => {
     try {
-      const formData = new FormData();
-      formData.append('brand_name', data.brand_name);
-      formData.append('category', data.category);
-      if (data.min_amount !== undefined) {
-        formData.append('min_amount', data.min_amount.toString());
-      }
-      if (data.max_amount !== undefined) {
-        formData.append('max_amount', data.max_amount.toString());
-      }
-      formData.append('is_active', data.is_active?.toString() ?? 'true');
-      if (data.image) {
-        formData.append('image', data.image);
-      }
-      formData.append('id', brandId);
-
       await mutation.mutateAsync(formData);
     } catch (error) {
       console.error('Update brand error:', error);
