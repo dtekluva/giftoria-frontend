@@ -46,6 +46,7 @@ import {
   changeForgotPassword,
 } from '../api';
 import { user_keys } from '../queries/user.queries';
+import { useState, useEffect } from 'react';
 
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
@@ -522,20 +523,33 @@ export const useCashierLogin = () => {
 
 export const useChangeForgotPassword = () => {
   const router = useRouter();
+  const [email, setEmail] = useState<string>('');
+
   const form = useForm<ChangeForgotPasswordType>({
     resolver: zodResolver(changeForgotPasswordSchema),
     defaultValues: {
-      email: localStorage.getItem('email') as string,
+      email: '',
       otp_code: '',
       password: '',
       confirm_password: '',
     },
   });
 
+  console.log(email);
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('email');
+    if (storedEmail) {
+      setEmail(storedEmail);
+      form.setValue('email', storedEmail);
+    }
+  }, [form, setEmail]);
+
   const mutation = useMutation({
     mutationFn: changeForgotPassword,
     onSuccess: (data) => {
       if (data.status) {
+        localStorage.removeItem('email');
         router.push('/auth/sign-in');
       }
     },
