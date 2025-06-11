@@ -18,7 +18,7 @@ import {
   IBuyCardAgain,
 } from '@/libs/types/brand.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next/client';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -355,6 +355,7 @@ export const useCardBalanceMutation = () => {
 };
 
 export const useCreateBrand = () => {
+  const queryClient = useQueryClient();
   const form = useForm<CreateBrandType>({
     resolver: zodResolver(createBrandSchema),
     defaultValues: {
@@ -363,6 +364,7 @@ export const useCreateBrand = () => {
       min_amount: undefined,
       max_amount: undefined,
       is_active: true,
+      image: undefined,
     },
   });
 
@@ -372,6 +374,7 @@ export const useCreateBrand = () => {
     onSuccess: (data) => {
       toast.success(data.data.message || 'Brand created successfully');
       form.reset();
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to create brand');
@@ -380,7 +383,21 @@ export const useCreateBrand = () => {
 
   const onSubmit = async (data: CreateBrandType) => {
     try {
-      const res = mutation.mutateAsync(data);
+      const formData = new FormData();
+      formData.append('brand_name', data.brand_name);
+      formData.append('category', data.category);
+      if (data.min_amount !== undefined) {
+        formData.append('min_amount', data.min_amount.toString());
+      }
+      if (data.max_amount !== undefined) {
+        formData.append('max_amount', data.max_amount.toString());
+      }
+      formData.append('is_active', data.is_active?.toString() ?? 'true');
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+
+      const res = mutation.mutateAsync(formData as any);
       showToast(res, {
         success: 'Brand created successfully',
         error: 'Error creating brand',
@@ -399,6 +416,7 @@ export const useCreateBrand = () => {
 };
 
 export const useEditBrand = (brandId: string) => {
+  const queryClient = useQueryClient();
   const form = useForm<CreateBrandType>({
     resolver: zodResolver(createBrandSchema),
     defaultValues: {
@@ -407,6 +425,7 @@ export const useEditBrand = (brandId: string) => {
       min_amount: undefined,
       max_amount: undefined,
       is_active: true,
+      image: undefined,
     },
   });
 
@@ -416,6 +435,7 @@ export const useEditBrand = (brandId: string) => {
     onSuccess: (data) => {
       toast.success(data.data.message || 'Brand updated successfully');
       form.reset();
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to update brand');
@@ -424,7 +444,22 @@ export const useEditBrand = (brandId: string) => {
 
   const onSubmit = async (data: CreateBrandType) => {
     try {
-      const res = mutation.mutateAsync(data);
+      const formData = new FormData();
+      formData.append('brand_name', data.brand_name);
+      formData.append('category', data.category);
+      if (data.min_amount !== undefined) {
+        formData.append('min_amount', data.min_amount.toString());
+      }
+      if (data.max_amount !== undefined) {
+        formData.append('max_amount', data.max_amount.toString());
+      }
+      formData.append('is_active', data.is_active?.toString() ?? 'true');
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+      formData.append('id', brandId);
+
+      const res = mutation.mutateAsync(formData as any);
       showToast(res, {
         success: 'Brand updated successfully',
         error: 'Error updating brand',
@@ -443,11 +478,13 @@ export const useEditBrand = (brandId: string) => {
 };
 
 export const useDeleteBrand = () => {
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: deleteBrand,
     mutationKey: ['delete-brand'],
     onSuccess: (data) => {
       toast.success(data.data.message || 'Brand deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to delete brand');
