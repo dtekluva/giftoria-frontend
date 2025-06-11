@@ -15,6 +15,7 @@ import {
   ChangeForgotPasswordType,
   CompanyPayOutType,
   CardBalanceType,
+  CreateBrandType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -364,4 +365,25 @@ export const getPayoutTransactions = async ({
   >(
     `/wema/payout_transaction/?search=${search}&page=${page}&page_size=${page_size}`
   );
+};
+
+// Add interface for create brand response
+interface ApiCreateBrandResponse {
+  status: boolean;
+  message: string;
+  data: {
+    id: string;
+    brand_name: string;
+    category: string;
+    min_amount: number | null;
+    max_amount: number | null;
+    is_active: boolean;
+  };
+}
+
+export const createBrand = async (data: CreateBrandType) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiCreateBrandResponse>
+  >('/brand/create_brand/', data);
 };
