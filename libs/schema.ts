@@ -291,6 +291,24 @@ export const createBrandSchema = z.object({
     .min(0, 'Maximum amount must be greater than or equal to 0')
     .optional(),
   is_active: z.boolean().optional(),
+  image: z
+    .any()
+    .refine(
+      (file) => file instanceof File && file.size <= 10 * 1024 * 1024, // Max size 10MB
+      'Image must be a valid file and less than 10MB'
+    )
+    .refine(
+      (file) =>
+        [
+          'image/jpeg',
+          'image/png',
+          'image/jpg',
+          'image/gif',
+          'image/webp',
+        ].includes(file?.type),
+      'Image must be a valid image file (JPG, PNG, JPEG, GIF, WEBP)'
+    )
+    .optional(),
 });
 
 //TYPES
