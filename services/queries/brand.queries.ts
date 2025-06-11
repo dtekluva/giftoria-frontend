@@ -17,6 +17,9 @@ import {
   searchAllBrands,
   fetchCategories,
   redeemCardByNumber,
+  getPayoutTransactions,
+  getReceivedCardSales,
+  fetchBrands,
 } from '../api';
 
 export const brand_keys = {
@@ -40,6 +43,16 @@ export const brand_keys = {
       page_size,
     },
   ],
+  brand_received_card: (search: string, page: number, page_size: number) => [
+    ...brand_keys.all,
+    'card',
+    'received',
+    {
+      search,
+      page,
+      page_size,
+    },
+  ],
   brand_card_sales_by_id: (id: string) => [
     ...brand_keys.all,
     'card',
@@ -57,6 +70,25 @@ export const brand_keys = {
     },
   ],
   categories: ['brands', 'categories'],
+  payout_transactions: (search: string, page: number, page_size: number) => [
+    ...brand_keys.all,
+    'payout',
+    'transactions',
+    {
+      search,
+      page,
+      page_size,
+    },
+  ],
+  fetch_brands: (search: string, page: number, page_size: number) => [
+    ...brand_keys.all,
+    'fetch_brands',
+    {
+      search,
+      page,
+      page_size,
+    },
+  ],
 } as const;
 
 export const useGetAllBrandCardsQuery = ({
@@ -133,6 +165,46 @@ export const useGetBrandCardSalesQuery = ({
   const prefetchQuery = () => {
     queryClient.prefetchQuery({
       queryKey: brand_keys.brand_card_sales(search, page + 1, page_size),
+      queryFn: () =>
+        getAllCardSales({
+          search: '',
+          page: page + 1,
+          page_size: page_size,
+        }),
+      staleTime: Infinity,
+    });
+  };
+
+  return {
+    query,
+    prefetchQuery,
+  };
+};
+export const useGetReceivedBrandCardSalesQuery = ({
+  search = '',
+  page = 2,
+  page_size = 4,
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: brand_keys.brand_received_card(search, page, page_size),
+    queryFn: () =>
+      getReceivedCardSales({
+        search,
+        page,
+        page_size,
+      }),
+    select: (data) => data.data,
+    placeholderData: keepPreviousData,
+  });
+
+  const prefetchQuery = () => {
+    queryClient.prefetchQuery({
+      queryKey: brand_keys.brand_received_card(search, page + 1, page_size),
       queryFn: () =>
         getAllCardSales({
           search: '',
@@ -228,6 +300,47 @@ export const useGetCategoriesQuery = () => {
   };
 };
 
+export const useGetPayoutTransactionsQuery = ({
+  search = '',
+  page = 1,
+  page_size = 10,
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: brand_keys.payout_transactions(search, page, page_size),
+    queryFn: () =>
+      getPayoutTransactions({
+        search,
+        page,
+        page_size,
+      }),
+    select: (data) => data.data,
+    placeholderData: keepPreviousData,
+  });
+
+  const prefetchQuery = () => {
+    queryClient.prefetchQuery({
+      queryKey: brand_keys.payout_transactions(search, page + 1, page_size),
+      queryFn: () =>
+        getPayoutTransactions({
+          search,
+          page: page + 1,
+          page_size,
+        }),
+      staleTime: Infinity,
+    });
+  };
+
+  return {
+    query,
+    prefetchQuery,
+  };
+};
+
 export const useRedeemCardQuery = (card_number: string) => {
   const query = useQuery({
     queryKey: ['redeem_card', card_number],
@@ -238,5 +351,46 @@ export const useRedeemCardQuery = (card_number: string) => {
 
   return {
     query,
+  };
+};
+
+export const useFetchBrandsQuery = ({
+  search = '',
+  page = 1,
+  page_size = 10,
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: brand_keys.fetch_brands(search, page, page_size),
+    queryFn: () =>
+      fetchBrands({
+        search,
+        page,
+        page_size,
+      }),
+    select: (data) => data.data,
+    placeholderData: keepPreviousData,
+  });
+
+  const prefetchQuery = () => {
+    queryClient.prefetchQuery({
+      queryKey: brand_keys.fetch_brands(search, page + 1, page_size),
+      queryFn: () =>
+        fetchBrands({
+          search,
+          page: page + 1,
+          page_size,
+        }),
+      staleTime: Infinity,
+    });
+  };
+
+  return {
+    query,
+    prefetchQuery,
   };
 };

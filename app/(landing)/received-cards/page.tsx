@@ -2,7 +2,7 @@
 import SearchInput from '@/components/custom/search-input';
 import ConvertCardIcon from '@/components/icon/convert-card-icon';
 import { Button } from '@/components/ui/button';
-import { useGetBrandCardSalesQuery } from '@/services/queries/brand.queries';
+import { useGetReceivedBrandCardSalesQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -12,11 +12,11 @@ import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-ico
 import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 import { useBuyCardById } from '@/services/mutations/brand.mutation';
 
-function MyOrderPage() {
+function MyReceiveGiftCardPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { query, prefetchQuery } = useGetBrandCardSalesQuery({
+  const { query, prefetchQuery } = useGetReceivedBrandCardSalesQuery({
     search: '',
     page: currentPage,
     page_size: MY_ORDER_PAGE_SIZE,
@@ -38,7 +38,7 @@ function MyOrderPage() {
     <div className='container mx-auto p-4 mt-2 md:mt-8'>
       <div className='lg:flex justify-between items-center'>
         <h1 className='md:text-2xl font-bold text-base font-dm-sans mb-4 lg:mb-0'>
-          My Order
+          My Received Gift Cards
         </h1>
         <SearchInput />
       </div>
@@ -145,21 +145,21 @@ function MyOrderPage() {
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   strokeWidth={2}
-                  d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+                  d='M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7'
                 />
               </svg>
             </div>
             <h3 className='text-xl font-semibold text-gray-900 mb-2'>
-              No Orders Yet
+              No Gift Cards Received
             </h3>
             <p className='text-gray-500 text-center mb-6'>
-              You haven&apos;t made any orders yet. Start shopping to see your
-              orders here.
+              You haven&apos;t received any gift cards yet. Share your profile
+              to receive gift cards from friends and family.
             </p>
             <Button
-              onClick={() => router.push('/')}
+              onClick={() => router.push('/profile')}
               className='bg-[#990099] hover:bg-[#7a007a] text-white px-6 py-2 rounded-md'>
-              Start Shopping
+              View Profile
             </Button>
           </div>
         )}
@@ -205,4 +205,4 @@ function MyOrderPage() {
   );
 }
 
-export default MyOrderPage;
+export default MyReceiveGiftCardPage;

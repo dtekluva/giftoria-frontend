@@ -5,7 +5,10 @@ import {
   BuyCardType,
   cardBalanceSchema,
   CardBalanceType,
-  requestPayWithdrawalSchema,
+  companyPayOutSchema,
+  CompanyPayOutType,
+  createBrandSchema,
+  CreateBrandType,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
@@ -27,6 +30,11 @@ import {
   getAIMessage,
   payViaBank,
   payViaPayStack,
+  companyPayOut,
+  redeemedGiftCard,
+  createBrand,
+  editBrand,
+  deleteBrand,
 } from '../api';
 
 export const useByCardsMutation = () => {
@@ -241,11 +249,51 @@ export const usePayBrand = () => {
 };
 
 export const useRequestWithdrawal = () => {
-  const form = useForm({
-    resolver: zodResolver(requestPayWithdrawalSchema),
+  const form = useForm<CompanyPayOutType>({
+    resolver: zodResolver(companyPayOutSchema),
+    defaultValues: {
+      account_number: '',
+      bank_name: '',
+      account_name: '',
+      bank_code: '',
+      amount: 0,
+      password: '',
+      narration: '',
+    },
   });
+
+  const mutation = useMutation({
+    mutationFn: companyPayOut,
+    mutationKey: ['company-payout'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Withdrawal request successful');
+      form.reset();
+    },
+    onError: (error: any) => {
+      toast.error(
+        error.response?.data?.message || 'Failed to process withdrawal request'
+      );
+    },
+  });
+
+  const onSubmit = async (data: CompanyPayOutType) => {
+    try {
+      const res = mutation.mutateAsync(data);
+
+      showToast(res, {
+        success: 'Processing request',
+        error: 'Error processing request',
+        loading: 'Request withdrawed successfully',
+      });
+    } catch (error) {
+      console.error('Withdrawal request error:', error);
+    }
+  };
+
   return {
     form,
+    onSubmit,
+    isLoading: mutation.isPending,
   };
 };
 
@@ -275,33 +323,152 @@ export const useCardBalanceMutation = () => {
   const form = useForm<CardBalanceType>({
     resolver: zodResolver(cardBalanceSchema),
     defaultValues: {
-      card_value: '',
-      shopping_value: '',
-      card_balance: '',
+      card_number: '',
+      amount: '',
     },
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: CardBalanceType) => {
-      // TODO: Replace with actual API call
-      return Promise.resolve(data);
-    },
+    mutationFn: redeemedGiftCard,
     mutationKey: ['card-balance'],
   });
 
   const onSubmit = async (data: CardBalanceType) => {
     try {
-      await mutation.mutateAsync(data);
-      toast.success('Card balance updated successfully');
+      const res = mutation.mutateAsync(data);
+      showToast(res, {
+        success: 'Card Succcessfully Redeemed',
+        error: 'Error processing request',
+        loading: 'Processing Reqeust',
+      });
     } catch (error) {
       console.log(error);
-      toast.error('Failed to update card balance');
+      toast.error('Failed to redeem card');
     }
   };
 
   return {
     form,
     onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useCreateBrand = () => {
+  const form = useForm<CreateBrandType>({
+    resolver: zodResolver(createBrandSchema),
+    defaultValues: {
+      brand_name: '',
+      category: '',
+      min_amount: undefined,
+      max_amount: undefined,
+      is_active: true,
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: createBrand,
+    mutationKey: ['create-brand'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Brand created successfully');
+      form.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to create brand');
+    },
+  });
+
+  const onSubmit = async (data: CreateBrandType) => {
+    try {
+      const res = mutation.mutateAsync(data);
+      showToast(res, {
+        success: 'Brand created successfully',
+        error: 'Error creating brand',
+        loading: 'Creating brand...',
+      });
+    } catch (error) {
+      console.error('Create brand error:', error);
+    }
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useEditBrand = (brandId: string) => {
+  const form = useForm<CreateBrandType>({
+    resolver: zodResolver(createBrandSchema),
+    defaultValues: {
+      brand_name: '',
+      category: '',
+      min_amount: undefined,
+      max_amount: undefined,
+      is_active: true,
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data: CreateBrandType) => editBrand({ ...data, id: brandId }),
+    mutationKey: ['edit-brand'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Brand updated successfully');
+      form.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update brand');
+    },
+  });
+
+  const onSubmit = async (data: CreateBrandType) => {
+    try {
+      const res = mutation.mutateAsync(data);
+      showToast(res, {
+        success: 'Brand updated successfully',
+        error: 'Error updating brand',
+        loading: 'Updating brand...',
+      });
+    } catch (error) {
+      console.error('Update brand error:', error);
+    }
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useDeleteBrand = () => {
+  const mutation = useMutation({
+    mutationFn: deleteBrand,
+    mutationKey: ['delete-brand'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Brand deleted successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to delete brand');
+    },
+  });
+
+  const deleteBrandById = async (brandId: string) => {
+    try {
+      const res = mutation.mutateAsync(brandId);
+      showToast(res, {
+        success: 'Brand deleted successfully',
+        error: 'Error deleting brand',
+        loading: 'Deleting brand...',
+      });
+    } catch (error) {
+      console.error('Delete brand error:', error);
+    }
+  };
+
+  return {
+    deleteBrandById,
     isLoading: mutation.isPending,
   };
 };

@@ -52,6 +52,7 @@ export interface CardSale {
   assigned_date: string;
   redeemed: boolean;
   redeemed_date: string | null;
+  sender_email: string;
 }
 
 export interface ApiCardSalesResponse {
@@ -61,11 +62,45 @@ export interface ApiCardSalesResponse {
   results: CardSale[];
 }
 
+export type TransactionStatus = 'PENDING' | 'REDEEMED' | 'DECLINED';
+
+export interface StatusCount {
+  PENDING: number;
+  REDEEMED: number;
+  DECLINED: number;
+}
+
+export interface BrandCardTransaction {
+  id: string;
+  branch: string;
+  user: string;
+  brand: string;
+  card: string;
+  amount: number;
+  card_value: number;
+  balance: number;
+  transaction_id: string;
+  status: TransactionStatus;
+  redeemed: boolean;
+  created_at: string;
+  card_number: string;
+  store_address: string;
+}
+
+export interface ApiBrandCardTransactionResponse {
+  status_count: StatusCount;
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: BrandCardTransaction[];
+}
+
 export interface ApiCompanyDetailsResponse {
   message: string; // Response message
   status: boolean; // Indicates if the request was successful
   balance: number; // Company balance
   company_name: string; // Name of the company
+  total_sales: string | null;
   company_address: string | null; // Address of the company (nullable)
   business_type: string | null; // Type of business (nullable)
   registration_number: string | null; // CAC registration number (nullable)
@@ -139,4 +174,26 @@ export interface ApiCategoryResponse {
   next: string | null;
   previous: string | null;
   results: Category[];
+}
+
+export interface CompanyPayOutTransaction {
+  id: string;
+  transaction_reference: string;
+  amount: number;
+  total_amount: number;
+  charges: number;
+  status: string;
+  narration: string;
+  account_name: string;
+  bank_name: string;
+  account_number: string;
+  created_at: string;
+  is_reversed: boolean;
+}
+
+export interface ApiCompanyPayOutTransactionResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: CompanyPayOutTransaction[];
 }

@@ -28,7 +28,7 @@ function SearchInput({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className='border-0 focus:border-0 focus:outline-none focus:ring-0 flex-1'
+        className='border-0 focus:border-0 focus:outline-none text-sm focus:ring-0 flex-1'
       />
       <div className='pl-4 border-l border-[#93A3C0]'>
         <FilterSearchIcon />

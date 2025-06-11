@@ -37,7 +37,7 @@ function CompanyDetails() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='border-t md:mt-6 mt-5 py-7 px-7 md:py-[30px] grid gap-5 md:gap-x-6 md:grid-cols-2'>
+          className='border-t md:mt-6 mt-5 py-7 md:px-7 px-4 md:py-[30px] grid gap-5 md:gap-x-6 md:grid-cols-2'>
           {/* Company Name */}
           <FormField
             control={form.control}
@@ -128,7 +128,7 @@ function CompanyDetails() {
         Request change of password
       </p>
 
-      <div className='grid md:grid-cols-2 gap-[10px] px-7 md:mt-7'>
+      <div className='grid md:grid-cols-2 gap-[10px] px-4 md:px-7 md:mt-7 mt-7'>
         <div>
           <h3 className='md:mb-8 mb-3 font-semibold'>Company Details</h3>
           <GiftCardDetailsTable data={companyCardDetails} />

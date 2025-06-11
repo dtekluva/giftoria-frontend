@@ -233,7 +233,7 @@ function OrderSummary() {
             }
             payingThroughBank={payingThroughBank}
             onOpenChange={setShowSuccessModal}
-            error={bankData?.payment_details.data.errors.message}
+            error={''}
             details={
               bankData?.payment_details?.data?.data?.account_details
                 ? {

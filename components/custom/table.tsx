@@ -6,12 +6,14 @@ interface TableProps<T> {
   headers: { key: string; title: string }[]; // Array of header objects with key and title
   data: T[]; // Array of data objects
   selectable?: boolean; // Optional prop to enable row selection
+  emptyStateMessage?: string; // Optional custom message for empty state
 }
 
 const Table = <T extends Record<string, unknown>>({
   headers,
   data,
   selectable = false,
+  emptyStateMessage = 'No data available',
 }: TableProps<T>) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -32,6 +34,35 @@ const Table = <T extends Record<string, unknown>>({
     }
   };
 
+  const EmptyState = () => (
+    <div className='flex flex-col items-center justify-center py-12 px-4 font-dm-sans'>
+      <div className='w-24 h-24 mb-6'>
+        <svg
+          className='w-full h-full text-gray-400'
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'>
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth={2}
+            d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+          />
+        </svg>
+      </div>
+      <h3 className='text-xl font-semibold text-gray-900 mb-2 font-montserrat'>
+        No Data Found
+      </h3>
+      <p className='text-gray-500 text-center font-montserrat'>
+        {emptyStateMessage}
+      </p>
+    </div>
+  );
+
+  if (data.length === 0) {
+    return <EmptyState />;
+  }
+
   return (
     <div className='container mx-auto px-4 pt-4 md:pt-9'>
       {/* Desktop Table */}
@@ -49,7 +80,9 @@ const Table = <T extends Record<string, unknown>>({
                 </th>
               )}
               {headers.map((header, index) => (
-                <th key={index} className='py-6 px-4 text-left font-medium'>
+                <th
+                  key={index}
+                  className='py-6 px-4 text-left font-semibold text-xs'>
                   {header.title}
                 </th>
               ))}
@@ -72,8 +105,10 @@ const Table = <T extends Record<string, unknown>>({
                   </th>
                 )}
                 {headers.map((header, colIndex) => (
-                  <td key={colIndex} className='py-[36px] px-4'>
-                    {String(row[header.key] || '-')}
+                  <td key={colIndex} className='py-[36px] px-4  text-xs'>
+                    <span className='line-clamp-1'>
+                      {String(row[header.key] || '-')}
+                    </span>
                   </td>
                 ))}
               </tr>
@@ -90,7 +125,9 @@ const Table = <T extends Record<string, unknown>>({
               <p
                 key={colIndex}
                 className='flex justify-between font-dm-sans gap-1 text-xs'>
-                <span className='font-medium font-sans'>{header.title}:</span>
+                <span className='font-bold text-xs font-sans'>
+                  {header.title}:
+                </span>
                 {String(row[header.key] || '-')}
               </p>
             ))}
