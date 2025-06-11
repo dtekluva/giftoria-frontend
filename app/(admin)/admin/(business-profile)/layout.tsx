@@ -13,6 +13,10 @@ function BusinessProfileLayout({ children }: { children: React.ReactNode }) {
       name: 'Branch',
       href: '/admin/branch',
     },
+    {
+      name: 'Manage Gift Card',
+      href: '/admin/manage-gift-card',
+    },
   ];
 
   const router = useRouter();
@@ -20,8 +24,8 @@ function BusinessProfileLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <div className='mt-7 w-full'>
-        <Tabs defaultValue='details' className='px-7 w-full border-b-2'>
-          <TabsList className='w-full md:max-w-[600px] md:gap-16'>
+        <Tabs defaultValue='details' className='md:px-7 w-full border-b-2'>
+          <TabsList className='w-full overflow-x-auto flex-nowrap md:max-w-[600px] md:gap-18 gap-8 scrollbar-hide'>
             {linksHeader.map((link) => (
               <TabsTrigger
                 key={link.name}
@@ -29,7 +33,7 @@ function BusinessProfileLayout({ children }: { children: React.ReactNode }) {
                   router.push(link.href);
                 }}
                 data-state={link.href === pathname ? 'active' : 'inactive'}
-                className='md:pb-4'
+                className='whitespace-nowrap md:pb-4'
                 value={link.name.toLowerCase().replace(/\s+/g, '')}>
                 {link.name}
               </TabsTrigger>

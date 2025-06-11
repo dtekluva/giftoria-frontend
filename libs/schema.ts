@@ -262,9 +262,8 @@ export const changeForgotPasswordSchema = z
   });
 
 export const cardBalanceSchema = z.object({
-  card_value: z.string().min(1, 'Card valu e is required'),
-  shopping_value: z.string().min(1, 'Card valu e is required'),
-  card_balance: z.string().min(1, 'Card valu e is required'),
+  card_number: z.string().min(1, 'Card valu e is required'),
+  amount: z.string().min(1, 'Amount is required'),
 });
 
 export const companyPayOutSchema = z.object({

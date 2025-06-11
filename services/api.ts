@@ -14,6 +14,7 @@ import {
   ForgotPasswordType,
   ChangeForgotPasswordType,
   CompanyPayOutType,
+  CardBalanceType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -192,6 +193,13 @@ export const buyCardbyId = async (data: BuyMultipleCard) => {
 export const buyCardAgainbyId = async (data: IBuyCardAgain) => {
   return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
     `/brand/buy_card_again/`,
+    data
+  );
+};
+
+export const redeemedGiftCard = async (data: CardBalanceType) => {
+  return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
+    `/branch/branch_redeem/`,
     data
   );
 };

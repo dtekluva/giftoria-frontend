@@ -29,6 +29,7 @@ import {
   payViaBank,
   payViaPayStack,
   companyPayOut,
+  redeemedGiftCard,
 } from '../api';
 
 export const useByCardsMutation = () => {
@@ -317,27 +318,27 @@ export const useCardBalanceMutation = () => {
   const form = useForm<CardBalanceType>({
     resolver: zodResolver(cardBalanceSchema),
     defaultValues: {
-      card_value: '',
-      shopping_value: '',
-      card_balance: '',
+      card_number: '',
+      amount: '',
     },
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: CardBalanceType) => {
-      // TODO: Replace with actual API call
-      return Promise.resolve(data);
-    },
+    mutationFn: redeemedGiftCard,
     mutationKey: ['card-balance'],
   });
 
   const onSubmit = async (data: CardBalanceType) => {
     try {
-      await mutation.mutateAsync(data);
-      toast.success('Card balance updated successfully');
+      const res = mutation.mutateAsync(data);
+      showToast(res, {
+        success: 'Card Succcessfully Redeemed',
+        error: 'Error processing request',
+        loading: 'Processing Reqeust',
+      });
     } catch (error) {
       console.log(error);
-      toast.error('Failed to update card balance');
+      toast.error('Failed to redeem card');
     }
   };
 
