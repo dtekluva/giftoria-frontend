@@ -276,6 +276,23 @@ export const companyPayOutSchema = z.object({
   narration: z.string().optional(),
 });
 
+export const createBrandSchema = z.object({
+  brand_name: z
+    .string()
+    .min(1, 'Brand name is required')
+    .max(255, 'Brand name must be less than 255 characters'),
+  category: z.string().min(1, 'Category is required'),
+  min_amount: z
+    .number()
+    .min(0, 'Minimum amount must be greater than or equal to 0')
+    .optional(),
+  max_amount: z
+    .number()
+    .min(0, 'Maximum amount must be greater than or equal to 0')
+    .optional(),
+  is_active: z.boolean().optional(),
+});
+
 //TYPES
 export type ForgotPasswordType = z.infer<typeof forgotPasswordSchema>;
 export type ChangeForgotPasswordType = z.infer<
@@ -300,3 +317,4 @@ export type SendVerificationCodeType = z.infer<
 export type LoginType = z.infer<typeof loginSchema>;
 export type CashierLoginType = z.infer<typeof cashierLoginSchema>;
 export type CompanyPayOutType = z.infer<typeof companyPayOutSchema>;
+export type CreateBrandType = z.infer<typeof createBrandSchema>;
