@@ -31,6 +31,7 @@ import { Category } from '@/libs/types/brand.types';
 import {
   useCreateBrand,
   useEditBrand,
+  useDeleteBrand,
 } from '@/services/mutations/brand.mutation';
 import {
   useFetchBrandsQuery,
@@ -236,6 +237,8 @@ function ManageGiftCardPage() {
     page_size: pageSize,
   });
 
+  const { deleteBrandById, isLoading: isDeleting } = useDeleteBrand();
+
   const handleEditClick = (brand: Brand) => {
     setSelectedBrand(brand);
     if (window.innerWidth < 768) {
@@ -247,6 +250,12 @@ function ManageGiftCardPage() {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleDeleteClick = async (brandId: string) => {
+    if (window.confirm('Are you sure you want to delete this gift card?')) {
+      await deleteBrandById(brandId);
+    }
   };
 
   return (
@@ -375,7 +384,10 @@ function ManageGiftCardPage() {
                     className='cursor-pointer'
                     onClick={() => handleEditClick(brand)}
                   />
-                  <button className='cursor-pointer'>
+                  <button
+                    className='cursor-pointer'
+                    onClick={() => handleDeleteClick(brand.id)}
+                    disabled={isDeleting}>
                     <TrashOutlineIcon className='cursor-pointer ml-4' />
                   </button>
                 </div>

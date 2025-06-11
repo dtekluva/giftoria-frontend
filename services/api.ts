@@ -395,6 +395,13 @@ export const editBrand = async (data: CreateBrandType & { id: string }) => {
   >('/brand/edit_brand/', data);
 };
 
+export const deleteBrand = async (brandId: string) => {
+  return await httpConfig.delete<
+    AxiosError,
+    AxiosResponse<ApiCreateBrandResponse>
+  >(`/brand/delete_brand/?brand_id=${brandId}`);
+};
+
 // Add interface for fetch brands response
 interface ApiFetchBrandsResponse {
   count: number;

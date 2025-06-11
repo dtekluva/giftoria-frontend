@@ -34,6 +34,7 @@ import {
   redeemedGiftCard,
   createBrand,
   editBrand,
+  deleteBrand,
 } from '../api';
 
 export const useByCardsMutation = () => {
@@ -437,6 +438,37 @@ export const useEditBrand = (brandId: string) => {
   return {
     form,
     onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useDeleteBrand = () => {
+  const mutation = useMutation({
+    mutationFn: deleteBrand,
+    mutationKey: ['delete-brand'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Brand deleted successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to delete brand');
+    },
+  });
+
+  const deleteBrandById = async (brandId: string) => {
+    try {
+      const res = mutation.mutateAsync(brandId);
+      showToast(res, {
+        success: 'Brand deleted successfully',
+        error: 'Error deleting brand',
+        loading: 'Deleting brand...',
+      });
+    } catch (error) {
+      console.error('Delete brand error:', error);
+    }
+  };
+
+  return {
+    deleteBrandById,
     isLoading: mutation.isPending,
   };
 };
