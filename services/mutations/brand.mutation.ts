@@ -33,6 +33,7 @@ import {
   companyPayOut,
   redeemedGiftCard,
   createBrand,
+  editBrand,
 } from '../api';
 
 export const useByCardsMutation = () => {
@@ -386,6 +387,50 @@ export const useCreateBrand = () => {
       });
     } catch (error) {
       console.error('Create brand error:', error);
+    }
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useEditBrand = (brandId: string) => {
+  const form = useForm<CreateBrandType>({
+    resolver: zodResolver(createBrandSchema),
+    defaultValues: {
+      brand_name: '',
+      category: '',
+      min_amount: undefined,
+      max_amount: undefined,
+      is_active: true,
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data: CreateBrandType) => editBrand({ ...data, id: brandId }),
+    mutationKey: ['edit-brand'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Brand updated successfully');
+      form.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update brand');
+    },
+  });
+
+  const onSubmit = async (data: CreateBrandType) => {
+    try {
+      const res = mutation.mutateAsync(data);
+      showToast(res, {
+        success: 'Brand updated successfully',
+        error: 'Error updating brand',
+        loading: 'Updating brand...',
+      });
+    } catch (error) {
+      console.error('Update brand error:', error);
     }
   };
 

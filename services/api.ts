@@ -387,3 +387,10 @@ export const createBrand = async (data: CreateBrandType) => {
     AxiosResponse<ApiCreateBrandResponse>
   >('/brand/create_brand/', data);
 };
+
+export const editBrand = async (data: CreateBrandType & { id: string }) => {
+  return await httpConfig.put<
+    AxiosError,
+    AxiosResponse<ApiCreateBrandResponse>
+  >('/brand/edit_brand/', data);
+};

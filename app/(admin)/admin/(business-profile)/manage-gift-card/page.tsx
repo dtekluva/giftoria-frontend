@@ -3,7 +3,12 @@
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -22,23 +27,50 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 import { useGetCategoriesQuery } from '@/services/queries/brand.queries';
-import { useCreateBrand } from '@/services/mutations/brand.mutation';
+import {
+  useCreateBrand,
+  useEditBrand,
+} from '@/services/mutations/brand.mutation';
 import { Category } from '@/libs/types/brand.types';
 
-function CreateGiftCardForm() {
+interface GiftCardFormProps {
+  mode: 'create' | 'edit';
+  brandId?: string;
+  initialData?: {
+    brand_name: string;
+    category: string;
+    min_amount: number;
+    max_amount: number;
+    is_active: boolean;
+  };
+}
+
+function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
   const { query: categoriesQuery } = useGetCategoriesQuery();
   const categories = categoriesQuery.data?.results || [];
-  const { form, onSubmit, isLoading } = useCreateBrand();
+  const createMutation = useCreateBrand();
+  const editMutation = useEditBrand(brandId || '');
+
+  const { form, onSubmit, isLoading } =
+    mode === 'create' ? createMutation : editMutation;
+
+  // Set initial values if in edit mode
+  React.useEffect(() => {
+    if (mode === 'edit' && initialData) {
+      form.reset(initialData);
+    }
+  }, [mode, initialData, form]);
 
   return (
     <div className='px-7 py-10 md:px-0 md:py-1'>
       <h2 className='font-semibold text-base md:text-2xl font-sans'>
-        Create Gift Card
+        {mode === 'create' ? 'Create Gift Card' : 'Edit Gift Card'}
       </h2>
       <p className='text-xs md:text-base text-[#4A4A68] font-dm-sans border-b pb-4'>
-        Fill the details below to create a Gift Card
+        Fill the details below to {mode === 'create' ? 'create' : 'edit'} a Gift
+        Card
       </p>
       <div className='md:mt-[30px] mt-6'>
         <Form {...form}>
@@ -153,7 +185,13 @@ function CreateGiftCardForm() {
               type='submit'
               className='w-full h-12 font-semibold'
               disabled={isLoading}>
-              {isLoading ? 'Creating...' : 'Create Gift Card'}
+              {isLoading
+                ? mode === 'create'
+                  ? 'Creating...'
+                  : 'Updating...'
+                : mode === 'create'
+                ? 'Create Gift Card'
+                : 'Update Gift Card'}
             </Button>
           </form>
         </Form>
@@ -163,6 +201,48 @@ function CreateGiftCardForm() {
 }
 
 function ManageGiftCardPage() {
+  const [selectedBrand, setSelectedBrand] = useState<{
+    id: string;
+    brand_name: string;
+    category: string;
+    min_amount: number;
+    max_amount: number;
+    is_active: boolean;
+  } | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+
+  const handleEditClick = (brand: {
+    id: string;
+    brand_name: string;
+    category: string;
+    min_amount: number;
+    max_amount: number;
+    is_active: boolean;
+  }) => {
+    setSelectedBrand(brand);
+    // Check if we're on mobile (screen width < 768px)
+    if (window.innerWidth < 768) {
+      setIsEditSheetOpen(true);
+    } else {
+      setIsEditDialogOpen(true);
+    }
+  };
+
+  // Add resize listener to handle screen size changes
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsEditDialogOpen(false);
+      } else {
+        setIsEditSheetOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className='py-6'>
       <div className='flex justify-end'>
@@ -173,7 +253,7 @@ function ManageGiftCardPage() {
             </Button>
           </DialogTrigger>
           <DialogContent className='sm:max-w-[620px] overflow-y-auto max-h-[90%]'>
-            <CreateGiftCardForm />
+            <GiftCardForm mode='create' />
           </DialogContent>
         </Dialog>
 
@@ -184,7 +264,35 @@ function ManageGiftCardPage() {
             </Button>
           </SheetTrigger>
           <SheetContent className='max-h-full overflow-y-auto' side='bottom'>
-            <CreateGiftCardForm />
+            <GiftCardForm mode='create' />
+          </SheetContent>
+        </Sheet>
+
+        {/* Edit Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className='sm:max-w-[620px] overflow-y-auto max-h-[90%]'>
+            <DialogTitle className='sr-only'>Edit Gift Card</DialogTitle>
+            {selectedBrand && (
+              <GiftCardForm
+                mode='edit'
+                brandId={selectedBrand.id}
+                initialData={selectedBrand}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Sheet */}
+        <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
+          <SheetContent className='max-h-full overflow-y-auto' side='bottom'>
+            <DialogTitle className='sr-only'>Edit Gift Card</DialogTitle>
+            {selectedBrand && (
+              <GiftCardForm
+                mode='edit'
+                brandId={selectedBrand.id}
+                initialData={selectedBrand}
+              />
+            )}
           </SheetContent>
         </Sheet>
       </div>
@@ -224,7 +332,19 @@ function ManageGiftCardPage() {
           <div className='md:flex-none flex md:flex-row flex-col items-center md:gap-12 flex-1'>
             <p className='text-xs font-dm-sans'>₦5,000 - ₦400,000.00</p>
             <div className='flex items-center'>
-              <OutlineEditIcon className='cursor-pointer' />
+              <OutlineEditIcon
+                className='cursor-pointer'
+                onClick={() =>
+                  handleEditClick({
+                    id: '1', // Replace with actual brand ID
+                    brand_name: 'Zara gift card',
+                    category: '1', // Replace with actual category ID
+                    min_amount: 5000,
+                    max_amount: 400000,
+                    is_active: true,
+                  })
+                }
+              />
               <button className='cursor-pointer'>
                 <TrashOutlineIcon className='cursor-pointer ml-4' />
               </button>
