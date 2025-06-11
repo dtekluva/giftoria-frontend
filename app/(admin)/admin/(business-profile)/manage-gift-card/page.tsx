@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
@@ -39,6 +40,7 @@ import {
 } from '@/services/queries/brand.queries';
 import Image from 'next/image';
 import React, { useState } from 'react';
+import UploadDocumentIcon from '@/components/icon/upload-document-icon';
 
 interface Brand {
   id: string;
@@ -47,6 +49,7 @@ interface Brand {
   min_amount: number | null;
   max_amount: number | null;
   is_active: boolean;
+  image?: string | null;
 }
 
 interface FormBrand {
@@ -55,19 +58,27 @@ interface FormBrand {
   min_amount: number;
   max_amount: number;
   is_active: boolean;
+  image?: File | null;
 }
 
 interface GiftCardFormProps {
   mode: 'create' | 'edit';
   brandId?: string;
   initialData?: Brand;
+  onSuccess?: () => void;
 }
 
-function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
+function GiftCardForm({
+  mode,
+  brandId,
+  initialData,
+  onSuccess,
+}: GiftCardFormProps) {
   const { query: categoriesQuery } = useGetCategoriesQuery();
   const categories = categoriesQuery.data?.results || [];
   const createMutation = useCreateBrand();
   const editMutation = useEditBrand(brandId || '');
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const { form, onSubmit, isLoading } =
     mode === 'create' ? createMutation : editMutation;
@@ -75,16 +86,53 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
   // Set initial values if in edit mode
   React.useEffect(() => {
     if (mode === 'edit' && initialData) {
-      const formData: FormBrand = {
+      form.reset({
         brand_name: initialData.brand_name,
         category: initialData.category,
         min_amount: initialData.min_amount ?? 0,
         max_amount: initialData.max_amount ?? 0,
         is_active: initialData.is_active,
-      };
-      form.reset(formData);
+        image: initialData.image ? new File([], initialData.image) : undefined,
+      });
+      if (initialData.image) {
+        setPreviewImage(initialData.image);
+      }
     }
   }, [mode, initialData, form]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      form.setValue('image', file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async (data: FormBrand) => {
+    const formData = new FormData();
+    formData.append('brand_name', data.brand_name);
+    formData.append('category', data.category);
+    if (data.min_amount !== undefined) {
+      formData.append('min_amount', data.min_amount.toString());
+    }
+    if (data.max_amount !== undefined) {
+      formData.append('max_amount', data.max_amount.toString());
+    }
+    formData.append('is_active', data.is_active?.toString() ?? 'true');
+    if (data.image) {
+      formData.append('image', data.image);
+    }
+    if (mode === 'edit' && brandId) {
+      formData.append('id', brandId);
+    }
+
+    await onSubmit(formData as any);
+    onSuccess?.();
+  };
 
   return (
     <div className='px-7 py-10 md:px-0 md:py-1'>
@@ -98,7 +146,7 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
       <div className='md:mt-[30px] mt-6'>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit as any)}
             className='md:space-y-6 space-y-4 font-dm-sans'>
             <FormField
               control={form.control}
@@ -113,6 +161,44 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='image'
+              render={() => (
+                <FormItem>
+                  <FormLabel>Brand Image</FormLabel>
+                  <div className='flex items-center gap-4'>
+                    <label
+                      htmlFor='brand-image'
+                      className='md:px-6 px-5 flex items-center gap-4 cursor-pointer py-4 rounded-[8px] bg-secondary-transparent'>
+                      <UploadDocumentIcon />
+                      <p className='font-medium font-dm-sans text-[#323232] text-sm'>
+                        {previewImage ? 'Change image' : 'Upload brand image'}
+                      </p>
+                    </label>
+                    <input
+                      id='brand-image'
+                      type='file'
+                      accept='image/jpeg,image/png,image/jpg,image/gif,image/webp'
+                      className='hidden'
+                      onChange={handleImageChange}
+                    />
+                    {previewImage && (
+                      <div className='relative w-20 h-20'>
+                        <Image
+                          src={previewImage}
+                          alt='Brand preview'
+                          fill
+                          className='object-cover rounded-lg'
+                        />
+                      </div>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -346,7 +432,7 @@ function ManageGiftCardPage() {
               <div className='flex flex-col gap-4 md:gap-16 md:flex-row'>
                 <div className='flex items-center gap-4 font-montserrat'>
                   <Image
-                    src={'https://placehold.co/160x100.png'}
+                    src={brand.image}
                     width={160}
                     height={100}
                     className='md:w-[160px] w-24'
@@ -356,10 +442,10 @@ function ManageGiftCardPage() {
                     <p className='md:text-sm text-[10px] font-semibold'>
                       {brand.brand_name}
                     </p>
-                    <p className='text-xs font-dm-sans'>Ashiru</p>
-                    <p className='md:text-xs text-[10px] xl:hidden block'>
-                      2/10/2023
-                    </p>
+                    <p className='text-xs font-dm-sans'>{brand.category}</p>
+                    {/* <p className='md:text-xs text-[10px] xl:hidden block'>
+                    {brand.}
+                    </p> */}
                   </div>
                   <p className='md:text-sm text-[10px] hidden xl:block ml-auto'>
                     {'adwaele@gmail.com'}

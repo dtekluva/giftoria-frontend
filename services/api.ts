@@ -13,9 +13,14 @@ import {
   CashierLoginType,
   ForgotPasswordType,
   ChangeForgotPasswordType,
+  companyPayOutSchema,
+  cardBalanceSchema,
+  cardSchema,
+  buyCardSchema,
+  BuyCardType,
+  createBrandSchema,
   CompanyPayOutType,
   CardBalanceType,
-  CreateBrandType,
 } from '@/libs/schema';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -26,6 +31,7 @@ import {
   ApiAllBrandCardsResponse,
   ApiBranchResponse,
   ApiBrandCardTransactionResponse,
+  ApiBrandProductResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
   ApiCategoryResponse,
@@ -381,18 +387,26 @@ interface ApiCreateBrandResponse {
   };
 }
 
-export const createBrand = async (data: CreateBrandType) => {
+export const createBrand = async (data: FormData) => {
   return await httpConfig.post<
     AxiosError,
     AxiosResponse<ApiCreateBrandResponse>
-  >('/brand/create_brand/', data);
+  >('/brand/create_brand/', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
-export const editBrand = async (data: CreateBrandType & { id: string }) => {
+export const editBrand = async (data: FormData) => {
   return await httpConfig.put<
     AxiosError,
     AxiosResponse<ApiCreateBrandResponse>
-  >('/brand/edit_brand/', data);
+  >('/brand/edit_brand/', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export const deleteBrand = async (brandId: string) => {
@@ -401,21 +415,6 @@ export const deleteBrand = async (brandId: string) => {
     AxiosResponse<ApiCreateBrandResponse>
   >(`/brand/delete_brand/?brand_id=${brandId}`);
 };
-
-// Add interface for fetch brands response
-interface ApiFetchBrandsResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: {
-    id: string;
-    brand_name: string;
-    category: string;
-    min_amount: number | null;
-    max_amount: number | null;
-    is_active: boolean;
-  }[];
-}
 
 export const fetchBrands = async ({
   search,
@@ -428,6 +427,6 @@ export const fetchBrands = async ({
 }) => {
   return await httpConfig.get<
     AxiosError,
-    AxiosResponse<ApiFetchBrandsResponse>
+    AxiosResponse<ApiBrandProductResponse>
   >(`/brand/fetch_brand/?search=${search}&page=${page}&page_size=${page_size}`);
 };

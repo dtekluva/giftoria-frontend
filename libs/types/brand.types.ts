@@ -197,3 +197,20 @@ export interface ApiCompanyPayOutTransactionResponse {
   previous: string | null;
   results: CompanyPayOutTransaction[];
 }
+
+type Product = {
+  id: string;
+  brand_name: string;
+  category: string;
+  image: string;
+  is_active: boolean;
+  min_amount: number;
+  max_amount: number;
+};
+
+export type ApiBrandProductResponse = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Product[];
+};
