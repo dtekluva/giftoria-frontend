@@ -19,6 +19,7 @@ import {
   redeemCardByNumber,
   getPayoutTransactions,
   getReceivedCardSales,
+  fetchBrands,
 } from '../api';
 
 export const brand_keys = {
@@ -73,6 +74,15 @@ export const brand_keys = {
     ...brand_keys.all,
     'payout',
     'transactions',
+    {
+      search,
+      page,
+      page_size,
+    },
+  ],
+  fetch_brands: (search: string, page: number, page_size: number) => [
+    ...brand_keys.all,
+    'fetch_brands',
     {
       search,
       page,
@@ -341,5 +351,46 @@ export const useRedeemCardQuery = (card_number: string) => {
 
   return {
     query,
+  };
+};
+
+export const useFetchBrandsQuery = ({
+  search = '',
+  page = 1,
+  page_size = 10,
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: brand_keys.fetch_brands(search, page, page_size),
+    queryFn: () =>
+      fetchBrands({
+        search,
+        page,
+        page_size,
+      }),
+    select: (data) => data.data,
+    placeholderData: keepPreviousData,
+  });
+
+  const prefetchQuery = () => {
+    queryClient.prefetchQuery({
+      queryKey: brand_keys.fetch_brands(search, page + 1, page_size),
+      queryFn: () =>
+        fetchBrands({
+          search,
+          page: page + 1,
+          page_size,
+        }),
+      staleTime: Infinity,
+    });
+  };
+
+  return {
+    query,
+    prefetchQuery,
   };
 };

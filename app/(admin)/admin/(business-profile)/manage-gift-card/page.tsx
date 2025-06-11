@@ -2,6 +2,7 @@
 
 import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
+import SearchInput from '@/components/custom/search-input';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -18,7 +19,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
   Select,
   SelectContent,
@@ -26,25 +26,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import Image from 'next/image';
-import React, { useState } from 'react';
-import { useGetCategoriesQuery } from '@/services/queries/brand.queries';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Category } from '@/libs/types/brand.types';
 import {
   useCreateBrand,
   useEditBrand,
 } from '@/services/mutations/brand.mutation';
-import { Category } from '@/libs/types/brand.types';
+import {
+  useFetchBrandsQuery,
+  useGetCategoriesQuery,
+} from '@/services/queries/brand.queries';
+import Image from 'next/image';
+import React, { useState } from 'react';
+
+interface Brand {
+  id: string;
+  brand_name: string;
+  category: string;
+  min_amount: number | null;
+  max_amount: number | null;
+  is_active: boolean;
+}
+
+interface FormBrand {
+  brand_name: string;
+  category: string;
+  min_amount: number;
+  max_amount: number;
+  is_active: boolean;
+}
 
 interface GiftCardFormProps {
   mode: 'create' | 'edit';
   brandId?: string;
-  initialData?: {
-    brand_name: string;
-    category: string;
-    min_amount: number;
-    max_amount: number;
-    is_active: boolean;
-  };
+  initialData?: Brand;
 }
 
 function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
@@ -59,7 +74,14 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
   // Set initial values if in edit mode
   React.useEffect(() => {
     if (mode === 'edit' && initialData) {
-      form.reset(initialData);
+      const formData: FormBrand = {
+        brand_name: initialData.brand_name,
+        category: initialData.category,
+        min_amount: initialData.min_amount ?? 0,
+        max_amount: initialData.max_amount ?? 0,
+        is_active: initialData.is_active,
+      };
+      form.reset(formData);
     }
   }, [mode, initialData, form]);
 
@@ -201,27 +223,21 @@ function GiftCardForm({ mode, brandId, initialData }: GiftCardFormProps) {
 }
 
 function ManageGiftCardPage() {
-  const [selectedBrand, setSelectedBrand] = useState<{
-    id: string;
-    brand_name: string;
-    category: string;
-    min_amount: number;
-    max_amount: number;
-    is_active: boolean;
-  } | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  const handleEditClick = (brand: {
-    id: string;
-    brand_name: string;
-    category: string;
-    min_amount: number;
-    max_amount: number;
-    is_active: boolean;
-  }) => {
+  const { query: brandsQuery } = useFetchBrandsQuery({
+    search,
+    page,
+    page_size: pageSize,
+  });
+
+  const handleEditClick = (brand: Brand) => {
     setSelectedBrand(brand);
-    // Check if we're on mobile (screen width < 768px)
     if (window.innerWidth < 768) {
       setIsEditSheetOpen(true);
     } else {
@@ -229,19 +245,9 @@ function ManageGiftCardPage() {
     }
   };
 
-  // Add resize listener to handle screen size changes
-  React.useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsEditDialogOpen(false);
-      } else {
-        setIsEditSheetOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   return (
     <div className='py-6'>
@@ -296,62 +302,106 @@ function ManageGiftCardPage() {
           </SheetContent>
         </Sheet>
       </div>
-      <ul className='mt-5 border-t'>
-        <li className='flex items-center justify-between space-y-4 lg:space-y-0 gap-4 pb-6 border-b md:px-7 px-4 py-5'>
-          <div className='flex flex-col gap-4 md:gap-16 md:flex-row'>
-            <div className='flex items-center gap-4 font-montserrat'>
-              <Image
-                src={'https://placehold.co/160x100.png'}
-                width={160}
-                height={100}
-                className='md:w-[160px] w-24'
-                alt=''
-              />
-              <div className='space-y-1 md:space-y-3'>
-                <p className='md:text-sm text-[10px] font-semibold'>
-                  Zara gift card
-                </p>
-                <p className='text-xs font-dm-sans'>Ashiru</p>
-                <p className='md:text-xs text-[10px] xl:hidden block'>
-                  2/10/2023
-                </p>
-              </div>
-              <p className='md:text-sm text-[10px] hidden xl:block ml-auto'>
-                {'adwaele@gmail.com'}
-              </p>
-            </div>
-            <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
-              <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
-                <article className='text-[6px] md:text-[10px]'>
-                  I love presenting gift
-                </article>
-              </div>
-            </div>
-          </div>
 
-          <div className='md:flex-none flex md:flex-row flex-col items-center md:gap-12 flex-1'>
-            <p className='text-xs font-dm-sans'>₦5,000 - ₦400,000.00</p>
-            <div className='flex items-center'>
-              <OutlineEditIcon
-                className='cursor-pointer'
-                onClick={() =>
-                  handleEditClick({
-                    id: '1', // Replace with actual brand ID
-                    brand_name: 'Zara gift card',
-                    category: '1', // Replace with actual category ID
-                    min_amount: 5000,
-                    max_amount: 400000,
-                    is_active: true,
-                  })
-                }
-              />
-              <button className='cursor-pointer'>
-                <TrashOutlineIcon className='cursor-pointer ml-4' />
-              </button>
+      {/* Search Input */}
+      <div className='px-4 md:px-7 mt-4 max-w-[380px]'>
+        <SearchInput
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder='Search gift cards...'
+          className='max-w-sm'
+        />
+      </div>
+
+      <ul className='mt-5 border-t'>
+        {brandsQuery.isLoading ? (
+          <li className='px-4 md:px-7 py-8 text-center text-gray-500'>
+            Loading gift cards...
+          </li>
+        ) : brandsQuery.data?.results.length === 0 ? (
+          <li className='px-4 md:px-7 py-8 text-center font-sora'>
+            <div className='text-gray-500 mb-2 font-medium  '>
+              No gift cards found
             </div>
-          </div>
-        </li>
+            <p className='text-sm text-gray-400'>
+              {search
+                ? 'Try adjusting your search or create a new gift card'
+                : 'Create your first gift card to get started'}
+            </p>
+          </li>
+        ) : (
+          brandsQuery.data?.results.map((brand) => (
+            <li
+              key={brand.id}
+              className='flex items-center justify-between space-y-4 lg:space-y-0 gap-4 pb-6 border-b md:px-7 px-4 py-5'>
+              <div className='flex flex-col gap-4 md:gap-16 md:flex-row'>
+                <div className='flex items-center gap-4 font-montserrat'>
+                  <Image
+                    src={'https://placehold.co/160x100.png'}
+                    width={160}
+                    height={100}
+                    className='md:w-[160px] w-24'
+                    alt=''
+                  />
+                  <div className='space-y-1 md:space-y-3'>
+                    <p className='md:text-sm text-[10px] font-semibold'>
+                      {brand.brand_name}
+                    </p>
+                    <p className='text-xs font-dm-sans'>Ashiru</p>
+                    <p className='md:text-xs text-[10px] xl:hidden block'>
+                      2/10/2023
+                    </p>
+                  </div>
+                  <p className='md:text-sm text-[10px] hidden xl:block ml-auto'>
+                    {'adwaele@gmail.com'}
+                  </p>
+                </div>
+                <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
+                  <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
+                    <article className='text-[6px] md:text-[10px]'>
+                      I love presenting gift
+                    </article>
+                  </div>
+                </div>
+              </div>
+
+              <div className='md:flex-none flex md:flex-row flex-col items-center md:gap-12 flex-1'>
+                <p className='text-xs font-dm-sans'>
+                  ₦{brand.min_amount?.toLocaleString()} - ₦
+                  {brand.max_amount?.toLocaleString()}
+                </p>
+                <div className='flex items-center'>
+                  <OutlineEditIcon
+                    className='cursor-pointer'
+                    onClick={() => handleEditClick(brand)}
+                  />
+                  <button className='cursor-pointer'>
+                    <TrashOutlineIcon className='cursor-pointer ml-4' />
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))
+        )}
       </ul>
+
+      {/* Pagination */}
+      {brandsQuery.data && brandsQuery.data.results.length > 0 && (
+        <div className='flex justify-center gap-2 mt-4 px-4 md:px-7'>
+          <Button
+            variant='outline'
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1 || brandsQuery.isLoading}>
+            Previous
+          </Button>
+          <Button
+            variant='outline'
+            onClick={() => handlePageChange(page + 1)}
+            disabled={!brandsQuery.data.next || brandsQuery.isLoading}>
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

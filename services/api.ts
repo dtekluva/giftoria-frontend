@@ -394,3 +394,33 @@ export const editBrand = async (data: CreateBrandType & { id: string }) => {
     AxiosResponse<ApiCreateBrandResponse>
   >('/brand/edit_brand/', data);
 };
+
+// Add interface for fetch brands response
+interface ApiFetchBrandsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: {
+    id: string;
+    brand_name: string;
+    category: string;
+    min_amount: number | null;
+    max_amount: number | null;
+    is_active: boolean;
+  }[];
+}
+
+export const fetchBrands = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiFetchBrandsResponse>
+  >(`/brand/fetch_brand/?search=${search}&page=${page}&page_size=${page_size}`);
+};
