@@ -7,6 +7,8 @@ import {
   CardBalanceType,
   companyPayOutSchema,
   CompanyPayOutType,
+  createBrandSchema,
+  CreateBrandType,
 } from '@/libs/schema';
 import { localStorageStore } from '@/libs/store';
 import { showToast } from '@/libs/toast';
@@ -30,6 +32,7 @@ import {
   payViaPayStack,
   companyPayOut,
   redeemedGiftCard,
+  createBrand,
 } from '../api';
 
 export const useByCardsMutation = () => {
@@ -339,6 +342,50 @@ export const useCardBalanceMutation = () => {
     } catch (error) {
       console.log(error);
       toast.error('Failed to redeem card');
+    }
+  };
+
+  return {
+    form,
+    onSubmit,
+    isLoading: mutation.isPending,
+  };
+};
+
+export const useCreateBrand = () => {
+  const form = useForm<CreateBrandType>({
+    resolver: zodResolver(createBrandSchema),
+    defaultValues: {
+      brand_name: '',
+      category: '',
+      min_amount: undefined,
+      max_amount: undefined,
+      is_active: true,
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: createBrand,
+    mutationKey: ['create-brand'],
+    onSuccess: (data) => {
+      toast.success(data.data.message || 'Brand created successfully');
+      form.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to create brand');
+    },
+  });
+
+  const onSubmit = async (data: CreateBrandType) => {
+    try {
+      const res = mutation.mutateAsync(data);
+      showToast(res, {
+        success: 'Brand created successfully',
+        error: 'Error creating brand',
+        loading: 'Creating brand...',
+      });
+    } catch (error) {
+      console.error('Create brand error:', error);
     }
   };
 
