@@ -1,28 +1,19 @@
-import { z } from 'zod';
-import { httpConfig } from './api.config';
 import {
+  BranchDetailsType,
+  CardBalanceType,
+  CashierLoginType,
+  ChangeForgotPasswordType,
+  ChangePasswordType,
+  CompanyPayOutType,
   createAdminAccountSchema,
   CreateUserAccountType,
-  VerifyEmailType,
-  SendVerificationCodeType,
-  LoginType,
-  ChangePasswordType,
-  UploadCompanyDetailType,
-  BranchDetailsType,
-  UpdateUserInfoType,
-  CashierLoginType,
   ForgotPasswordType,
-  ChangeForgotPasswordType,
-  companyPayOutSchema,
-  cardBalanceSchema,
-  cardSchema,
-  buyCardSchema,
-  BuyCardType,
-  createBrandSchema,
-  CompanyPayOutType,
-  CardBalanceType,
+  LoginType,
+  SendVerificationCodeType,
+  UpdateUserInfoType,
+  UploadCompanyDetailType,
+  VerifyEmailType,
 } from '@/libs/schema';
-import { AxiosError, AxiosResponse } from 'axios';
 import {
   ApiAuthCompanyResponse,
   ApiUserInfoResponse,
@@ -43,6 +34,9 @@ import {
   IBuyCardAgain,
   ICard,
 } from '@/libs/types/brand.types';
+import { AxiosError, AxiosResponse } from 'axios';
+import { z } from 'zod';
+import { httpConfig } from './api.config';
 
 /// AUTHENTICATION API SERVICES
 export const adminSignUp = async (

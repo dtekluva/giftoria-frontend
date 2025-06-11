@@ -12,19 +12,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useChangeForgotPassword } from '@/services/mutations/auth.mutations';
-import { localStorageStore } from '@/libs/store';
-import { useEffect } from 'react';
+
 import EditIcon from '@/components/icon/edit-icon';
 
 function ChangeForgotPassword() {
   const { form, onSubmit, isLoading } = useChangeForgotPassword();
-  const email = localStorageStore.getItem('verify-mail') as string;
-
-  useEffect(() => {
-    if (email) {
-      form.setValue('email', email);
-    }
-  }, [email, form]);
 
   return (
     <div className='w-full'>
