@@ -42,7 +42,9 @@ function ManageGiftCardPage() {
             <DialogHeader>
               <DialogTitle>Add New Gift Card</DialogTitle>
             </DialogHeader>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='space-y-4 font-nunito'>
               <div className='space-y-2'>
                 <label className='text-sm font-medium'>Brand Name</label>
                 <Input
