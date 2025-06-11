@@ -6,6 +6,7 @@ import SMSIcon from '@/components/icon/sms-icon';
 import SMSNotificationIcon from '@/components/icon/sms-notification-icon';
 import SmsStarIcon from '@/components/icon/sms-star-icon';
 import { Input } from '@/components/ui/input';
+
 import { BrandCardTransaction } from '@/libs/types/brand.types';
 import { useGetCompanyHistory } from '@/services/queries/company.queries';
 import React, { useState, useCallback } from 'react';
@@ -27,6 +28,7 @@ const tableHeaders = [
 ];
 
 function AdminPage() {
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -76,6 +78,7 @@ function AdminPage() {
   }, []);
 
   const responseData = query.data?.data;
+
 
   return (
     <div>
