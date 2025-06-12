@@ -12,12 +12,62 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useUpdateCompanyDetails } from '@/services/mutations/company.mutation';
-import { useGetCompanyDashboardQuery } from '@/services/queries/company.queries';
+import {
+  useUpdateCompanyDetails,
+  useUploadCompanyLogoMutation,
+} from '@/services/mutations/company.mutation';
+import {
+  useGetCompanyDashboardQuery,
+  useGetCompanyLogoQuery,
+} from '@/services/queries/company.queries';
+import Image from 'next/image';
+import { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { toast } from 'sonner';
 
 function CompanyDetails() {
   const { form, onSubmit } = useUpdateCompanyDetails();
   const { query } = useGetCompanyDashboardQuery();
+  const { query: logoQuery } = useGetCompanyLogoQuery();
+  const uploadLogoMutation = useUploadCompanyLogoMutation();
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('company_logo', file, file.name);
+
+        console.log('Uploading file:', {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+        });
+
+        uploadLogoMutation.mutate(formData, {
+          onSuccess: (data) => {
+            toast.success('Company logo updated successfully');
+            console.log('Upload success:', data);
+          },
+          onError: (error) => {
+            toast.error('Failed to update company logo');
+            console.error('Upload error:', error);
+          },
+        });
+      }
+    },
+    [uploadLogoMutation]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.png', '.jpg', '.jpeg', '.gif'],
+    },
+    maxFiles: 1,
+    multiple: false,
+    maxSize: 5 * 1024 * 1024, // 5MB max file size
+  });
 
   if (query.isPending) {
     return <CompanyDetailsSkeleton />;
@@ -141,6 +191,48 @@ function CompanyDetails() {
             Please note that any change to your document will require <br />
             verification and may require between 3-72 hours
           </p>
+        </div>
+      </div>
+
+      <div className='mt-6'>
+        <h3 className='text-lg font-semibold mb-4'>Company Logo</h3>
+        <div
+          {...getRootProps()}
+          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
+            ${
+              isDragActive
+                ? 'border-primary bg-primary/5'
+                : 'border-gray-300 hover:border-primary'
+            }`}>
+          <input {...getInputProps()} />
+          {logoQuery.isLoading ? (
+            <div className='animate-pulse h-32 bg-gray-200 rounded-lg'></div>
+          ) : logoQuery.data?.company_logo ? (
+            <div className='relative'>
+              <Image
+                src={`data:image/jpeg;base64,${logoQuery.data.company_logo}`}
+                alt='Company Logo'
+                className='max-h-32 mx-auto'
+                width={128}
+                height={128}
+                style={{ objectFit: 'contain' }}
+              />
+              <p className='mt-2 text-sm text-gray-500'>
+                Click or drag to replace logo
+              </p>
+            </div>
+          ) : (
+            <div>
+              <p className='text-gray-500'>
+                {isDragActive
+                  ? 'Drop the logo here'
+                  : 'Drag and drop your company logo here, or click to select'}
+              </p>
+              <p className='text-sm text-gray-400 mt-2'>
+                Supported formats: PNG, JPG, JPEG, GIF (max 5MB)
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

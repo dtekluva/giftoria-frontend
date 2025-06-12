@@ -424,3 +424,28 @@ export const fetchBrands = async ({
     AxiosResponse<ApiBrandProductResponse>
   >(`/brand/fetch_brand/?search=${search}&page=${page}&page_size=${page_size}`);
 };
+
+// Add interface for company logo response
+interface ApiCompanyLogoResponse {
+  status: boolean;
+  message: string;
+  company_logo: string | null;
+}
+
+export const getCompanyLogo = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyLogoResponse>
+  >('/auth/company_logo/');
+};
+
+export const uploadCompanyLogo = async (data: FormData) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiCompanyLogoResponse>
+  >('/auth/company_logo/', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
