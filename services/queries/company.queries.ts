@@ -7,6 +7,7 @@ import {
   fetchBranches,
   fetchCompanyOrderHistory,
   getCompanyDashboard,
+  getCompanyLogo,
 } from '../api';
 
 export const company_keys = {
@@ -21,6 +22,7 @@ export const company_keys = {
     },
   ],
   company_history: () => ['company', 'history'],
+  company_logo: () => ['company', 'logo'],
 };
 
 export const useGetCompanyDashboardQuery = () => {
@@ -105,4 +107,16 @@ export const useGetCompanyHistory = ({
   };
 
   return { query, prefetchQuery };
+};
+
+export const useGetCompanyLogoQuery = () => {
+  const query = useQuery({
+    queryKey: company_keys.company_logo(),
+    queryFn: () => getCompanyLogo(),
+    select: (data) => data.data,
+  });
+
+  return {
+    query,
+  };
 };

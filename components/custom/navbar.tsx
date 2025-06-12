@@ -37,11 +37,12 @@ function NavBar() {
   const router = useRouter();
   const access_token = getCookie('access_token');
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [cartItemsCount, setCartItemsCount] = useState(0);
 
-  const { query } = useSearchAllBrands({ search });
+  const { query } = useSearchAllBrands({ search: debouncedSearch });
   const suggestions = query.data?.results || [];
 
   const { query: categoriesQuery } = useGetCategoriesQuery();
@@ -104,6 +105,15 @@ function NavBar() {
     });
     return () => unsubscribe();
   }, [scrollY]);
+
+  // Add debounce effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const backgroundColor = useTransform(
     scrollY,
@@ -317,7 +327,7 @@ function NavBar() {
             </div>
 
             {showSuggestions && search && suggestions.length > 0 && (
-              <div className='absolute z-[9999999] top-20  right-40 md:min-w-[300px] mt-1  bg-white border rounded shadow-lg max-h-60 overflow-y-auto'>
+              <div className='absolute z-[9999999] top-20  right-52 md:min-w-[300px] mt-1  bg-white border rounded shadow-lg max-h-60 overflow-y-auto'>
                 {suggestions.map((brand: ICard) => (
                   <div
                     key={brand.id}

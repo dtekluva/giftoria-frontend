@@ -20,35 +20,38 @@ import { deleteCookie } from 'cookies-next/client';
 import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
-const links = [
-  {
-    icon: <UserIcon height={20} width={20} />,
-    label: 'Profile',
-    href: '/cashier/profile',
-  },
-  {
-    icon: <MoneyIcon />,
-    label: 'Gift Cards',
-    href: '/cashier/gift-cards',
-    details: 'Gift Card Orders',
-  },
-
-  {
-    icon: <LoginIcon />,
-    label: 'Sign Out',
-    href: '#',
-    action: () => {
-      deleteCookie('access_token');
-      deleteCookie('refresh_token');
-      deleteCookie('password');
-    },
-  },
-];
-
 function CashierLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  const links = [
+    {
+      icon: <UserIcon height={20} width={20} />,
+      label: 'Profile',
+      href: '/cashier/profile',
+    },
+    {
+      icon: <MoneyIcon />,
+      label: 'Gift Cards',
+      href: '/cashier/gift-cards',
+      details: 'Gift Card Orders',
+    },
+
+    {
+      icon: <LoginIcon />,
+      label: 'Sign Out',
+      href: '#',
+      action: () => {
+        deleteCookie('access_token');
+        deleteCookie('refresh_token');
+        deleteCookie('password');
+        router.replace('/auth/sign-in');
+      },
+    },
+  ];
+
   const pathname = usePathname();
   const queryClient = useQueryClient();
 

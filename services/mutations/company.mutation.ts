@@ -7,8 +7,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { createBranch, deleteBranch } from '../api';
+import { createBranch, deleteBranch, uploadCompanyLogo } from '../api';
 import { company_keys } from '../queries/company.queries';
+import { toast } from 'sonner';
 
 export const useUpdateCompanyDetails = () => {
   const queryClient = useQueryClient();
@@ -109,4 +110,30 @@ export const useDeleteBranch = (currentPage: number) => {
   return {
     deleteBranchMutate,
   };
+};
+
+export const useUploadCompanyLogoMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      const file = formData.get('upload_company_logo') as File;
+      if (!file) return;
+      try {
+        const response = await uploadCompanyLogo(formData);
+
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success('Company logo updated successfully');
+      queryClient.invalidateQueries({ queryKey: company_keys.company_logo() });
+    },
+    onError: (error) => {
+      console.error('Mutation: Error callback', error);
+      toast.error('Failed to update company logo');
+    },
+  });
 };

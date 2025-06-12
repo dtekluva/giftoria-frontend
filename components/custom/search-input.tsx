@@ -1,20 +1,53 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SearchIcon from '../icon/search-icon';
 import FilterSearchIcon from '../icon/filter-search-icon';
 
 interface SearchInputProps {
   value?: string; // Optional value prop
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void; // Optional onChange handler
+  onDebouncedChange?: (value: string) => void;
   placeholder?: string; // Optional placeholder prop
   className?: string; // Optional className prop
+  debounceDelay?: number;
 }
 
 function SearchInput({
   value,
   onChange,
+  onDebouncedChange,
   placeholder = 'Search',
-  className,
+  className = '',
+  debounceDelay = 500,
 }: SearchInputProps) {
+  const [inputValue, setInputValue] = useState(value || '');
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setInputValue(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
+    if (!onDebouncedChange) return;
+
+    const timer = setTimeout(() => {
+      onDebouncedChange(inputValue);
+    }, debounceDelay);
+
+    return () => clearTimeout(timer);
+  }, [inputValue, debounceDelay, onDebouncedChange]);
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value;
+      setInputValue(newValue);
+      if (onChange) {
+        onChange(event);
+      }
+    },
+    [onChange]
+  );
+
   return (
     <div
       className={
@@ -25,8 +58,8 @@ function SearchInput({
         <SearchIcon />
       </div>
       <input
-        value={value}
-        onChange={onChange}
+        value={inputValue}
+        onChange={handleChange}
         placeholder={placeholder}
         className='border-0 focus:border-0 focus:outline-none text-sm focus:ring-0 flex-1'
       />
@@ -37,4 +70,4 @@ function SearchInput({
   );
 }
 
-export default SearchInput;
+export default React.memo(SearchInput);
