@@ -440,12 +440,16 @@ export const getCompanyLogo = async () => {
 };
 
 export const uploadCompanyLogo = async (data: FormData) => {
-  return await httpConfig.post<
-    AxiosError,
-    AxiosResponse<ApiCompanyLogoResponse>
-  >('/auth/company_logo/', data, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  console.log('API: uploadCompanyLogo called with data:', data);
+  try {
+    const response = await httpConfig.post<
+      AxiosError,
+      AxiosResponse<ApiCompanyLogoResponse>
+    >('/auth/company_logo/', data);
+
+    return response;
+  } catch (error) {
+    console.error('API: uploadCompanyLogo error:', error);
+    throw error;
+  }
 };
