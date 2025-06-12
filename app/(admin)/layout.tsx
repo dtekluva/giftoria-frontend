@@ -15,6 +15,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { ApiUserInfoResponse } from '@/libs/types/auth.types';
+import { useGetCompanyLogoQuery } from '@/services/queries/company.queries';
 import { user_keys } from '@/services/queries/user.queries';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
@@ -22,56 +23,61 @@ import { deleteCookie } from 'cookies-next/client';
 import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
-const links = [
-  {
-    icon: <UserIcon height={20} width={20} />,
-    label: 'Profile',
-    href: '/admin/profile',
-  },
-  {
-    icon: <MoneyIcon />,
-    label: 'Gift Cards',
-    href: '/admin/gift-cards',
-    details: 'Gift Card Orders',
-  },
-  {
-    icon: <BillIcon />,
-    label: 'Branch',
-    href: '/admin/branch',
-    details: 'Business Profile',
-  },
-  {
-    icon: <BillIcon />,
-    label: 'Company Details',
-    href: '/admin/company-details',
-    details: 'Business Profile',
-  },
-  {
-    icon: <TransactionMinusIcon />,
-    label: 'Request Fund',
-    href: '/admin/request-funds',
-    details: 'Request Funds',
-  },
-  {
-    icon: <LoginIcon />,
-    label: 'Sign Out',
-    href: '#',
-    action: () => {
-      deleteCookie('access_token');
-      deleteCookie('refresh_token');
-      deleteCookie('password');
-    },
-  },
-];
-
 function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  const links = [
+    {
+      icon: <UserIcon height={20} width={20} />,
+      label: 'Profile',
+      href: '/admin/profile',
+    },
+    {
+      icon: <MoneyIcon />,
+      label: 'Gift Cards',
+      href: '/admin/gift-cards',
+      details: 'Gift Card Orders',
+    },
+    {
+      icon: <BillIcon />,
+      label: 'Branch',
+      href: '/admin/branch',
+      details: 'Business Profile',
+    },
+    {
+      icon: <BillIcon />,
+      label: 'Company Details',
+      href: '/admin/company-details',
+      details: 'Business Profile',
+    },
+    {
+      icon: <TransactionMinusIcon />,
+      label: 'Request Fund',
+      href: '/admin/request-funds',
+      details: 'Request Funds',
+    },
+    {
+      icon: <LoginIcon />,
+      label: 'Sign Out',
+      href: '#',
+      action: () => {
+        deleteCookie('access_token');
+        deleteCookie('refresh_token');
+        deleteCookie('password');
+        router.replace('/auth/sign-in');
+      },
+    },
+  ];
+
   const pathname = usePathname();
   const queryClient = useQueryClient();
   const userData: AxiosResponse<ApiUserInfoResponse> | undefined =
     queryClient.getQueryData(user_keys.userInfo());
+
+  const { query: logoQuery } = useGetCompanyLogoQuery();
 
   return (
     <SidebarProvider>
@@ -122,7 +128,10 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </h1>
             <div className='ml-auto pl-14 flex justify-end pr-10 gap-2 items-center'>
               <Image
-                src={'https://placehold.co/40x40.png'}
+                src={
+                  logoQuery.data?.company_logo ??
+                  'https://placehold.co/40x40.png'
+                }
                 width={40}
                 height={40}
                 alt='Admin Banner'
