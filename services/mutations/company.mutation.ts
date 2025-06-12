@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { createBranch, deleteBranch, uploadCompanyLogo } from '../api';
 import { company_keys } from '../queries/company.queries';
+import { toast } from 'sonner';
 
 export const useUpdateCompanyDetails = () => {
   const queryClient = useQueryClient();
@@ -116,26 +117,23 @@ export const useUploadCompanyLogoMutation = () => {
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      // Ensure the file is properly set in FormData
-      const file = formData.get('company_logo') as File;
-      if (!file) {
-        throw new Error('No file provided');
+      const file = formData.get('upload_company_logo') as File;
+      if (!file) return;
+      try {
+        const response = await uploadCompanyLogo(formData);
+
+        return response.data;
+      } catch (error) {
+        throw error;
       }
-
-      // Create a new FormData instance
-      const newFormData = new FormData();
-      newFormData.append('company_logo', file);
-
-      // Make the API call
-      const response = await uploadCompanyLogo(newFormData);
-      return response.data;
     },
     onSuccess: () => {
-      // Invalidate and refetch the company logo query
+      toast.success('Company logo updated successfully');
       queryClient.invalidateQueries({ queryKey: company_keys.company_logo() });
     },
     onError: (error) => {
-      console.error('Error uploading company logo:', error);
+      console.error('Mutation: Error callback', error);
+      toast.error('Failed to update company logo');
     },
   });
 };
