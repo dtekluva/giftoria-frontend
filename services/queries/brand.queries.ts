@@ -21,6 +21,7 @@ import {
   getReceivedCardSales,
   fetchBrands,
   getCardBalanceByNumber,
+  getCardAssignedById,
 } from '../api';
 
 export const brand_keys = {
@@ -55,6 +56,12 @@ export const brand_keys = {
     },
   ],
   brand_card_sales_by_id: (id: string) => [
+    ...brand_keys.all,
+    'card',
+    'sales',
+    id,
+  ],
+  brand_card_assigned_by_id: (id: string) => [
     ...brand_keys.all,
     'card',
     'sales',
@@ -251,6 +258,19 @@ export const useGetSingleCardSalesQuery = (id: string) => {
   const query = useQuery({
     queryKey: brand_keys.brand_card_sales_by_id(id),
     queryFn: () => getCardSalesById(id),
+    select: (data) => data.data,
+    enabled: !!id,
+  });
+
+  return {
+    query,
+  };
+};
+
+export const useGetSingleCardAssigendQuery = (id: string) => {
+  const query = useQuery({
+    queryKey: brand_keys.brand_card_assigned_by_id(id),
+    queryFn: () => getCardAssignedById(id),
     select: (data) => data.data,
     enabled: !!id,
   });
