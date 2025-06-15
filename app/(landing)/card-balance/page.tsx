@@ -13,7 +13,7 @@ import SendIcon from '@/components/icon/send-icon';
 // } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 // import { useCardBalanceMutation } from '@/services/mutations/brand.mutation';
-import { useRedeemCardQuery } from '@/services/queries/brand.queries';
+import { useGetCardBalanceQuery } from '@/services/queries/brand.queries';
 import { formatCustomDate } from '@/utils/dateFormat';
 import { useState } from 'react';
 
@@ -37,7 +37,7 @@ import { useState } from 'react';
 function Page() {
   // const { form, onSubmit, isLoading } = useCardBalanceMutation();
   const [cardNumber, setCardNumber] = useState('');
-  const { query } = useRedeemCardQuery(cardNumber);
+  const { query } = useGetCardBalanceQuery(cardNumber);
 
   const handleCardSearch = (e: React.FormEvent) => {
     e.preventDefault();
