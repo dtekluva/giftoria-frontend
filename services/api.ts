@@ -23,12 +23,14 @@ import {
   ApiBranchResponse,
   ApiBrandCardTransactionResponse,
   ApiBrandProductResponse,
+  ApiBuyCardAgainResponse,
   ApiBuyCardResponse,
   ApiCardSalesResponse,
   ApiCategoryResponse,
   ApiCompanyDetailsResponse,
   ApiCompanyPayOutTransactionResponse,
   ApiPaymentSetupResponse,
+  AssignedCard,
   BuyMultipleCard,
   CardSale,
   IBuyCardAgain,
@@ -183,6 +185,11 @@ export const getCardSalesById = async (id: string) => {
     `/brand/fetch_single_card_sale/?sale_id=${id}`
   );
 };
+export const getCardAssignedById = async (id: string) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<AssignedCard>>(
+    `/brand/fetch_single_assigned_cards/?card_id=${id}`
+  );
+};
 
 export const buyCardbyId = async (data: BuyMultipleCard) => {
   return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
@@ -192,10 +199,10 @@ export const buyCardbyId = async (data: BuyMultipleCard) => {
 };
 
 export const buyCardAgainbyId = async (data: IBuyCardAgain) => {
-  return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
-    `/brand/buy_card_again/`,
-    data
-  );
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiBuyCardAgainResponse>
+  >(`/brand/buy_card_again/`, data);
 };
 
 export const redeemedGiftCard = async (data: CardBalanceType) => {

@@ -180,27 +180,66 @@ export const useByAllCardsMutation = (selectedPayment: string) => {
 };
 
 export const useBuyCardById = () => {
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState('Paystack');
+  const [reference, setReference] = useState('');
+
+  const {
+    payThroughPayStack,
+    payThroughBank,
+    isPaying,
+    isPayingBank,
+    bankData,
+  } = usePayBrand();
+
   const mutation = useMutation({
     mutationFn: buyCardAgainbyId,
     mutationKey: ['buy-card-again', 'card'],
+    onSuccess: (response) => {
+      setShowPaymentModal(true);
+      setReference(response.data.payment_details);
+    },
   });
 
-  const buyCard = (data: Partial<IBuyCardAgain>) => {
-    const res = mutation.mutateAsync({
-      card_id: data.card_id ?? '',
-      password: getCookie('password') ?? '',
-    });
-    console.log(res, 'res');
-    showToast(res, {
-      success: 'Card purchased successfully',
-      error: 'Error purchasing card',
-      loading: 'Purchasing card...',
-    });
+  const handlePayment = () => {
+    if (reference) {
+      if (selectedPayment.toLowerCase() === 'Paystack') {
+        payThroughPayStack(reference);
+      } else {
+        payThroughBank(reference);
+      }
+    }
+  };
+
+  const buyCard = async (data: Partial<IBuyCardAgain>) => {
+    try {
+      const res = mutation.mutateAsync({
+        card_id: data.card_id ?? '',
+        password: getCookie('password') ?? '',
+      });
+      showToast(res, {
+        success: 'Card purchased successfully',
+        error: 'Error purchasing card',
+        loading: 'Purchasing card...',
+      });
+    } catch (error) {
+      console.error('Buy card error:', error);
+    }
   };
 
   return {
     buyCard,
     isBuyingCard: mutation.isPending,
+    showPaymentModal,
+    setShowPaymentModal,
+    selectedPayment,
+    setSelectedPayment,
+    isPaying,
+    isPayingBank,
+    bankData,
+    payThroughPayStack,
+    payThroughBank,
+    handlePayment,
   };
 };
 
@@ -216,6 +255,9 @@ export const usePayBrand = () => {
       localStorageStore.removeItem('cards');
       router.push(data.data.payment_details.payment_link);
     },
+    onError: () => {
+      toast.error('An error occured');
+    },
   });
 
   const bankMutation = useMutation({
@@ -224,6 +266,9 @@ export const usePayBrand = () => {
     onSuccess: (data) => {
       localStorageStore.removeItem('cards');
       setBankData(data.data);
+    },
+    onError: () => {
+      toast.error('An error occured');
     },
   });
 

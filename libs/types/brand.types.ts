@@ -30,6 +30,12 @@ export interface ApiBuyCardResponse {
   payment_reference: string;
   amount: number;
 }
+export interface ApiBuyCardAgainResponse {
+  status: boolean;
+  message: string;
+  payment_details: string;
+  amount: number;
+}
 
 export interface CardSale {
   id: string;
@@ -53,6 +59,52 @@ export interface CardSale {
   redeemed: boolean;
   redeemed_date: string | null;
   sender_email: string;
+}
+export interface AssignedCard {
+  id: string;
+  brand: string;
+  card_amount: number;
+  recipient_name: string;
+  recipient_email: string;
+  recipient_phone: string | null;
+  for_who: string;
+  occasion: string;
+  message: string;
+  reference: string;
+  is_paid: boolean;
+  is_assigned: boolean;
+  brand_name: string;
+  brand_image: string | null;
+  sent: boolean;
+  sent_date: string;
+  assigned: boolean;
+  assigned_date: string;
+  redeemed: boolean;
+  redeemed_date: string | null;
+  sender_email: string;
+
+  company: null;
+  sender: string;
+  receiver_email: string;
+
+  card_number: '3ax79y3';
+  amount: number;
+  balance: number;
+  expiry_date: string;
+  date_claimed: string | null;
+  date_redeemed: null | string;
+  is_claimed: boolean;
+  is_redeemed: boolean;
+  created_at: string | null;
+
+  sender_name: string;
+
+  receiver_name: string;
+  receiver_phone_number: string;
+  date_issued: string | null;
+
+  claimed: true;
+  claimed_date: string | null;
 }
 
 export interface ApiCardSalesResponse {
