@@ -9,10 +9,11 @@ import { Input } from '@/components/ui/input';
 
 import { BrandCardTransaction } from '@/libs/types/brand.types';
 import { useGetCompanyHistory } from '@/services/queries/company.queries';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
 import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
+import { useRouter } from 'next/navigation';
 
 const PAGE_SIZE = 10;
 
@@ -31,12 +32,39 @@ function AdminPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [cardCode, setCardCode] = useState('');
+  const [debouncedCardCode, setDebouncedCardCode] = useState('');
+  const router = useRouter();
 
   const { query, prefetchQuery } = useGetCompanyHistory({
     search: searchTerm,
     page: currentPage,
     page_size: PAGE_SIZE,
   });
+
+  // Add debounce effect for card code
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedCardCode(cardCode);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [cardCode]);
+
+  // Handle card code search when debounced value changes
+  useEffect(() => {
+    if (debouncedCardCode) {
+      // Add your API call or search logic here
+      console.log('Searching for card code:', debouncedCardCode);
+    }
+  }, [debouncedCardCode]);
+
+  const handleCardCodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (cardCode.trim()) {
+      router.push(`/admin/card-balance/${cardCode.trim()}`);
+    }
+  };
 
   const formatTableData = (data: BrandCardTransaction[]) => {
     return data.map((item) => ({
@@ -84,14 +112,20 @@ function AdminPage() {
     <div>
       <div className='px-4 pt-6'>
         <h2 className='text-base md:hidden font-semibold'>Gift Card Orders</h2>
-        <div className='flex items-center border py-1 px-1 rounded-[8px] md:mt-0 mt-6 max-w-[400px] mx-auto pr-6'>
+        <form
+          onSubmit={handleCardCodeSubmit}
+          className='flex items-center border py-1 px-1 rounded-[8px] md:mt-0 mt-6 max-w-[400px] mx-auto pr-6'>
           <Input
             type='text'
+            value={cardCode}
+            onChange={(e) => setCardCode(e.target.value)}
             className='border-none flex-1 md:h-[50px] font-nunito'
             placeholder='Enter gift card unique code'
           />
-          <SendIcon />
-        </div>
+          <button type='submit' className='cursor-pointer'>
+            <SendIcon />
+          </button>
+        </form>
       </div>
       <div className='md:mt-7 mt-5 border-t-[2px] border-[#F6F3FB] md:px-6 px-4 md:py-10 py-5'>
         <div className='container mx-auto'>
@@ -129,6 +163,7 @@ function AdminPage() {
             <SearchInput
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
+              onDebouncedChange={handleSearch}
               placeholder='Search orders...'
             />
           </div>

@@ -350,6 +350,13 @@ export const redeemCardByNumber = async (card_number: string) => {
   >(`/branch/branch_redeem_card/?card_number=${card_number}`);
 };
 
+export const getCardBalanceByNumber = async (card_number: string) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCardRedemptionResponse>
+  >(`/auth/user_card_balance/?card_number=${card_number}`);
+};
+
 export const getPayoutTransactions = async ({
   search,
   page,
@@ -423,4 +430,33 @@ export const fetchBrands = async ({
     AxiosError,
     AxiosResponse<ApiBrandProductResponse>
   >(`/brand/fetch_brand/?search=${search}&page=${page}&page_size=${page_size}`);
+};
+
+// Add interface for company logo response
+interface ApiCompanyLogoResponse {
+  status: boolean;
+  message: string;
+  company_logo: string | null;
+}
+
+export const getCompanyLogo = async () => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiCompanyLogoResponse>
+  >('/auth/company_logo/');
+};
+
+export const uploadCompanyLogo = async (data: FormData) => {
+  console.log('API: uploadCompanyLogo called with data:', data);
+  try {
+    const response = await httpConfig.post<
+      AxiosError,
+      AxiosResponse<ApiCompanyLogoResponse>
+    >('/auth/company_logo/', data);
+
+    return response;
+  } catch (error) {
+    console.error('API: uploadCompanyLogo error:', error);
+    throw error;
+  }
 };

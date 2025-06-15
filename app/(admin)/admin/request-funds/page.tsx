@@ -158,9 +158,28 @@ function RequestFundPage() {
               placeholder='Search by reference, account name, or bank name'
               className='md:max-w-fit md:mx-auto'
             />
-            <Button className='md:h-16 col-span-full ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans font-semibold mt-5 md:mt-0'>
-              Request Funds
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className='md:h-16 col-span-full ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans font-semibold mt-5 md:mt-0'>
+                  Request Funds
+                </Button>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-[620px] overflow-y-auto max-h-[90%]'>
+                <RequestWithdrawalForm />
+              </DialogContent>
+            </Dialog>
+            <Sheet>
+              <SheetTrigger asChild className='md:hidden'>
+                <Button className='md:h-16 col-span-full ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans font-semibold mt-5 md:mt-0'>
+                  Request Funds
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                className='max-h-full overflow-y-auto'
+                side='bottom'>
+                <RequestWithdrawalForm />
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
         <div>

@@ -54,9 +54,9 @@ interface Brand {
 
 interface FormBrand {
   brand_name: string;
-  category: string;
-  min_amount: number;
-  max_amount: number;
+  category: string; // Required UUID
+  min_amount?: number; // Optional, minimum 0
+  max_amount?: number; // Optional, minimum 0
   is_active: boolean;
   image?: File | null;
 }
@@ -83,16 +83,25 @@ function GiftCardForm({
   const { form, onSubmit, isLoading } =
     mode === 'create' ? createMutation : editMutation;
 
-  // Set initial values if in edit mode
+  // Initialize form with default values
   React.useEffect(() => {
-    if (mode === 'edit' && initialData) {
+    if (mode === 'create') {
+      form.reset({
+        brand_name: '',
+        category: '',
+        min_amount: 0,
+        max_amount: 0,
+        is_active: true,
+        image: null,
+      });
+    } else if (mode === 'edit' && initialData) {
       form.reset({
         brand_name: initialData.brand_name,
         category: initialData.category,
         min_amount: initialData.min_amount ?? 0,
         max_amount: initialData.max_amount ?? 0,
         is_active: initialData.is_active,
-        image: initialData.image ? new File([], initialData.image) : undefined,
+        image: initialData.image,
       });
       if (initialData.image) {
         setPreviewImage(initialData.image);
@@ -103,6 +112,13 @@ function GiftCardForm({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check if file size is greater than 1MB
+      if (file.size > 1024 * 1024) {
+        alert('Image size should not exceed 1MB');
+        e.target.value = ''; // Clear the file input
+        return;
+      }
+
       form.setValue('image', file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -113,25 +129,23 @@ function GiftCardForm({
   };
 
   const handleSubmit = async (data: FormBrand) => {
-    const formData = new FormData();
-    formData.append('brand_name', data.brand_name);
-    formData.append('category', data.category);
-    if (data.min_amount !== undefined) {
-      formData.append('min_amount', data.min_amount.toString());
-    }
-    if (data.max_amount !== undefined) {
-      formData.append('max_amount', data.max_amount.toString());
-    }
-    formData.append('is_active', data.is_active?.toString() ?? 'true');
-    if (data.image) {
-      formData.append('image', data.image);
-    }
-    if (mode === 'edit' && brandId) {
-      formData.append('id', brandId);
+    console.log('Form data before submission:', data); // Debug log
+
+    // Validate required fields
+    if (!data.brand_name || !data.category) {
+      console.error('Missing required fields:', {
+        brand_name: data.brand_name,
+        category: data.category,
+      });
+      return;
     }
 
-    await onSubmit(formData as any);
-    onSuccess?.();
+    try {
+      await onSubmit(data as any);
+      onSuccess?.();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
@@ -315,7 +329,7 @@ function ManageGiftCardPage() {
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 4;
 
   const { query: brandsQuery } = useFetchBrandsQuery({
     search,
@@ -451,13 +465,13 @@ function ManageGiftCardPage() {
                     {'adwaele@gmail.com'}
                   </p>
                 </div>
-                <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
+                {/* <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
                   <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
                     <article className='text-[6px] md:text-[10px]'>
                       I love presenting gift
                     </article>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className='md:flex-none flex md:flex-row flex-col items-center md:gap-12 flex-1'>
@@ -485,7 +499,7 @@ function ManageGiftCardPage() {
 
       {/* Pagination */}
       {brandsQuery.data && brandsQuery.data.results.length > 0 && (
-        <div className='flex justify-center gap-2 mt-4 px-4 md:px-7'>
+        <div className='flex justify-center gap-2 mt-4 font-dm-sans px-4 md:px-7'>
           <Button
             variant='outline'
             onClick={() => handlePageChange(page - 1)}

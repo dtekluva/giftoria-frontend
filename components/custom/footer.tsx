@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import LinkedInIcon from '../icon/linkedin-icon';
 import SlackIcon from '../icon/slack-icon';
 import TwitterIcon from '../icon/twitter-icon';
@@ -33,8 +34,14 @@ function Footer() {
               PRODUCTS
             </p>
             <ul className='mt-4 text-white/60 font-dm-sans'>
-              <li>Shop Gift Cards</li>
-              <li>Become a Merchant</li>
+              <li>
+                {' '}
+                <Link href={'/gift-card'}>Shop Gift Cards</Link>
+              </li>
+              <li>
+                {' '}
+                <Link href={'/auth/admin/sign-up'}>Become a Merchant</Link>
+              </li>
             </ul>
           </div>
           <div className=''>

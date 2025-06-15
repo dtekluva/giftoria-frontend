@@ -13,9 +13,9 @@ import SendIcon from '@/components/icon/send-icon';
 // } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 // import { useCardBalanceMutation } from '@/services/mutations/brand.mutation';
-import { useRedeemCardQuery } from '@/services/queries/brand.queries';
+import { useGetCardBalanceQuery } from '@/services/queries/brand.queries';
 import { formatCustomDate } from '@/utils/dateFormat';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // const giftCardDetails = {
 //   'Gift Card Code': 'GFT - XYZ123456',
@@ -37,11 +37,21 @@ import { useState } from 'react';
 function Page() {
   // const { form, onSubmit, isLoading } = useCardBalanceMutation();
   const [cardNumber, setCardNumber] = useState('');
-  const { query } = useRedeemCardQuery(cardNumber);
+  const [debouncedCardNumber, setDebouncedCardNumber] = useState('');
+  const { query } = useGetCardBalanceQuery(debouncedCardNumber);
+
+  // Debounce effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedCardNumber(cardNumber);
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timer);
+  }, [cardNumber]);
 
   const handleCardSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // The query will automatically run when cardNumber changes
+    // The query will automatically run when debouncedCardNumber changes
   };
 
   return (

@@ -213,6 +213,7 @@ export const usePayBrand = () => {
     mutationFn: payViaPayStack,
     mutationKey: ['pay', 'card'],
     onSuccess: (data: any) => {
+      localStorageStore.removeItem('cards');
       router.push(data.data.payment_details.payment_link);
     },
   });
@@ -221,6 +222,7 @@ export const usePayBrand = () => {
     mutationFn: payViaBank,
     mutationKey: ['pay', 'bank'],
     onSuccess: (data) => {
+      localStorageStore.removeItem('cards');
       setBankData(data.data);
     },
   });

@@ -12,12 +12,39 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useUpdateCompanyDetails } from '@/services/mutations/company.mutation';
-import { useGetCompanyDashboardQuery } from '@/services/queries/company.queries';
+import {
+  useUpdateCompanyDetails,
+  useUploadCompanyLogoMutation,
+} from '@/services/mutations/company.mutation';
+import {
+  useGetCompanyDashboardQuery,
+  useGetCompanyLogoQuery,
+} from '@/services/queries/company.queries';
+import { useCallback } from 'react';
+import { toast } from 'sonner';
 
 function CompanyDetails() {
   const { form, onSubmit } = useUpdateCompanyDetails();
   const { query } = useGetCompanyDashboardQuery();
+  const { query: logoQuery } = useGetCompanyLogoQuery();
+  const uploadLogoMutation = useUploadCompanyLogoMutation();
+
+  const handleUpload = useCallback(
+    (file: File) => {
+      const formData = new FormData();
+      formData.append('upload_company_logo', file);
+
+      uploadLogoMutation.mutate(formData, {
+        onSuccess: () => {
+          toast.success('Company logo updated successfully');
+        },
+        onError: () => {
+          toast.error('Failed to update company logo');
+        },
+      });
+    },
+    [uploadLogoMutation]
+  );
 
   if (query.isPending) {
     return <CompanyDetailsSkeleton />;
@@ -33,7 +60,12 @@ function CompanyDetails() {
 
   return (
     <div className='pt-7 md:pt-9'>
-      <DragAndDropUpload onUpload={(file) => console.log(file)} />
+      <DragAndDropUpload
+        onUpload={handleUpload}
+        placeholderImage={logoQuery.data?.company_logo ?? ''}
+        maxSize={5 * 1024 * 1024} // 5MB
+        acceptedFormats={['image/png', 'image/jpeg', 'image/jpg', 'image/gif']}
+      />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

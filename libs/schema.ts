@@ -294,7 +294,7 @@ export const createBrandSchema = z.object({
   image: z
     .any()
     .refine(
-      (file) => file instanceof File && file.size <= 10 * 1024 * 1024, // Max size 10MB
+      (file) => file instanceof File && file.size <= 1 * 1024 * 1024, // Max size 10MB
       'Image must be a valid file and less than 10MB'
     )
     .refine(
