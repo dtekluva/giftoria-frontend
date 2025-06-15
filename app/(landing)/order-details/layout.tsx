@@ -1,4 +1,5 @@
 'use client';
+import { useQueryState } from 'nuqs';
 import React from 'react';
 
 function OrderDetailsLayout({
@@ -8,7 +9,7 @@ function OrderDetailsLayout({
   receiver: React.ReactNode;
   sender: React.ReactNode;
 }) {
-  const [userType] = React.useState('sender');
+  const [userType] = useQueryState('user_type');
   return (
     <div className='flex'>{userType === 'receiver' ? receiver : sender}</div>
   );
