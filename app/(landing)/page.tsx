@@ -209,7 +209,7 @@ export default function Home() {
               title: 'No Gift Card? No Problem',
               description: (
                 <span>
-                  We’ll design and customize an e-gift card for your <br />{' '}
+                  We&apos;ll design and customize an e-gift card for your <br />{' '}
                   business on our platform at no extra cost.
                 </span>
               ),
@@ -258,9 +258,77 @@ export default function Home() {
         <FAQ
           questions={[
             {
-              question: 'What is Giftee?',
+              question: 'What is this platform about?',
               answer:
-                'Giftee is a digital gift card platform that allows users to purchase and send gift cards from various brands to their friends and family.',
+                'This platform allows you to buy and send digital gift cards from various trusted brands for birthdays, holidays, special milestones, or just to show appreciation.',
+            },
+            {
+              question: 'How will the recipient receive the gift card?',
+              answer:
+                'All gift cards are delivered directly via email. Please ensure you enter the correct email address at checkout.',
+            },
+            {
+              question:
+                'Can I schedule a gift card to be delivered on a future date?',
+              answer:
+                'Yes! You can select a future delivery date and time during checkout, so your gift arrives right on time.',
+            },
+            {
+              question: 'What brands do you offer?',
+              answer:
+                'We feature a variety of brands across categories like fashion, food, tech, gaming, and more. Visit our homepage to see the full list.',
+            },
+            {
+              question: 'Can I personalize the gift card message?',
+              answer:
+                'Yes! You can include a custom message, which will be delivered with the gift card via email.',
+            },
+            {
+              question: 'What payment methods do you accept?',
+              answer:
+                'We accept major debit and credit cards, as well as secure online payment methods.',
+            },
+            {
+              question: 'Are there any fees for purchasing gift cards?',
+              answer:
+                'There are no additional or hidden fees. You pay only the gift card value unless stated during promotions.',
+            },
+            {
+              question: 'Can the recipient use the gift card instantly?',
+              answer:
+                'Yes, once received, most gift cards can be used immediately based on the brand&apos;s redemption process.',
+            },
+            {
+              question: 'Can a gift card be used more than once?',
+              answer:
+                'Yes. A gift card can be used multiple times across different purchases until the total value is fully used.',
+            },
+            {
+              question: 'Do gift cards expire?',
+              answer:
+                'Yes. Each brand sets its own expiry policy, but most gift cards are valid for 1 to 2 years from the date of purchase.',
+            },
+            {
+              question:
+                'I entered the wrong recipient email. What should I do?',
+              answer:
+                'Contact us immediately at support@yourplatform.com. If the card hasn&apos;t been redeemed, we may be able to help you correct it.',
+            },
+            {
+              question:
+                'What if the recipient doesn&apos;t receive the gift card?',
+              answer:
+                'Ask them to check their spam or promotions folder. If not found within 15 minutes, contact us with your order ID.',
+            },
+            {
+              question: 'Are gift cards refundable?',
+              answer:
+                'No. Digital gift cards are non-refundable once they are delivered.',
+            },
+            {
+              question: 'Can I track the status of a gift card I sent?',
+              answer:
+                'Yes. You&apos;ll receive a confirmation email with status updates showing whether the card has been opened by the recipient.',
             },
           ]}
         />
