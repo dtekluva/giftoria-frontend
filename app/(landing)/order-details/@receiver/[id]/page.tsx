@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import GiftCardDetailsTable from '@/components/custom/gift-card-details';
 import { TransactionStepper } from '@/components/custom/transaction-stepper';
@@ -27,7 +28,7 @@ function Page() {
   if (query.data)
     return (
       <div className='container mx-auto px-4 py-6 md:py-11'>
-        <TransactionStepper data={query.data} activeStep={2} />
+        <TransactionStepper data={query.data as any} activeStep={2} />
         <div className='rounded-[20px] md:border md:mt-[60px] mt-5'>
           <div className='md:p-10 p-3 md:rounded-[20px] md:flex gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
             <Image
