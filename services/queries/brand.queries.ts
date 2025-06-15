@@ -20,6 +20,7 @@ import {
   getPayoutTransactions,
   getReceivedCardSales,
   fetchBrands,
+  getCardBalanceByNumber,
 } from '../api';
 
 export const brand_keys = {
@@ -345,6 +346,18 @@ export const useRedeemCardQuery = (card_number: string) => {
   const query = useQuery({
     queryKey: ['redeem_card', card_number],
     queryFn: () => redeemCardByNumber(card_number),
+    select: (data) => data.data,
+    enabled: !!card_number,
+  });
+
+  return {
+    query,
+  };
+};
+export const useGetCardBalanceQuery = (card_number: string) => {
+  const query = useQuery({
+    queryKey: ['get_card_balance', card_number],
+    queryFn: () => getCardBalanceByNumber(card_number),
     select: (data) => data.data,
     enabled: !!card_number,
   });
