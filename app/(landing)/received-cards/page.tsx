@@ -1,6 +1,5 @@
 'use client';
 import SearchInput from '@/components/custom/search-input';
-import ConvertCardIcon from '@/components/icon/convert-card-icon';
 import { Button } from '@/components/ui/button';
 import { useGetReceivedBrandCardSalesQuery } from '@/services/queries/brand.queries';
 import Image from 'next/image';
@@ -10,7 +9,6 @@ import { useState } from 'react';
 import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
 import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
-import { useBuyCardById } from '@/services/mutations/brand.mutation';
 
 function MyReceiveGiftCardPage() {
   const router = useRouter();
@@ -21,8 +19,6 @@ function MyReceiveGiftCardPage() {
     page: currentPage,
     page_size: MY_ORDER_PAGE_SIZE,
   });
-
-  const { buyCard, isBuyingCard } = useBuyCardById();
 
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -70,12 +66,6 @@ function MyReceiveGiftCardPage() {
               key={index}
               className='flex items-center justify-between gap-8 pb-6 border-b flex-wrap'>
               <div>
-                <div className='flex items-center gap-2 flex-1 md:hidden mb-2'>
-                  <ConvertCardIcon width={16} height={16} />
-                  <p className='text-[8px] sm:text-xs text-[#990099] font-semibold'>
-                    Buy Again
-                  </p>
-                </div>
                 <div className='flex items-center gap-4 font-montserrat'>
                   <Image
                     src={order?.brand_image ?? ''}
@@ -101,20 +91,6 @@ function MyReceiveGiftCardPage() {
                   </div>
                 </div>
                 <div className='hidden md:block'>
-                  <button
-                    type='button'
-                    disabled={isBuyingCard}
-                    onClick={() => {
-                      buyCard({
-                        card_id: order.brand,
-                      });
-                    }}
-                    className='flex cursor-pointer items-center gap-2 disabled:opacity-50'>
-                    <ConvertCardIcon />
-                    <p className='text-base text-[#990099] font-semibold'>
-                      Buy Again
-                    </p>
-                  </button>
                   <Button
                     onClick={() => {
                       router.push(`/order-details/${order.id}`);
