@@ -118,7 +118,7 @@ function MyOrderPage() {
                       card_id: order?.id,
                     })
                   }
-                  className='flex items-center gap-2 flex-1 md:hidden mb-2'>
+                  className='flex items-center gap-2 flex-1 lg:hidden mb-2'>
                   <ConvertCardIcon width={16} height={16} />
                   <p className='text-[8px] sm:text-xs text-[#990099] font-semibold'>
                     Buy Again
@@ -145,18 +145,18 @@ function MyOrderPage() {
                   </div>
                 </div>
               </div>
-              <div className='md:flex gap-[110px]'>
-                <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
-                  <div className='md:flex-none flex-1 text-end'>
+              <div className='lg:flex gap-[110px]'>
+                <div className='flex items-center lg:gap-[157px] justify-between lg:justify-normal'>
+                  <div className='lg:flex-none flex-1 text-end'>
                     <p className='font-dm-sans text-xs md:text-sm font-medium'>
                       {order.reference}
                     </p>
-                    <p className='text-xs md:text-base font-bold mt-5 md:mt-8'>
+                    <p className='text-xs md:text-base font-bold mt-5 lg:mt-8'>
                       ₦{order.card_amount?.toLocaleString()}
                     </p>
                   </div>
                 </div>
-                <div className='hidden md:block'>
+                <div className='hidden lg:block'>
                   <button
                     type='button'
                     disabled={isBuyingCard}

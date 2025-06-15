@@ -59,6 +59,7 @@ export interface CardSale {
   redeemed: boolean;
   redeemed_date: string | null;
   sender_email: string;
+  amount: string;
 }
 export interface AssignedCard {
   id: string;

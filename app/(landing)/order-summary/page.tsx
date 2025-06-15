@@ -1,5 +1,4 @@
 'use client';
-import OutlineEditIcon from '@/components/icon/outline-edit-icon';
 import TrashOutlineIcon from '@/components/icon/trash-outline-icon';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -8,13 +7,13 @@ import { BuyMultipleCard } from '@/libs/types/brand.types';
 import { useByAllCardsMutation } from '@/services/mutations/brand.mutation';
 
 import { BankTransferModal } from '@/components/custom/bank-transfer-modal';
+import BankTransferIcon from '@/components/icon/bank-transfer-icon';
+import PayStackIcon from '@/components/icon/paystack-icon';
 import { getCookie } from 'cookies-next/client';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import PayStackIcon from '@/components/icon/paystack-icon';
-import BankTransferIcon from '@/components/icon/bank-transfer-icon';
 
 const paymentService = [
   {
@@ -141,7 +140,7 @@ function OrderSummary() {
                   {card.recipient_email}
                 </p>
                 <div className='flex items-center'>
-                  <OutlineEditIcon className='cursor-pointer' />
+                  {/* <OutlineEditIcon className='cursor-pointer' /> */}
                   <button
                     className='cursor-pointer'
                     onClick={() => handleDelete(index)}>

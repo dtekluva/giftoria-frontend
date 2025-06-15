@@ -83,7 +83,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className='md:px-10 md:pt-9 px-5 pt-6 pb-4'>
-          <Link href={'/'}>
+          <Link href={'/admin/gift-cards'}>
             <LogoIcon height={40} />
           </Link>
         </SidebarHeader>
