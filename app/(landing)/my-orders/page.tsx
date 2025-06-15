@@ -11,10 +11,41 @@ import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
 import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 import { useBuyCardById } from '@/services/mutations/brand.mutation';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { BankTransferModal } from '@/components/custom/bank-transfer-modal';
+import PayStackIcon from '@/components/icon/paystack-icon';
+import BankTransferIcon from '@/components/icon/bank-transfer-icon';
+
+interface Order {
+  id: string;
+  brand_name: string;
+  brand_image: string | null;
+  recipient_name: string;
+  recipient_email: string;
+  reference: string;
+  card_amount: number;
+}
+
+const paymentService = [
+  {
+    name: 'Paystack',
+    description: 'Pay securely with paystack',
+    type: 'paystack',
+    icon: <PayStackIcon />,
+  },
+  {
+    name: 'Bank Transfer',
+    description: 'Pay directly from your bank',
+    type: 'transfer',
+    icon: <BankTransferIcon />,
+  },
+];
 
 function MyOrderPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCard] = useState<Order | null>(null);
 
   const { query, prefetchQuery } = useGetBrandCardSalesQuery({
     search: '',
@@ -22,7 +53,18 @@ function MyOrderPage() {
     page_size: MY_ORDER_PAGE_SIZE,
   });
 
-  const { buyCard, isBuyingCard } = useBuyCardById();
+  const {
+    buyCard,
+    isBuyingCard,
+    showPaymentModal,
+    setShowPaymentModal,
+    selectedPayment,
+    setSelectedPayment,
+    isPaying,
+    isPayingBank,
+    bankData,
+    handlePayment,
+  } = useBuyCardById();
 
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -70,7 +112,13 @@ function MyOrderPage() {
               key={index}
               className='flex items-center justify-between gap-8 pb-6 border-b flex-wrap'>
               <div>
-                <div className='flex items-center gap-2 flex-1 md:hidden mb-2'>
+                <div
+                  onClick={() =>
+                    buyCard({
+                      card_id: order?.id,
+                    })
+                  }
+                  className='flex items-center gap-2 flex-1 md:hidden mb-2'>
                   <ConvertCardIcon width={16} height={16} />
                   <p className='text-[8px] sm:text-xs text-[#990099] font-semibold'>
                     Buy Again
@@ -112,11 +160,11 @@ function MyOrderPage() {
                   <button
                     type='button'
                     disabled={isBuyingCard}
-                    onClick={() => {
+                    onClick={() =>
                       buyCard({
-                        card_id: order.id,
-                      });
-                    }}
+                        card_id: order?.id,
+                      })
+                    }
                     className='flex cursor-pointer items-center gap-2 disabled:opacity-50'>
                     <ConvertCardIcon />
                     <p className='text-base text-[#990099] font-semibold'>
@@ -209,6 +257,81 @@ function MyOrderPage() {
           </Button>
         </div>
       )}
+
+      {/* Payment Method Modal */}
+      {showPaymentModal && (
+        <div className='fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50'>
+          <div className='bg-white rounded-lg p-6 max-w-md w-full mx-4'>
+            <h2 className='font-bold text-xl mb-4'>Choose Payment Method</h2>
+            <RadioGroup
+              value={selectedPayment}
+              onValueChange={setSelectedPayment}
+              className='grid grid-cols-1 gap-4'>
+              {paymentService.map((item, index) => (
+                <Label
+                  key={index}
+                  htmlFor={`payment-${index}`}
+                  className={`flex-1 h-full border rounded-[12px] p-4 space-y-3 cursor-pointer transition-all duration-200 ${
+                    selectedPayment === item.name
+                      ? 'border-primary bg-primary/5'
+                      : 'border-[#E2E6EE] hover:border-primary/50'
+                  }`}>
+                  <div className='flex items-center gap-4'>
+                    <RadioGroupItem
+                      value={item.name}
+                      id={`payment-${index}`}
+                      className='mt-1'
+                    />
+                    <h4 className='text-base font-bold'>{item.name}</h4>
+                    {item.icon}
+                  </div>
+                </Label>
+              ))}
+            </RadioGroup>
+            <div className='flex justify-end gap-4 mt-6'>
+              <Button
+                variant='outline'
+                onClick={() => setShowPaymentModal(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handlePayment}
+                disabled={isBuyingCard || isPaying || isPayingBank}
+                className='bg-[#990099] hover:bg-[#7a007a] text-white'>
+                {isBuyingCard || isPaying || isPayingBank
+                  ? 'Processing...'
+                  : 'Proceed to Payment'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bank Transfer Modal */}
+      <BankTransferModal
+        open={isPayingBank && !!bankData}
+        amount={selectedCard?.card_amount ?? 0}
+        payingThroughBank={isPayingBank}
+        onOpenChange={() => setShowPaymentModal(false)}
+        error={''}
+        details={
+          bankData?.payment_details?.data?.data?.account_details
+            ? {
+                bank_name:
+                  bankData.payment_details.data.data.account_details.bank_name,
+                account_name:
+                  bankData.payment_details.data.data.account_details
+                    .account_name,
+                account_number:
+                  bankData.payment_details.data.data.account_details
+                    .account_number,
+                request_reference:
+                  bankData.payment_details.data.data.account_details
+                    .request_reference,
+              }
+            : null
+        }
+      />
     </div>
   );
 }
