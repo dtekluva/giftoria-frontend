@@ -1,18 +1,18 @@
 'use client';
-import Table from '@/components/custom/table';
 import SearchInput from '@/components/custom/search-input';
+import Table from '@/components/custom/table';
+import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
+import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import SendIcon from '@/components/icon/send-icon';
 import SMSIcon from '@/components/icon/sms-icon';
 import SMSNotificationIcon from '@/components/icon/sms-notification-icon';
 import SmsStarIcon from '@/components/icon/sms-star-icon';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BrandCardTransaction } from '@/libs/types/brand.types';
-import { useGetCompanyHistory } from '@/services/queries/company.queries';
-import React, { useState, useCallback, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
-import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
+import { useGetCompanyBranchHistory } from '@/services/queries/company.queries';
 import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const PAGE_SIZE = 10;
 
@@ -34,7 +34,7 @@ function CashierPage({ params }: { params: Promise<{ slug: string }> }) {
   const [cardCode, setCardCode] = useState('');
   const [debouncedCardCode, setDebouncedCardCode] = useState('');
 
-  const { query, prefetchQuery } = useGetCompanyHistory({
+  const { query, prefetchQuery } = useGetCompanyBranchHistory({
     search: searchTerm,
     page: currentPage,
     page_size: PAGE_SIZE,
