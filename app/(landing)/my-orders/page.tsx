@@ -84,9 +84,17 @@ function MyOrderPage() {
                     className='max-[380px]:w-[100px]'
                     alt=''
                   />
-                  <p className='md:text-sm text-[10px] font-medium'>
-                    {order?.brand_name}
-                  </p>
+                  <div className='space-y-2'>
+                    <p className='md:text-sm text-[10px] font-medium'>
+                      {order?.brand_name}
+                    </p>
+                    <p className='md:text-sm text-[10px] font-medium'>
+                      {order?.recipient_name}
+                    </p>
+                    <p className='md:text-sm text-[10px] font-medium'>
+                      {order?.recipient_email}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className='md:flex gap-[110px]'>
@@ -96,7 +104,7 @@ function MyOrderPage() {
                       {order.reference}
                     </p>
                     <p className='text-xs md:text-base font-bold mt-5 md:mt-8'>
-                      ₦{order.amount?.toLocaleString()}
+                      ₦{order.card_amount?.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -106,7 +114,7 @@ function MyOrderPage() {
                     disabled={isBuyingCard}
                     onClick={() => {
                       buyCard({
-                        card_id: order.brand,
+                        card_id: order.id,
                       });
                     }}
                     className='flex cursor-pointer items-center gap-2 disabled:opacity-50'>

@@ -96,7 +96,7 @@ function MyReceiveGiftCardPage() {
                       {order.reference}
                     </p>
                     <p className='text-xs md:text-base font-bold mt-5 md:mt-8'>
-                      ₦{order?.amount?.toLocaleString()}
+                      ₦{order?.card_amount?.toLocaleString()}
                     </p>
                   </div>
                 </div>

@@ -89,8 +89,16 @@ export const changePasswordScheme = z.object({
     .string()
     .min(8, 'Password must be at least 8 characters')
     .max(60, 'Password must be less than 60 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter'),
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
 });
+
+// Add password requirements message
+export const PASSWORD_REQUIREMENTS = {
+  message:
+    'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number',
+};
 
 export const buyCardSchema = z.object({
   brand: z.string().min(1, 'Brand is required'),

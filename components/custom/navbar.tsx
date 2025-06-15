@@ -327,7 +327,7 @@ function NavBar() {
             </div>
 
             {showSuggestions && search && suggestions.length > 0 && (
-              <div className='absolute z-[9999999] top-20  right-52 md:min-w-[300px] mt-1  bg-white border rounded shadow-lg max-h-60 overflow-y-auto'>
+              <div className='absolute z-[9999999] top-20  right-44 md:min-w-[300px] mt-1  bg-white border rounded shadow-lg max-h-60 overflow-y-auto'>
                 {suggestions.map((brand: ICard) => (
                   <div
                     key={brand.id}

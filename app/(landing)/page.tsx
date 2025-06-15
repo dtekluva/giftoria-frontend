@@ -74,6 +74,7 @@ export default function Home() {
         <h2 className='px-4 md:px-[2.5rem] lg:px-[3.75rem] mt-6 md:mt-[2.5rem] lg:mt-[3.75rem] text-center text-base md:text-[2rem] lg:text-[2.5rem] font-semibold'>
           Explore our collections of Gift cards
         </h2>
+
         <div className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] md:px-[3.125rem] container mx-auto px-5'>
           {query.isPending &&
             Array.from({ length: 4 }).map((_, index) => (
