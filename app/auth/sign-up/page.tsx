@@ -115,6 +115,7 @@ function CreateAccount() {
                     <Input
                       type='password'
                       {...field}
+                      isPassword
                       placeholder='Please enter your password'
                     />
                   </FormControl>

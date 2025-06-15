@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useChangePassword } from '@/services/mutations/auth.mutations';
+import { PASSWORD_REQUIREMENTS } from '@/libs/schema';
 
 function ResetPassword() {
   const { form, onSubmit, isLoading } = useChangePassword();
@@ -57,6 +58,9 @@ function ResetPassword() {
                       placeholder='Enter your new password'
                     />
                   </FormControl>
+                  <p className='text-sm text-gray-500 mt-1'>
+                    {PASSWORD_REQUIREMENTS.message}
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}

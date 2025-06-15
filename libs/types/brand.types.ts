@@ -34,7 +34,7 @@ export interface ApiBuyCardResponse {
 export interface CardSale {
   id: string;
   brand: string;
-  amount: number;
+  card_amount: number;
   recipient_name: string;
   recipient_email: string;
   recipient_phone: string | null;

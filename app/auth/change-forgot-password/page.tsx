@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { useChangeForgotPassword } from '@/services/mutations/auth.mutations';
 
 import EditIcon from '@/components/icon/edit-icon';
+import { PASSWORD_REQUIREMENTS } from '@/libs/schema';
 
 function ChangeForgotPassword() {
   const { form, onSubmit, isLoading } = useChangeForgotPassword();
@@ -85,6 +86,9 @@ function ChangeForgotPassword() {
                     />
                   </FormControl>
                   <FormMessage />
+                  <p className='text-sm text-gray-500'>
+                    {PASSWORD_REQUIREMENTS.message}
+                  </p>
                 </FormItem>
               )}
             />
