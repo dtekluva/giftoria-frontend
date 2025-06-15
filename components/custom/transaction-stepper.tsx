@@ -36,7 +36,10 @@ function TransactionStepper(
           </StepperTrigger>
           <StepperSeparator className='md:-mt-8 -ml-[82px] md:-ml-0' />
         </StepperItem>
-        <StepperItem disabled step={2} className='[&:not(:last-child)]:flex-1'>
+        <StepperItem
+          disabled
+          step={2}
+          className='[&:not(:last-child)]:flex-1 -ml-8 md:-ml-0'>
           <StepperTrigger>
             <StepperIndicator asChild className='md:flex-col gap-3 md:gap-1.5'>
               <TransactionPendingIcon />
@@ -44,9 +47,9 @@ function TransactionStepper(
                 <p className='text-[10px] font-medium md:text-xs text-[#FCAC33]'>
                   Pending{' '}
                 </p>
-                <p className='text-[8px] md:text-xs text-[#4A4A68]'>
+                {/* <p className='text-[8px] md:text-xs text-[#4A4A68]'>
                   {formatCustomDate(props.data?.assigned_date ?? '')}
-                </p>
+                </p> */}
               </div>
             </StepperIndicator>
           </StepperTrigger>
