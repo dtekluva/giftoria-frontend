@@ -101,7 +101,7 @@ function GiftCardForm({
         min_amount: initialData.min_amount ?? 0,
         max_amount: initialData.max_amount ?? 0,
         is_active: initialData.is_active,
-        image: initialData.image ? new File([], initialData.image) : null,
+        image: initialData.image,
       });
       if (initialData.image) {
         setPreviewImage(initialData.image);
@@ -112,6 +112,13 @@ function GiftCardForm({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check if file size is greater than 1MB
+      if (file.size > 1024 * 1024) {
+        alert('Image size should not exceed 1MB');
+        e.target.value = ''; // Clear the file input
+        return;
+      }
+
       form.setValue('image', file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -322,7 +329,7 @@ function ManageGiftCardPage() {
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 4;
 
   const { query: brandsQuery } = useFetchBrandsQuery({
     search,
@@ -458,13 +465,13 @@ function ManageGiftCardPage() {
                     {'adwaele@gmail.com'}
                   </p>
                 </div>
-                <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
+                {/* <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
                   <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
                     <article className='text-[6px] md:text-[10px]'>
                       I love presenting gift
                     </article>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className='md:flex-none flex md:flex-row flex-col items-center md:gap-12 flex-1'>
@@ -492,7 +499,7 @@ function ManageGiftCardPage() {
 
       {/* Pagination */}
       {brandsQuery.data && brandsQuery.data.results.length > 0 && (
-        <div className='flex justify-center gap-2 mt-4 px-4 md:px-7'>
+        <div className='flex justify-center gap-2 mt-4 font-dm-sans px-4 md:px-7'>
           <Button
             variant='outline'
             onClick={() => handlePageChange(page - 1)}
