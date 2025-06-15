@@ -181,7 +181,7 @@ export const useByAllCardsMutation = (selectedPayment: string) => {
 
 export const useBuyCardById = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState('Paystack');
+  const [selectedPayment, setSelectedPayment] = useState('paystack');
   const [reference, setReference] = useState('');
 
   const {
@@ -203,7 +203,7 @@ export const useBuyCardById = () => {
 
   const handlePayment = () => {
     if (reference) {
-      if (selectedPayment.toLowerCase() === 'Paystack') {
+      if (selectedPayment.toLowerCase() === 'paystack') {
         payThroughPayStack(reference);
       } else {
         payThroughBank(reference);
