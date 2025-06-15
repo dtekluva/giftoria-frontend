@@ -56,5 +56,6 @@ export const config = {
     '/order-summary',
     '/admin/:path*',
     '/cashier/:path*',
+    '/card-balance',
   ],
 };

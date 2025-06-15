@@ -12,6 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { PASSWORD_REQUIREMENTS } from '@/libs/schema';
 import { useCreateUserAccount } from '@/services/mutations/auth.mutations';
 
 function CreateAccount() {
@@ -119,6 +120,9 @@ function CreateAccount() {
                       placeholder='Please enter your password'
                     />
                   </FormControl>
+                  <p className='text-sm text-gray-500 font-dm-sans'>
+                    {PASSWORD_REQUIREMENTS.message}
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
