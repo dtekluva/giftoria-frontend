@@ -5,6 +5,7 @@ import {
 } from '@tanstack/react-query';
 import {
   fetchBranches,
+  fetchCompanyBranchOrderHistory,
   fetchCompanyOrderHistory,
   getCompanyDashboard,
   getCompanyLogo,
@@ -99,6 +100,36 @@ export const useGetCompanyHistory = ({
       queryKey: ['company-history', search, page + 1, page_size],
       queryFn: () =>
         fetchCompanyOrderHistory({
+          search,
+          page: page + 1,
+          page_size,
+        }),
+    });
+  };
+
+  return { query, prefetchQuery };
+};
+export const useGetCompanyBranchHistory = ({
+  search = '',
+  page = 1,
+  page_size = 10,
+}: {
+  search?: string;
+  page?: number;
+  page_size?: number;
+} = {}) => {
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: ['company-branch-history', search, page, page_size],
+    queryFn: () => fetchCompanyBranchOrderHistory({ search, page, page_size }),
+  });
+
+  const prefetchQuery = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['company-branch-history', search, page + 1, page_size],
+      queryFn: () =>
+        fetchCompanyBranchOrderHistory({
           search,
           page: page + 1,
           page_size,

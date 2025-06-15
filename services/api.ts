@@ -264,6 +264,22 @@ export const fetchCompanyOrderHistory = async ({
     `/branch/company_order_history/?search=${search}&page=${page}&page_size=${page_size}`
   );
 };
+export const fetchCompanyBranchOrderHistory = async ({
+  search,
+  page,
+  page_size,
+}: {
+  search: string;
+  page: number;
+  page_size: number;
+}) => {
+  return await httpConfig.get<
+    AxiosError,
+    AxiosResponse<ApiBrandCardTransactionResponse>
+  >(
+    `/branch/company_branch_order_history/?search=${search}&page=${page}&page_size=${page_size}`
+  );
+};
 
 export const payViaPayStack = async (reference: string) => {
   return await httpConfig.get<
