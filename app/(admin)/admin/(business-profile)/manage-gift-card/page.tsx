@@ -54,9 +54,9 @@ interface Brand {
 
 interface FormBrand {
   brand_name: string;
-  category: string;
-  min_amount: number;
-  max_amount: number;
+  category: string; // Required UUID
+  min_amount?: number; // Optional, minimum 0
+  max_amount?: number; // Optional, minimum 0
   is_active: boolean;
   image?: File | null;
 }
@@ -83,16 +83,25 @@ function GiftCardForm({
   const { form, onSubmit, isLoading } =
     mode === 'create' ? createMutation : editMutation;
 
-  // Set initial values if in edit mode
+  // Initialize form with default values
   React.useEffect(() => {
-    if (mode === 'edit' && initialData) {
+    if (mode === 'create') {
+      form.reset({
+        brand_name: '',
+        category: '',
+        min_amount: 0,
+        max_amount: 0,
+        is_active: true,
+        image: null,
+      });
+    } else if (mode === 'edit' && initialData) {
       form.reset({
         brand_name: initialData.brand_name,
         category: initialData.category,
         min_amount: initialData.min_amount ?? 0,
         max_amount: initialData.max_amount ?? 0,
         is_active: initialData.is_active,
-        image: initialData.image ? new File([], initialData.image) : undefined,
+        image: initialData.image ? new File([], initialData.image) : null,
       });
       if (initialData.image) {
         setPreviewImage(initialData.image);
@@ -113,25 +122,23 @@ function GiftCardForm({
   };
 
   const handleSubmit = async (data: FormBrand) => {
-    const formData = new FormData();
-    formData.append('brand_name', data.brand_name);
-    formData.append('category', data.category);
-    if (data.min_amount !== undefined) {
-      formData.append('min_amount', data.min_amount.toString());
-    }
-    if (data.max_amount !== undefined) {
-      formData.append('max_amount', data.max_amount.toString());
-    }
-    formData.append('is_active', data.is_active?.toString() ?? 'true');
-    if (data.image) {
-      formData.append('image', data.image);
-    }
-    if (mode === 'edit' && brandId) {
-      formData.append('id', brandId);
+    console.log('Form data before submission:', data); // Debug log
+
+    // Validate required fields
+    if (!data.brand_name || !data.category) {
+      console.error('Missing required fields:', {
+        brand_name: data.brand_name,
+        category: data.category,
+      });
+      return;
     }
 
-    await onSubmit(formData as any);
-    onSuccess?.();
+    try {
+      await onSubmit(data as any);
+      onSuccess?.();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
