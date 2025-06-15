@@ -45,6 +45,19 @@ function Page() {
             </p>
           </div>
 
+          <div className='max-w-[800px] rounded-lg mb-2 md:mb-6 md:py-6 px-7 p-4 bg-[#F6F3FB] mx-2 md:mx-auto'>
+            <h2 className='text-[#4A014A] font-montserrat font-semibold mb-2 md:mb-3'>
+              Message
+            </h2>
+            <p className='italic font-dm-sans md:text-xl text-base'>
+              Today is all about celebrating you! I hope your day is filled with
+              love, laughter, and unforgettable moments. You deserve all the
+              happiness in the world, and I’m so grateful to have you in my
+              life. May this year bring you new adventures, exciting
+              opportunities, and endless joy.
+            </p>
+          </div>
+
           <div className='md:pt-10 pt-[30px] md:border-t'>
             <h1 className='font-semibold text-base px-6 font-montserrat md:px-12 mb-3 md:mb-8'>
               Gift Card Details
