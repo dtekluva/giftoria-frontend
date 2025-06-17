@@ -71,18 +71,7 @@ function AdminPage() {
       amount: `₦${item.amount.toLocaleString()}`,
       card_value: `₦${item.card_value.toLocaleString()}`,
       balance: `₦${item.balance.toLocaleString()}`,
-      status: (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            item.status === 'PENDING'
-              ? 'bg-yellow-100 text-yellow-800'
-              : item.status === 'REDEEMED'
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800'
-          }`}>
-          {item.status}
-        </span>
-      ),
+      status: item.status,
       store_address: item.store_address,
       created_at: new Date(item.created_at).toLocaleDateString(),
     }));
