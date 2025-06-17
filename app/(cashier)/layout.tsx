@@ -47,7 +47,7 @@ function CashierLayout({ children }: { children: React.ReactNode }) {
         deleteCookie('access_token');
         deleteCookie('refresh_token');
         deleteCookie('password');
-        router.replace('/auth/sign-in');
+        router.replace('/auth/cashier/sign-in');
       },
     },
   ];
