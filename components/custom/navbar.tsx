@@ -203,6 +203,8 @@ function NavBar() {
         },
       ];
 
+  const accessToken = getCookie('access_token') as string;
+
   return (
     <motion.div
       style={{
@@ -379,7 +381,7 @@ function NavBar() {
                   router.push('/order-summary');
                 }}
               />
-              {cartItemsCount > 0 && (
+              {cartItemsCount > 0 && accessToken && (
                 <div
                   className='absolute -top-1 -right-1 bg-[#FF0066] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center z-50 shadow-md'
                   style={{ transform: 'translate(25%, -25%)' }}>

@@ -31,7 +31,7 @@ export const verifyEmailSchema = z.object({
     .min(1, {
       message: 'OTP code is required',
     })
-    .max(6, 'OTP code must be 6 characters'),
+    .max(7, 'OTP code must be 6 characters'),
 });
 
 export const createUserAccountSchema = z.object({
@@ -114,7 +114,7 @@ export const buyCardSchema = z.object({
     .max(11, 'Recepient phone number must be less than 11 characters'),
   for_who: z.string().min(1, 'For who is required'),
   occasion: z.string().min(1, 'Occasion is required'),
-  message: z.string().optional(),
+  message: z.string().max(255).optional(),
   image: z.string().optional(),
 });
 export const uploadCompanyDetailSchema = z.object({

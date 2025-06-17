@@ -175,41 +175,114 @@ function GiftCardDetails() {
                       <FormControl>
                         <Input
                           id='value'
-                          placeholder='Input gift card worth'
+                          placeholder={
+                            query?.data?.min_amount === 0 &&
+                            query?.data?.max_amount === 0
+                              ? 'This gift card is currently not available'
+                              : `Enter amount between ${
+                                  query?.data?.min_amount?.toLocaleString() ?? 0
+                                } and ${
+                                  query?.data?.max_amount?.toLocaleString() ??
+                                  'unlimited'
+                                }`
+                          }
                           className='md:h-12'
+                          disabled={
+                            query?.data?.min_amount === 0 &&
+                            query?.data?.max_amount === 0
+                          }
                           {...field}
                           onInput={(e) => {
+                            const value = e.currentTarget.value.replace(
+                              /\D/g,
+                              ''
+                            );
+                            const numValue = parseInt(value);
+
+                            if (
+                              query?.data?.min_amount === 0 &&
+                              query?.data?.max_amount === 0
+                            ) {
+                              form.setError('card_amount', {
+                                type: 'manual',
+                                message:
+                                  'This gift card is currently not available',
+                              });
+                              return;
+                            }
+
+                            if (numValue < (query?.data?.min_amount ?? 0)) {
+                              form.setError('card_amount', {
+                                type: 'manual',
+                                message: `Amount must be at least ${query?.data?.min_amount?.toLocaleString()}`,
+                              });
+                            } else if (
+                              query?.data?.max_amount &&
+                              numValue > query.data.max_amount
+                            ) {
+                              form.setError('card_amount', {
+                                type: 'manual',
+                                message: `Amount cannot exceed ${query?.data?.max_amount?.toLocaleString()}`,
+                              });
+                            } else {
+                              form.clearErrors('card_amount');
+                            }
+
                             field.onChange(e);
-                            e.currentTarget.value =
-                              e.currentTarget.value.replace(/\D/g, '');
-                            e.currentTarget.value =
-                              e.currentTarget.value.replace(
-                                /(\d)(?=(\d{3})+(?!\d))/g,
-                                '$1,'
-                              );
+                            e.currentTarget.value = value.replace(
+                              /\B(?=(\d{3})+(?!\d))/g,
+                              ','
+                            );
                           }}
                         />
                       </FormControl>
+                      <p className='text-sm text-muted-foreground'>
+                        {query?.data?.min_amount === 0 &&
+                        query?.data?.max_amount === 0
+                          ? 'This gift card is currently not available'
+                          : `Available range: ${
+                              query?.data?.min_amount?.toLocaleString() ?? 0
+                            } - ${
+                              query?.data?.max_amount?.toLocaleString() ??
+                              'unlimited'
+                            }`}
+                      </p>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <div className='flex flex-row flex-wrap mt-4 md:mt-6 gap-3 cursor-pointer'>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <div
-                      onClick={() => {
-                        form.setValue(
-                          'card_amount',
-                          ((index + 1) * 10000)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                        );
-                      }}
-                      key={index}
-                      className='p-3 rounded-sm border transition-transform duration-300 hover:scale-105 hover:border-primary'>
-                      <p>{(index + 1) * 10000}</p>
-                    </div>
-                  ))}
+                  {Array.from({ length: 5 }).map((_, index) => {
+                    const amount = (index + 1) * 10000;
+                    const isWithinRange =
+                      !(
+                        query?.data?.min_amount === 0 &&
+                        query?.data?.max_amount === 0
+                      ) &&
+                      amount >= (query?.data?.min_amount ?? 0) &&
+                      (!query?.data?.max_amount ||
+                        amount <= query.data.max_amount);
+
+                    return (
+                      <div
+                        onClick={() => {
+                          if (isWithinRange) {
+                            form.setValue(
+                              'card_amount',
+                              amount
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            );
+                          }
+                        }}
+                        key={index}
+                        className={`p-3 rounded-sm border transition-transform duration-300 hover:scale-105 hover:border-primary ${
+                          !isWithinRange ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}>
+                        <p>{amount.toLocaleString()}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div className='space-y-2'>

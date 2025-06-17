@@ -18,6 +18,7 @@ export function AccountDropdown() {
     deleteCookie('access_token');
     deleteCookie('password');
     deleteCookie('refresh_token');
+    localStorage.removeItem('cards');
     router.push('/auth/sign-in');
   };
 
