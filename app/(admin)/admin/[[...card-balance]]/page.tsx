@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 // import { useCardBalanceMutation } from '@/services/mutations/brand.mutation';
 import { useRedeemCardQuery } from '@/services/queries/brand.queries';
 import { formatCustomDate } from '@/utils/dateFormat';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 // const giftCardDetails = {
@@ -36,7 +37,9 @@ import { useState } from 'react';
 
 function Page() {
   // const { form, onSubmit, isLoading } = useCardBalanceMutation();
-  const [cardNumber, setCardNumber] = useState('');
+  const cardId = usePathname()?.split('/').pop();
+  const [cardNumber, setCardNumber] = useState(cardId ?? '');
+
   const { query } = useRedeemCardQuery(cardNumber);
 
   const handleCardSearch = (e: React.FormEvent) => {
