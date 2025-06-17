@@ -145,6 +145,15 @@ function MyOrderPage() {
                   </div>
                 </div>
               </div>
+              <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
+                {order.message && (
+                  <div className='px-3 md:py-5  py-3 bg-[#F6F3FB] rounded-[10px] max-w-[440px] flex-1'>
+                    <article className='text-[6px] md:text-[10px]'>
+                      {order.message}
+                    </article>
+                  </div>
+                )}
+              </div>
               <div className='lg:flex gap-[110px]'>
                 <div className='flex items-center lg:gap-[157px] justify-between lg:justify-normal'>
                   <div className='lg:flex-none flex-1 text-end'>
@@ -156,6 +165,7 @@ function MyOrderPage() {
                     </p>
                   </div>
                 </div>
+
                 <div className='hidden lg:block'>
                   <button
                     type='button'
