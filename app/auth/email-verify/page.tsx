@@ -95,6 +95,9 @@ function VerifyEmail() {
               {mutation.isPending ? 'Verifying...' : 'Verify Code'}
             </Button>
             <Button
+              onClick={() => {
+                router.push('/auth/sign-up/');
+              }}
               variant={'outline'}
               className='text-sm font-bold md:text-base md:h-[70px] h-[50px] mb-10 mt-5 w-full'>
               Back to Create Account

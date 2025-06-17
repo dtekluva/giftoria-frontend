@@ -31,7 +31,7 @@ export const verifyEmailSchema = z.object({
     .min(1, {
       message: 'OTP code is required',
     })
-    .max(6, 'OTP code must be 6 characters'),
+    .max(7, 'OTP code must be 6 characters'),
 });
 
 export const createUserAccountSchema = z.object({
