@@ -5,6 +5,8 @@ export interface ICard {
   brand_name: string;
   image: string | null;
   is_active: boolean;
+  min_amount?: number;
+  max_amount?: number;
 }
 
 export interface ApiAllBrandCardsResponse {
