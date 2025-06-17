@@ -15,19 +15,21 @@ import { Input } from '@/components/ui/input';
 import { useCardBalanceMutation } from '@/services/mutations/brand.mutation';
 import { useRedeemCardQuery } from '@/services/queries/brand.queries';
 import { formatCustomDate } from '@/utils/dateFormat';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-function Page({ params }: { params: Promise<{ slug: string }> }) {
+function Page() {
   const { form, onSubmit, isLoading } = useCardBalanceMutation();
-  const [cardNumber, setCardNumber] = useState('');
+
+  const cardId = usePathname()?.split('/').pop();
+  const [cardNumber, setCardNumber] = useState(cardId ?? '');
+
   const { query } = useRedeemCardQuery(cardNumber);
 
   const handleCardSearch = (e: React.FormEvent) => {
     e.preventDefault();
     // The query will automatically run when cardNumber changes
   };
-
-  console.log(params, 'this area');
 
   return (
     <div className=' md:px-14 px-4 py-3 md:py-7'>
@@ -112,26 +114,6 @@ function Page({ params }: { params: Promise<{ slug: string }> }) {
               onSubmit={form.handleSubmit(onSubmit)}
               className='flex flex-col'>
               <div className='md:flex space-y-4 md:space-y-0 gap-4 font-dm-sans'>
-                <FormField
-                  control={form.control}
-                  name='card_number'
-                  render={({ field }) => (
-                    <FormItem className='flex-1'>
-                      <FormLabel className='text-base font-semibold text-gray-700'>
-                        Card Number
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder='Enter card value'
-                          className='md:h-12'
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <FormField
                   control={form.control}
                   name='amount'

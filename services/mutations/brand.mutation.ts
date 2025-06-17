@@ -367,10 +367,12 @@ export const useGetAIMessage = () => {
 };
 
 export const useCardBalanceMutation = () => {
+  const cardId = usePathname()?.split('/').pop();
+
   const form = useForm<CardBalanceType>({
     resolver: zodResolver(cardBalanceSchema),
     defaultValues: {
-      card_number: '',
+      card_number: cardId ?? '',
       amount: '',
     },
   });
