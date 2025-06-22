@@ -193,7 +193,7 @@ function RequestFundPage() {
               ))}
             </div>
           ) : (
-            <Table headers={headers} data={tableData} selectable={true} />
+            <Table headers={headers} data={tableData} />
           )}
         </div>
 
