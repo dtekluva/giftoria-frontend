@@ -10,7 +10,7 @@ export function Card({ data }: { data: ICard }) {
       <Image
         src={data?.image ?? ''}
         width={280}
-        className='w-full rounded-lg md:rounded-[1.875rem] aspect-video md:h-[140px] object-cover'
+        className='w-full rounded-lg md:rounded-[1.875rem] aspect-[0.5] md:h-[140px] object-center'
         height={140}
         alt=''
       />
