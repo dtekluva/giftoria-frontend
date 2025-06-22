@@ -18,13 +18,12 @@ const PAGE_SIZE = 10;
 
 const tableHeaders = [
   { key: 'transaction_id', title: 'Transaction ID' },
-  { key: 'card_number', title: 'Card Number' },
+  { key: 'order_number', title: 'Order Number' },
   { key: 'amount', title: 'Amount' },
   { key: 'card_value', title: 'Card Value' },
   { key: 'balance', title: 'Balance' },
   { key: 'status', title: 'Status' },
-  { key: 'store_address', title: 'Store Address' },
-  { key: 'created_at', title: 'Date' },
+  { key: 'branch', title: 'Branch Name' },
 ];
 
 function AdminPage() {
@@ -67,13 +66,12 @@ function AdminPage() {
   const formatTableData = (data: BrandCardTransaction[]) => {
     return data.map((item) => ({
       transaction_id: item.transaction_id,
-      card_number: item.card_number,
+      order_number: item.order_number,
       amount: `₦${item.amount.toLocaleString()}`,
       card_value: `₦${item.card_value.toLocaleString()}`,
       balance: `₦${item.balance.toLocaleString()}`,
       status: item.status,
-      store_address: item.store_address,
-      created_at: new Date(item.created_at).toLocaleDateString(),
+      branch: item.branch,
     }));
   };
 
@@ -120,7 +118,9 @@ function AdminPage() {
               <h5 className='text-sm font-dm-sans font-medium'>
                 Total Redeemed card
               </h5>
-              <p className='font-sans text-2xl font-semibold'>₦19,000,000</p>
+              <p className='font-sans text-2xl font-semibold'>
+                ₦{responseData?.status_count?.REDEEMED ?? 0}
+              </p>
             </div>
             <Card
               title='Redeemed'
