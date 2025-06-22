@@ -102,7 +102,7 @@ function GiftCardDetails() {
   };
 
   const handleProceedToPayment = async () => {
-    const isValid = saveItemToLocalStorage();
+    const isValid = await saveItemToLocalStorage();
     if (isValid) {
       // Force a cart update event
       const event = new Event('cartUpdated');
@@ -118,8 +118,8 @@ function GiftCardDetails() {
     }
   };
 
-  const handleAddToCart = () => {
-    const isValid = saveItemToLocalStorage();
+  const handleAddToCart = async () => {
+    const isValid = await saveItemToLocalStorage();
     if (isValid) {
       // Force a cart update event
       const event = new Event('cartUpdated');
@@ -127,17 +127,17 @@ function GiftCardDetails() {
 
       // Also trigger a storage event manually since it won't fire in the same window
       const cartItems = localStorage.getItem('cards');
-      if (cartItems) {
+      if (cartItems && form.formState.isValid) {
         localStorage.setItem('cards', cartItems);
       }
 
-      router.push('/gift-card');
+      // router.push('/gift-card');
     }
   };
 
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
-      <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:grid grid-cols-[40%_1fr] gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
+      <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:grid grid-cols-2 gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
         {query.isPending ? (
           <div className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] bg-gray-300'></div>
         ) : (
@@ -428,7 +428,7 @@ function GiftCardDetails() {
                       <FormLabel>Personalized Message</FormLabel>
                       <FormControl>
                         <Textarea
-                          className='min-h-[74px] md:min-h-[126px] resize-none'
+                          className='min-h-[74px] md:min-h-[126px] md:max-h-[126px] resize-none'
                           {...field}
                         />
                       </FormControl>

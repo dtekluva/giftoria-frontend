@@ -294,6 +294,7 @@ function NavBar() {
                     {categories.map((category: Category) => (
                       <SelectItem
                         key={category.id}
+                        className='uppercase font-dm-sans'
                         value={category.category_name}>
                         {category.category_name}
                       </SelectItem>

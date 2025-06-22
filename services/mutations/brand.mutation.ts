@@ -54,16 +54,15 @@ export const useByCardsMutation = () => {
     },
   });
 
-  const saveItemToLocalStorage = () => {
+  const saveItemToLocalStorage = async () => {
     const cards = localStorageStore.getItem('cards') as BuyMultipleCard;
-    form.trigger();
+    const isValid = await form.trigger();
 
-    if (Object.keys(form.formState.errors)[0]) {
+    if (!isValid) {
       toast.error('Please fill in all required fields');
       return false;
     }
 
-    console.log('No cards found in local storage', cards);
     if (!cards) {
       localStorageStore.setItem('cards', {
         cards: [form.getValues()],
@@ -95,8 +94,8 @@ export const useByCardsMutation = () => {
     }
   };
 
-  const onSubmit = () => {
-    return saveItemToLocalStorage();
+  const onSubmit = async () => {
+    return await saveItemToLocalStorage();
   };
 
   return {
