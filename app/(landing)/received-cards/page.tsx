@@ -93,7 +93,9 @@ function MyReceiveGiftCardPage() {
                 <div className='hidden md:block'>
                   <Button
                     onClick={() => {
-                      router.push(`/order-details/${order.id}`);
+                      router.push(
+                        `/order-details/${order.id}?user_type=receiver`
+                      );
                     }}
                     className='mt-4 h-[63px] text-base font-semibold min-w-[200px]'>
                     View order
@@ -102,7 +104,7 @@ function MyReceiveGiftCardPage() {
               </div>
               <Button
                 onClick={() => {
-                  router.push(`/order-details/${order.id}`);
+                  router.push(`/order-details/${order.id}?user_type=receiver`);
                 }}
                 className='md:hidden h-10 text-xs font-semibold max-w-[130px] flex-1 ml-auto'>
                 View order
