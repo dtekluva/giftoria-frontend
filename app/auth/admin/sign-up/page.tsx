@@ -39,7 +39,7 @@ function AdminSignUp() {
     <div className='w-full'>
       <AuthCard showPadding={false} title='Create Account'>
         <Stepper value={activeStep} orientation='horizontal'>
-          {steps.map((step) => (
+          {steps.map((step, index) => (
             <StepperItem
               key={step}
               step={step}
@@ -47,7 +47,7 @@ function AdminSignUp() {
               <StepperTrigger className='flex-col gap-0'>
                 <StepperIndicator className='mt-7' />
                 <p className='font-dm-sans md:text-lg text-base text-[#BCBCBC]'>
-                  Step 1
+                  Step {index + 1}
                 </p>
               </StepperTrigger>
               {step < steps.length && <StepperSeparator />}
