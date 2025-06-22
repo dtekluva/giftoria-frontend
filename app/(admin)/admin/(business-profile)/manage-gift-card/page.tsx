@@ -232,7 +232,10 @@ function GiftCardForm({
                     </FormControl>
                     <SelectContent>
                       {categories.map((category: Category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                        <SelectItem
+                          className='uppercase font-dm-sans'
+                          key={category.id}
+                          value={category.id}>
                           {category.category_name}
                         </SelectItem>
                       ))}
@@ -252,7 +255,6 @@ function GiftCardForm({
                     <FormLabel>Card Value(Minimum)</FormLabel>
                     <FormControl>
                       <Input
-                        type='number'
                         placeholder='Enter minimum amount'
                         className='md:h-12 flex-1'
                         {...field}
@@ -272,7 +274,6 @@ function GiftCardForm({
                     <FormLabel>Card Value(Maximum)</FormLabel>
                     <FormControl>
                       <Input
-                        type='number'
                         placeholder='Enter maximum amount'
                         className='md:h-12 flex-1'
                         {...field}
