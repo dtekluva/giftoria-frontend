@@ -24,11 +24,12 @@ import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 function BranchPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { form, onSubmit, mutation } = useBranchDetailsForm(currentPage + 1);
+  const [search, setSearch] = useState('');
 
   const { deleteBranchMutate } = useDeleteBranch(currentPage + 1);
 
   const { query, prefetchQuery } = useGetCompanyBranches({
-    search: '',
+    search: search,
     page: currentPage,
     page_size: MY_ORDER_PAGE_SIZE,
   });
@@ -168,7 +169,7 @@ function BranchPage() {
             <h3 className='md:mb-8 mb-3 md:text-xl font-semibold'>
               Branch Details
             </h3>
-            <SearchInput />
+            <SearchInput value={search} onDebouncedChange={setSearch} />
           </div>
           <TransactionHistoryTable
             prefetchQuery={prefetchQuery}
