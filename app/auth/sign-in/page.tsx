@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PASSWORD_REQUIREMENTS } from '@/libs/schema';
 import { useLogin } from '@/services/mutations/auth.mutations';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -64,6 +65,9 @@ function SignIn() {
                       />
                     </FormControl>
                     <FormMessage />
+                    <p className='text-sm text-gray-500 mt-1'>
+                      {PASSWORD_REQUIREMENTS.message}
+                    </p>
                   </FormItem>
                 )}
               />
