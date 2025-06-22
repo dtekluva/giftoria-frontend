@@ -11,14 +11,31 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useUpdateUserProfile } from '@/services/mutations/auth.mutations';
+import { useGetCompanyLogoQuery } from '@/services/queries/company.queries';
+import Image from 'next/image';
 
 function UpdateUserInfo() {
   const { form, onSubmit, userData } = useUpdateUserProfile();
 
+  const { query: logoQuery } = useGetCompanyLogoQuery();
+
   return (
     <div className='w-full font-dm-sans'>
       <div className='flex items-center gap-4 pb-4 border-b md:pb-6'>
-        <ProfileIcon />
+        {logoQuery.data?.company_logo ? (
+          <Image
+            src={
+              logoQuery.data?.company_logo ?? 'https://placehold.co/40x40.png'
+            }
+            width={100}
+            height={100}
+            alt='Admin Banner'
+            className='rounded-full border'
+          />
+        ) : (
+          <ProfileIcon />
+        )}
+
         <h1 className='font-bold md:text-base text-sm'>
           {userData?.data.first_name} {userData?.data.last_name}
         </h1>
