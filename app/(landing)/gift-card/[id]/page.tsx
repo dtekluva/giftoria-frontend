@@ -137,7 +137,7 @@ function GiftCardDetails() {
 
   return (
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
-      <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:grid grid-cols-2 gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
+      <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:grid grid-cols-[40%_1fr] gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
         {query.isPending ? (
           <div className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] bg-gray-300'></div>
         ) : (
