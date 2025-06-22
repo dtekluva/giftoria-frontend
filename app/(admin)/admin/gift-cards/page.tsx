@@ -48,6 +48,23 @@ function AdminPage() {
     }
   };
 
+  function getTitleColor(title: string) {
+    switch (title.toLowerCase()) {
+      case 'sent':
+        return 'text-[#259C80]';
+      case 'claimed':
+        return 'text-[#13ACF3]';
+      case 'redeemed':
+        return 'text-[#4E00AD]';
+      case 'pending':
+        return 'text-[#E5A300]';
+      case 'declined':
+        return 'text-[#F97878]';
+      default:
+        return 'text-[#000000]';
+    }
+  }
+
   const formatTableData = (data: BrandCardTransaction[]) => {
     return data.map((item) => ({
       transaction_id: item.transaction_id,
@@ -55,7 +72,7 @@ function AdminPage() {
       amount: `₦${item.amount.toLocaleString()}`,
       card_value: `₦${item.card_value.toLocaleString()}`,
       balance: `₦${item.balance.toLocaleString()}`,
-      status: item.status,
+      status: <span className={getTitleColor(item.status)}>{item.status}</span>,
       branch: item.branch,
     }));
   };

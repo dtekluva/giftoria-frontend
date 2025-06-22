@@ -14,7 +14,7 @@ function GiftCardDetailsTable({ data }: { data: GiftCardDetails }) {
               <tr key={title}>
                 <th
                   scope='row'
-                  className='px-6 py-3 text-left text-sm font-normal text-[#556575]'>
+                  className='px-6 py-3 text-nowrap text-left text-sm font-normal text-[#556575]'>
                   {title
                     .replace(/([A-Z])/g, ' $1') // Add space before capital letters
                     .replace(/^./, (str) => str.toUpperCase())}{' '}
