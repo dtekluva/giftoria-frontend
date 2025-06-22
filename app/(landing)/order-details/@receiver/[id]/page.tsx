@@ -33,7 +33,7 @@ function Page() {
             <Image
               src={query.data.brand_image!}
               width={500}
-              className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] object-cover'
+              className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] object-center'
               height={300}
               alt=''
             />
