@@ -428,7 +428,7 @@ function GiftCardDetails() {
                       <FormLabel>Personalized Message</FormLabel>
                       <FormControl>
                         <Textarea
-                          className='min-h-[74px] md:min-h-[126px] resize-none'
+                          className='min-h-[74px] md:min-h-[126px] md:max-h-[126px] resize-none'
                           {...field}
                         />
                       </FormControl>
