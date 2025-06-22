@@ -89,7 +89,11 @@ const Table = <T extends Record<string, unknown>>({
                   {headers.map((header, colIndex) => (
                     <td key={colIndex} className='py-[36px]  px-4  text-xs'>
                       <span className='line-clamp-1'>
-                        {String(row[header.key] || '-')}
+                        {row[header.key] !== undefined &&
+                        row[header.key] !== null &&
+                        row[header.key] !== ''
+                          ? (row[header.key] as React.ReactNode)
+                          : '-'}
                       </span>
                     </td>
                   ))}
@@ -112,7 +116,11 @@ const Table = <T extends Record<string, unknown>>({
                 <span className='font-bold text-xs font-sans'>
                   {header.title}:
                 </span>
-                {String(row[header.key] || '-')}
+                {row[header.key] !== undefined &&
+                row[header.key] !== null &&
+                row[header.key] !== ''
+                  ? (row[header.key] as React.ReactNode)
+                  : '-'}
               </p>
             ))}
           </div>
