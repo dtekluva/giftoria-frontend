@@ -1,31 +1,30 @@
 'use client';
-import Table from '@/components/custom/table';
 import SearchInput from '@/components/custom/search-input';
+import Table from '@/components/custom/table';
+import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
+import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import SendIcon from '@/components/icon/send-icon';
 import SMSIcon from '@/components/icon/sms-icon';
 import SMSNotificationIcon from '@/components/icon/sms-notification-icon';
 import SmsStarIcon from '@/components/icon/sms-star-icon';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import { BrandCardTransaction } from '@/libs/types/brand.types';
 import { useGetCompanyHistory } from '@/services/queries/company.queries';
-import React, { useState, useCallback, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
-import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { useRouter } from 'next/navigation';
+import React, { useCallback, useState } from 'react';
 
 const PAGE_SIZE = 10;
 
 const tableHeaders = [
   { key: 'transaction_id', title: 'Transaction ID' },
-  { key: 'card_number', title: 'Card Number' },
+  { key: 'order_number', title: 'Order Number' },
   { key: 'amount', title: 'Amount' },
   { key: 'card_value', title: 'Card Value' },
   { key: 'balance', title: 'Balance' },
   { key: 'status', title: 'Status' },
-  { key: 'store_address', title: 'Store Address' },
-  { key: 'created_at', title: 'Date' },
+  { key: 'branch', title: 'Branch Name' },
 ];
 
 function AdminPage() {
@@ -33,7 +32,7 @@ function AdminPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [cardCode, setCardCode] = useState('');
-  const [debouncedCardCode, setDebouncedCardCode] = useState('');
+
   const router = useRouter();
 
   const { query, prefetchQuery } = useGetCompanyHistory({
@@ -41,23 +40,6 @@ function AdminPage() {
     page: currentPage,
     page_size: PAGE_SIZE,
   });
-
-  // Add debounce effect for card code
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedCardCode(cardCode);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [cardCode]);
-
-  // Handle card code search when debounced value changes
-  useEffect(() => {
-    if (debouncedCardCode) {
-      // Add your API call or search logic here
-      console.log('Searching for card code:', debouncedCardCode);
-    }
-  }, [debouncedCardCode]);
 
   const handleCardCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,13 +51,12 @@ function AdminPage() {
   const formatTableData = (data: BrandCardTransaction[]) => {
     return data.map((item) => ({
       transaction_id: item.transaction_id,
-      card_number: item.card_number,
+      order_number: item.order_number,
       amount: `₦${item.amount.toLocaleString()}`,
       card_value: `₦${item.card_value.toLocaleString()}`,
       balance: `₦${item.balance.toLocaleString()}`,
       status: item.status,
-      store_address: item.store_address,
-      created_at: new Date(item.created_at).toLocaleDateString(),
+      branch: item.branch,
     }));
   };
 
@@ -123,7 +104,9 @@ function AdminPage() {
               <h5 className='text-sm font-dm-sans font-medium'>
                 Total Redeemed card
               </h5>
-              <p className='font-sans text-2xl font-semibold'>₦19,000,000</p>
+              <p className='font-sans text-2xl font-semibold'>
+                ₦{responseData?.status_count?.REDEEMED ?? 0}
+              </p>
             </div>
             <Card
               title='Redeemed'
@@ -151,7 +134,6 @@ function AdminPage() {
             </h3>
             <SearchInput
               value={searchTerm}
-              onChange={(e) => handleSearch(e.target.value)}
               onDebouncedChange={handleSearch}
               placeholder='Search orders...'
             />

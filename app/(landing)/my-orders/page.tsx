@@ -46,9 +46,10 @@ function MyOrderPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCard] = useState<Order | null>(null);
+  const [search, setSearch] = useState('');
 
   const { query, prefetchQuery } = useGetBrandCardSalesQuery({
-    search: '',
+    search,
     page: currentPage,
     page_size: MY_ORDER_PAGE_SIZE,
   });
@@ -82,7 +83,7 @@ function MyOrderPage() {
         <h1 className='md:text-2xl font-bold text-base font-dm-sans mb-4 lg:mb-0'>
           My Order
         </h1>
-        <SearchInput />
+        <SearchInput value={search} onDebouncedChange={setSearch} />
       </div>
       <ul className='mt-4 md:mt-6 space-y-4'>
         {query.isPending ? (

@@ -58,7 +58,7 @@ function Page() {
                 GFT - {query.data?.reference}
               </p>
               <p className='text-xs md:text-base font-bold mt-5 md:mt-8'>
-                ₦{query.data?.card_amount.toLocaleString()}
+                ₦{query.data?.card_amount?.toLocaleString()}
               </p>
             </div>
           </div>

@@ -32,6 +32,12 @@ export interface ApiBuyCardResponse {
   payment_reference: string;
   amount: number;
 }
+
+export interface ApiBranchRedeemResponse {
+  status: boolean;
+  transaction_id: string;
+  message: string;
+}
 export interface ApiBuyCardAgainResponse {
   status: boolean;
   message: string;
@@ -140,6 +146,7 @@ export interface BrandCardTransaction {
   created_at: string;
   card_number: string;
   store_address: string;
+  order_number: string;
 }
 
 export interface ApiBrandCardTransactionResponse {

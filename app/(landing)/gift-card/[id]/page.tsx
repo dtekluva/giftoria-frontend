@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -21,16 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import {
   useByCardsMutation,
   useGetAIMessage,
 } from '@/services/mutations/brand.mutation';
 import { useGetBrandCardByIdQuery } from '@/services/queries/brand.queries';
+import { getCookie } from 'cookies-next/client';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { getCookie } from 'cookies-next/client';
 
 const OCCASIONS = [
   'Birthday',

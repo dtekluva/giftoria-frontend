@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Checkbox } from '../ui/checkbox';
+import EmptyIcon from '../icon/empty-icon';
 
 interface TableProps<T> {
   headers: { key: string; title: string }[]; // Array of header objects with key and title
@@ -13,7 +14,6 @@ const Table = <T extends Record<string, unknown>>({
   headers,
   data,
   selectable = false,
-  emptyStateMessage = 'No data available',
 }: TableProps<T>) => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -35,39 +35,19 @@ const Table = <T extends Record<string, unknown>>({
   };
 
   const EmptyState = () => (
-    <div className='flex flex-col items-center justify-center py-12 px-4 font-dm-sans'>
-      <div className='w-24 h-24 mb-6'>
-        <svg
-          className='w-full h-full text-gray-400'
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'>
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth={2}
-            d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
-          />
-        </svg>
-      </div>
-      <h3 className='text-xl font-semibold text-gray-900 mb-2 font-montserrat'>
-        No Data Found
-      </h3>
-      <p className='text-gray-500 text-center font-montserrat'>
-        {emptyStateMessage}
-      </p>
+    <div className='py-2 px-4 max-w-fit mx-auto'>
+      <EmptyIcon />
     </div>
   );
-
-  if (data.length === 0) {
-    return <EmptyState />;
-  }
 
   return (
     <div className='container mx-auto px-4 pt-4 md:pt-9'>
       {/* Desktop Table */}
       <div className='overflow-x-auto hidden md:block'>
-        <table className='min-w-full bg-white shadow-md rounded-lg text-sm'>
+        <table
+          className={`min-w-full bg-white shadow-md rounded-lg text-sm ${
+            !data.length ? 'shadow-none' : ''
+          }`}>
           <thead className='border-y'>
             <tr className='font-montserrat'>
               {selectable && (
@@ -88,33 +68,37 @@ const Table = <T extends Record<string, unknown>>({
               ))}
             </tr>
           </thead>
-          <tbody className='text-gray-700'>
-            {data.map((row, rowIndex) => (
-              <tr
-                key={rowIndex}
-                className={`border-b hover:bg-gray-50 font-dm-sans ${
-                  selectedRows.includes(rowIndex) ? 'bg-gray-100' : ''
-                }`}>
-                {selectable && (
-                  <th className='py-4 px-4'>
-                    <Checkbox
-                      checked={selectedRows.includes(rowIndex)}
-                      onCheckedChange={() => handleCheckboxChange(rowIndex)}
-                      aria-label={`Select row ${rowIndex + 1}`}
-                    />
-                  </th>
-                )}
-                {headers.map((header, colIndex) => (
-                  <td key={colIndex} className='py-[36px] px-4  text-xs'>
-                    <span className='line-clamp-1'>
-                      {String(row[header.key] || '-')}
-                    </span>
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
+
+          {data.length && (
+            <tbody className='text-gray-700'>
+              {data.map((row, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  className={`border-b hover:bg-gray-50 font-dm-sans ${
+                    selectedRows.includes(rowIndex) ? 'bg-gray-100' : ''
+                  }`}>
+                  {selectable && (
+                    <th className='py-4 px-4'>
+                      <Checkbox
+                        checked={selectedRows.includes(rowIndex)}
+                        onCheckedChange={() => handleCheckboxChange(rowIndex)}
+                        aria-label={`Select row ${rowIndex + 1}`}
+                      />
+                    </th>
+                  )}
+                  {headers.map((header, colIndex) => (
+                    <td key={colIndex} className='py-[36px]  px-4  text-xs'>
+                      <span className='line-clamp-1'>
+                        {String(row[header.key] || '-')}
+                      </span>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
+        {!data.length && <EmptyState />}
       </div>
 
       {/* Mobile View */}

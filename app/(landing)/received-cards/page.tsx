@@ -13,9 +13,9 @@ import { MY_ORDER_PAGE_SIZE } from '@/libs/constants';
 function MyReceiveGiftCardPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [search, setSearch] = useState('');
   const { query, prefetchQuery } = useGetReceivedBrandCardSalesQuery({
-    search: '',
+    search: search,
     page: currentPage,
     page_size: MY_ORDER_PAGE_SIZE,
   });
@@ -36,7 +36,7 @@ function MyReceiveGiftCardPage() {
         <h1 className='md:text-2xl font-bold text-base font-dm-sans mb-4 lg:mb-0'>
           My Received Gift Cards
         </h1>
-        <SearchInput />
+        <SearchInput value={search} onDebouncedChange={setSearch} />
       </div>
       <ul className='mt-4 md:mt-6 space-y-4'>
         {query.isPending ? (
@@ -93,7 +93,9 @@ function MyReceiveGiftCardPage() {
                 <div className='hidden md:block'>
                   <Button
                     onClick={() => {
-                      router.push(`/order-details/${order.id}`);
+                      router.push(
+                        `/order-details/${order.id}?user_type=receiver`
+                      );
                     }}
                     className='mt-4 h-[63px] text-base font-semibold min-w-[200px]'>
                     View order
@@ -102,7 +104,7 @@ function MyReceiveGiftCardPage() {
               </div>
               <Button
                 onClick={() => {
-                  router.push(`/order-details/${order.id}`);
+                  router.push(`/order-details/${order.id}?user_type=receiver`);
                 }}
                 className='md:hidden h-10 text-xs font-semibold max-w-[130px] flex-1 ml-auto'>
                 View order

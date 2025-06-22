@@ -416,7 +416,7 @@ function ManageGiftCardPage() {
       <div className='px-4 md:px-7 mt-4 max-w-[380px]'>
         <SearchInput
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onDebouncedChange={setSearch}
           placeholder='Search gift cards...'
           className='max-w-sm'
         />

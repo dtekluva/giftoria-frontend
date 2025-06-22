@@ -1,8 +1,15 @@
 'use client';
 
 import GiftCardDetailsTable from '@/components/custom/gift-card-details';
+import ApprovalHeroIcon from '@/components/icon/approval-hero-icon';
 import SendIcon from '@/components/icon/send-icon';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -19,7 +26,14 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 function Page() {
-  const { form, onSubmit, isLoading } = useCardBalanceMutation();
+  const {
+    form,
+    onSubmit,
+    isLoading,
+    showSuccessModal,
+    approvalQuery,
+    setShowSuccessModal,
+  } = useCardBalanceMutation();
 
   const cardId = usePathname()?.split('/').pop();
   const [cardNumber, setCardNumber] = useState(cardId ?? '');
@@ -28,7 +42,6 @@ function Page() {
 
   const handleCardSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // The query will automatically run when cardNumber changes
   };
 
   return (
@@ -111,14 +124,14 @@ function Page() {
         <div>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={form.handleSubmit((data) => onSubmit(data))}
               className='flex flex-col'>
               <div className='md:flex space-y-4 md:space-y-0 gap-4 font-dm-sans'>
                 <FormField
                   control={form.control}
                   name='amount'
                   render={({ field }) => (
-                    <FormItem className='flex-1'>
+                    <FormItem className='flex-1 max-w-[600px] mx-auto'>
                       <FormLabel className='text-base font-semibold text-gray-700'>
                         Amount
                       </FormLabel>
@@ -144,8 +157,29 @@ function Page() {
           </Form>
         </div>
       </div>
+
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className='sm:max-w-[605px]'>
+          <DialogHeader>
+            <DialogTitle>
+              <div className='flex flex-col items-center mt-8 pb-8'>
+                <ApprovalHeroIcon />
+                <h1 className='text-2xl md:text-[34px] text-[#990099] font-semibold -mt-16'>
+                  {approvalQuery.isPending
+                    ? 'Waiting'
+                    : approvalQuery?.data?.data.transaction_status}
+                </h1>
+                <p className='max-w-[292px] text-center text-base font-dm-sans'>
+                  Card redemption approved for Gift Card{' '}
+                  {query.data?.card_number}. You may now proceed to complete the
+                  transaction.
+                </p>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
 export default Page;

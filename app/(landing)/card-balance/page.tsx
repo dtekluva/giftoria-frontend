@@ -1,6 +1,7 @@
 'use client';
 
 import GiftCardDetailsTable from '@/components/custom/gift-card-details';
+import Table from '@/components/custom/table';
 import SendIcon from '@/components/icon/send-icon';
 // import { Button } from '@/components/ui/button';
 // import {
@@ -34,11 +35,38 @@ import { useState, useEffect } from 'react';
 //   'Date issued': '2022-08-15',
 // };
 
+const tableHeaders = [
+  { key: 'transaction_id', title: 'Transaction ID' },
+  { key: 'card_number', title: 'Card Number' },
+  { key: 'amount', title: 'Amount' },
+  { key: 'card_value', title: 'Card Value' },
+  { key: 'balance', title: 'Balance' },
+  { key: 'status', title: 'Status' },
+  { key: 'store_address', title: 'Store Address' },
+  { key: 'created_at', title: 'Date' },
+];
+
 function Page() {
   // const { form, onSubmit, isLoading } = useCardBalanceMutation();
   const [cardNumber, setCardNumber] = useState('');
   const [debouncedCardNumber, setDebouncedCardNumber] = useState('');
   const { query } = useGetCardBalanceQuery(debouncedCardNumber);
+
+  const formatTableData = () => {
+    return (
+      query?.data?.card_transactions?.map((item) => ({
+        transaction_id: item.transaction_id,
+        card_number: item.card_number,
+        amount: `₦${item.amount.toLocaleString()}`,
+        card_value: `₦${item.card_value.toLocaleString()}`,
+        balance: `₦${item.balance.toLocaleString()}`,
+        status: item.status,
+
+        store_address: item.store_address,
+        created_at: new Date(item.created_at).toLocaleDateString(),
+      })) ?? []
+    );
+  };
 
   // Debounce effect
   useEffect(() => {
@@ -64,7 +92,7 @@ function Page() {
             className='border-none flex-1 md:h-[50px] font-nunito'
             placeholder='Enter gift card unique code'
             value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
+            onChange={(e) => setCardNumber(e.target.value.trim())}
           />
           <SendIcon onClick={handleCardSearch} />
         </div>
@@ -125,7 +153,18 @@ function Page() {
           {query.error?.message || 'Failed to fetch card details'}
         </div>
       )}
-
+      {query.data && (
+        <>
+          <h3 className='px-6 mt-8 mb-3 md:text-2xl font-semibold text-base'>
+            Shopping History
+          </h3>
+          <Table
+            headers={tableHeaders}
+            data={formatTableData()}
+            emptyStateMessage='No card transaction'
+          />
+        </>
+      )}
       {/* Card Balance Form */}
       {/* <div className='md:pt-10 pt-[30px] md:border-t md:mt-6 mt-4'>
         <h1 className='font-semibold text-base font-montserrat mb-3 md:mb-8'>

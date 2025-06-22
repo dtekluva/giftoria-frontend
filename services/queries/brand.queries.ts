@@ -9,19 +9,21 @@ import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
+  approveBuyer,
   bankTransferCompeleted,
+  fetchBrands,
+  fetchCategories,
   getAllBrandCards,
   getAllCardSales,
   getBrandCardById,
+  getBuyerApprovalStaus,
+  getCardAssignedById,
+  getCardBalanceByNumber,
   getCardSalesById,
-  searchAllBrands,
-  fetchCategories,
-  redeemCardByNumber,
   getPayoutTransactions,
   getReceivedCardSales,
-  fetchBrands,
-  getCardBalanceByNumber,
-  getCardAssignedById,
+  redeemCardByNumber,
+  searchAllBrands,
 } from '../api';
 
 export const brand_keys = {
@@ -97,6 +99,7 @@ export const brand_keys = {
       page_size,
     },
   ],
+  buyer_approval_status: (id: string) => ['buyer_approval_status', id],
 } as const;
 
 export const useGetAllBrandCardsQuery = ({
@@ -374,12 +377,38 @@ export const useRedeemCardQuery = (card_number: string) => {
     query,
   };
 };
+
 export const useGetCardBalanceQuery = (card_number: string) => {
   const query = useQuery({
     queryKey: ['get_card_balance', card_number],
     queryFn: () => getCardBalanceByNumber(card_number),
     select: (data) => data.data,
     enabled: !!card_number,
+  });
+
+  return {
+    query,
+  };
+};
+
+export const useBuyerApprovalQuery = (id: string) => {
+  const query = useQuery({
+    queryKey: ['buyer_approval', id],
+    queryFn: () => approveBuyer(id),
+    select: (data) => data.data,
+    enabled: !!id,
+  });
+
+  return {
+    query,
+  };
+};
+
+export const useGetBuyerApprovalStatus = (id: string) => {
+  const query = useQuery({
+    queryKey: brand_keys.buyer_approval_status(id),
+    queryFn: () => getBuyerApprovalStaus(id),
+    enabled: !!id,
   });
 
   return {
