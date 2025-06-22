@@ -37,12 +37,20 @@ function Page() {
               height={300}
               alt=''
             />
-            <p className='lg:leading-[40px] md:leading-[20px] leading-[18px] lg:text-xl md:text-sm text-xs max-w-[585px]'>
-              Looking for the perfect gift? Whether it’s fashion, electronics,
-              home essentials, beauty products, or more, you’ll find it all with
-              our exclusive gift cards! Looking for the perfect gift? Whether
-              it’s fashion
-            </p>
+            <div>
+              <h1 className='md:text-[36px] text-xl font-semibold text-[#990099] font-montserrat'>
+                N{query.data?.amount}
+              </h1>
+              <p className='md:mt-4 mt-3 mb-2 md:mb-3 font-bold md:text-2xl text-base font-montserrat'>
+                {query.data?.brand_name}
+              </p>
+              <p className='lg:leading-[40px] md:leading-[20px] leading-[18px] lg:text-xl md:text-sm text-xs max-w-[585px]'>
+                Looking for the perfect gift? Whether it’s fashion, electronics,
+                home essentials, beauty products, or more, you’ll find it all
+                with our exclusive gift cards! Looking for the perfect gift?
+                Whether it’s fashion
+              </p>
+            </div>
           </div>
 
           <div className='max-w-[800px] rounded-lg mb-2 md:mb-6 md:py-6 px-7 p-4 bg-[#F6F3FB] mx-2 md:mx-auto'>

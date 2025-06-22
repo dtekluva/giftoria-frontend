@@ -14,7 +14,7 @@ function BusinessProfileLayout({ children }: { children: React.ReactNode }) {
       href: '/admin/branch',
     },
     {
-      name: 'Manage Gift Card',
+      name: 'Manage Gift Cards',
       href: '/admin/manage-gift-card',
     },
   ];

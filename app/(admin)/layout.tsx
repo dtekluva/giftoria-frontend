@@ -48,6 +48,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       details: 'Business Profile',
     },
     {
+      icon: <MoneyIcon />,
+      label: 'Manage Gift Cards',
+      href: '/admin/manage-gift-card',
+      details: 'Gift Card Orders',
+    },
+    {
       icon: <BillIcon />,
       label: 'Company Details',
       href: '/admin/company-details',

@@ -155,7 +155,7 @@ function Page() {
       )}
       {query.data && (
         <>
-          <h3 className='px-6 mt-8 mb-3 md:text-2xl font-semibold text-base'>
+          <h3 className='px-6 mt-8 md:mt-16 md:text-2xl font-semibold text-base'>
             Shopping History
           </h3>
           <Table
