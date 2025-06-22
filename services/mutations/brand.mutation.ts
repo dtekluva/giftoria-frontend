@@ -27,15 +27,16 @@ import { toast } from 'sonner';
 import {
   buyCardAgainbyId,
   buyCardbyId,
+  companyPayOut,
+  createBrand,
+  deleteBrand,
+  editBrand,
   getAIMessage,
   payViaBank,
   payViaPayStack,
-  companyPayOut,
   redeemedGiftCard,
-  createBrand,
-  editBrand,
-  deleteBrand,
 } from '../api';
+import { useGetBuyerApprovalStatus } from '../queries/brand.queries';
 
 export const useByCardsMutation = () => {
   const cardId = usePathname()?.split('/').pop();
@@ -368,6 +369,11 @@ export const useGetAIMessage = () => {
 
 export const useCardBalanceMutation = () => {
   const cardId = usePathname()?.split('/').pop();
+  const [transactionId, setTransactionId] = useState('');
+
+  const { query } = useGetBuyerApprovalStatus(transactionId);
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const form = useForm<CardBalanceType>({
     resolver: zodResolver(cardBalanceSchema),
@@ -380,15 +386,19 @@ export const useCardBalanceMutation = () => {
   const mutation = useMutation({
     mutationFn: redeemedGiftCard,
     mutationKey: ['card-balance'],
+    onSuccess: (data) => {
+      setTransactionId(data.data.transaction_id);
+      setShowSuccessModal(true);
+    },
   });
 
   const onSubmit = async (data: CardBalanceType) => {
     try {
       const res = mutation.mutateAsync(data);
       showToast(res, {
-        success: 'Card Succcessfully Redeemed',
+        success: 'Card Successfully Redeemed',
         error: 'Error processing request',
-        loading: 'Processing Reqeust',
+        loading: 'Processing Request',
       });
     } catch (error) {
       console.log(error);
@@ -400,6 +410,9 @@ export const useCardBalanceMutation = () => {
     form,
     onSubmit,
     isLoading: mutation.isPending,
+    showSuccessModal,
+    setShowSuccessModal,
+    approvalQuery: query,
   };
 };
 

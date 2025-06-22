@@ -20,6 +20,7 @@ import {
 } from '@/libs/types/auth.types';
 import {
   ApiAllBrandCardsResponse,
+  ApiBranchRedeemResponse,
   ApiBranchResponse,
   ApiBrandCardTransactionResponse,
   ApiBrandProductResponse,
@@ -31,6 +32,7 @@ import {
   ApiCompanyPayOutTransactionResponse,
   ApiPaymentSetupResponse,
   AssignedCard,
+  BrandCardTransaction,
   BuyMultipleCard,
   CardSale,
   IBuyCardAgain,
@@ -206,10 +208,10 @@ export const buyCardAgainbyId = async (data: IBuyCardAgain) => {
 };
 
 export const redeemedGiftCard = async (data: CardBalanceType) => {
-  return await httpConfig.post<AxiosError, AxiosResponse<ApiBuyCardResponse>>(
-    `/branch/branch_redeem/`,
-    data
-  );
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<ApiBranchRedeemResponse>
+  >(`/branch/branch_redeem/`, data);
 };
 
 // COMPANY API SERVICES
@@ -364,6 +366,7 @@ interface ApiCardRedemptionResponse {
   redeemed: boolean;
   redeemed_date: string | null;
   sender_email: string;
+  card_transactions: BrandCardTransaction[];
 }
 
 export const redeemCardByNumber = async (card_number: string) => {
@@ -462,6 +465,11 @@ interface ApiCompanyLogoResponse {
   company_logo: string | null;
 }
 
+export interface ApiBuyerApprovalStaus {
+  status: boolean;
+  message: string;
+  transaction_status: string;
+}
 export const getCompanyLogo = async () => {
   return await httpConfig.get<
     AxiosError,
@@ -482,4 +490,16 @@ export const uploadCompanyLogo = async (data: FormData) => {
     console.error('API: uploadCompanyLogo error:', error);
     throw error;
   }
+};
+
+export const approveBuyer = async (id: string) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiBuyerApprovalStaus>>(
+    `/branch/buyer_approval?transaction_id=${id}`
+  );
+};
+
+export const getBuyerApprovalStaus = async (id: string) => {
+  return await httpConfig.get<AxiosError, AxiosResponse<ApiBuyerApprovalStaus>>(
+    `/branch/buyer_approval_status?transaction_id=${id}`
+  );
 };
