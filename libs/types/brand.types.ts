@@ -146,6 +146,7 @@ export interface BrandCardTransaction {
   created_at: string;
   card_number: string;
   store_address: string;
+  order_number: string;
 }
 
 export interface ApiBrandCardTransactionResponse {
