@@ -12,52 +12,30 @@ import { Input } from '@/components/ui/input';
 import { BrandCardTransaction } from '@/libs/types/brand.types';
 import { useGetCompanyBranchHistory } from '@/services/queries/company.queries';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 const PAGE_SIZE = 10;
 
 const tableHeaders = [
   { key: 'transaction_id', title: 'Transaction ID' },
-  { key: 'card_number', title: 'Card Number' },
   { key: 'amount', title: 'Amount' },
   { key: 'card_value', title: 'Card Value' },
   { key: 'balance', title: 'Balance' },
   { key: 'status', title: 'Status' },
-  { key: 'store_address', title: 'Store Address' },
-  { key: 'created_at', title: 'Date' },
+  { key: 'branch', title: 'Branch' },
 ];
 
-function CashierPage({ params }: { params: Promise<{ slug: string }> }) {
+function CashierPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [cardCode, setCardCode] = useState('');
-  const [debouncedCardCode, setDebouncedCardCode] = useState('');
 
   const { query, prefetchQuery } = useGetCompanyBranchHistory({
     search: searchTerm,
     page: currentPage,
     page_size: PAGE_SIZE,
   });
-
-  console.log(params, 'this area');
-
-  // Add debounce effect for card code
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedCardCode(cardCode);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [cardCode]);
-
-  // Handle card code search when debounced value changes
-  useEffect(() => {
-    if (debouncedCardCode) {
-      // Add your API call or search logic here
-      console.log('Searching for card code:', debouncedCardCode);
-    }
-  }, [debouncedCardCode]);
 
   const handleCardCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,24 +47,11 @@ function CashierPage({ params }: { params: Promise<{ slug: string }> }) {
   const formatTableData = (data: BrandCardTransaction[]) => {
     return data.map((item) => ({
       transaction_id: item.transaction_id,
-      card_number: item.card_number,
       amount: `₦${item.amount.toLocaleString()}`,
       card_value: `₦${item.card_value.toLocaleString()}`,
       balance: `₦${item.balance.toLocaleString()}`,
-      status: (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            item.status === 'PENDING'
-              ? 'bg-yellow-100 text-yellow-800'
-              : item.status === 'REDEEMED'
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800'
-          }`}>
-          {item.status}
-        </span>
-      ),
-      store_address: item.store_address,
-      created_at: new Date(item.created_at).toLocaleDateString(),
+      status: item.status,
+      branch: item.branch,
     }));
   };
 
@@ -133,7 +98,10 @@ function CashierPage({ params }: { params: Promise<{ slug: string }> }) {
               <h5 className='text-sm font-dm-sans font-medium'>
                 Total Redeemed card
               </h5>
-              <p className='font-sans text-2xl font-semibold'>₦19,000,000</p>
+              <p className='font-sans text-2xl font-semibold'>
+                {' '}
+                ₦{responseData?.status_count?.REDEEMED ?? 0}
+              </p>
             </div>
             <Card
               title='Redeemed'
@@ -161,7 +129,7 @@ function CashierPage({ params }: { params: Promise<{ slug: string }> }) {
             </h3>
             <SearchInput
               value={searchTerm}
-              onChange={(e) => handleSearch(e.target.value)}
+              onDebouncedChange={handleSearch}
               placeholder='Search orders...'
             />
           </div>
