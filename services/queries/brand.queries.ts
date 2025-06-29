@@ -409,6 +409,12 @@ export const useGetBuyerApprovalStatus = (id: string) => {
     queryKey: brand_keys.buyer_approval_status(id),
     queryFn: () => getBuyerApprovalStaus(id),
     enabled: !!id,
+    refetchInterval: (query) => {
+      if (query.state.data?.data.transaction_status === 'REDEEMED') {
+        return false;
+      }
+      return 10000;
+    },
   });
 
   return {

@@ -172,26 +172,32 @@ function Page() {
           <DialogHeader>
             <DialogTitle>
               <div className='flex flex-col items-center pb-8'>
-                {approvalQuery.isPending ? (
-                  <ApprovalHeroIcon />
-                ) : (
+                {approvalQuery.data?.data.transaction_status === 'PENDING' ||
+                approvalQuery.isPending ? (
                   <WaitingApprovalIcon />
+                ) : (
+                  <ApprovalHeroIcon />
                 )}
                 <h1
                   className={`text-2xl md:text-[34px] text-[#990099] font-montserrat font-semibold -mt-16 ${
-                    approvalQuery.isPending ? 'text-[#E5A300]' : ''
+                    approvalQuery.data?.data.transaction_status === 'PENDING' ||
+                    approvalQuery.isPending
+                      ? 'text-[#E5A300]'
+                      : ''
                   }`}>
-                  {approvalQuery.isPending
+                  {approvalQuery.data?.data.transaction_status === 'PENDING' ||
+                  approvalQuery.isPending
                     ? 'Waiting Approval'
                     : approvalQuery?.data?.data.transaction_status}
                 </h1>
-                {!approvalQuery.isPending && (
-                  <p className='max-w-[292px] text-center text-base font-dm-sans'>
-                    Card redemption approved for Gift Card{' '}
-                    {query.data?.card_number}. You may now proceed to complete
-                    the transaction.
-                  </p>
-                )}
+                {approvalQuery.data?.data.transaction_status !== 'PENDING' &&
+                  !approvalQuery.isPending && (
+                    <p className='max-w-[292px] text-center font-light text-base font-dm-sans'>
+                      Card redemption approved for Gift Card{' '}
+                      {query.data?.card_number}. You may now proceed to complete
+                      the transaction.
+                    </p>
+                  )}
               </div>
             </DialogTitle>
           </DialogHeader>
