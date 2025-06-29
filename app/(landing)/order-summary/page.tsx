@@ -210,7 +210,7 @@ function OrderSummary() {
                     <h4 className='text-sm md:text-base font-bold'>
                       {item.name}
                     </h4>
-                    {item.icon}
+                    <div className='hidden md:block'>{item.icon}</div>
                   </div>
                 </Label>
               ))}
