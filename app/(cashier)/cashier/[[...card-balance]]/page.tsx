@@ -3,6 +3,7 @@
 import GiftCardDetailsTable from '@/components/custom/gift-card-details';
 import ApprovalHeroIcon from '@/components/icon/approval-hero-icon';
 import SendIcon from '@/components/icon/send-icon';
+import CloseIcon from '@/components/icon/close-icon';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -159,7 +160,15 @@ function Page() {
       </div>
 
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent className='sm:max-w-[605px]'>
+        <DialogContent className='sm:max-w-[605px] relative'>
+          {/* Close button */}
+          <button
+            type='button'
+            aria-label='Close dialog'
+            onClick={() => setShowSuccessModal(false)}
+            className='absolute top-4 right-4 p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#990099]'>
+            <CloseIcon width={24} height={24} />
+          </button>
           <DialogHeader>
             <DialogTitle>
               <div className='flex flex-col items-center mt-8 pb-8'>
