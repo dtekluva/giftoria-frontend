@@ -135,22 +135,20 @@ function OrderSummary() {
               <Image src={card.image ?? ''} width={160} height={100} alt='' />
               <div className='space-y-2 md:space-y-3'>
                 <p className='text-sm font-medium'>₦{card.card_amount}</p>
-                <p className='text-xs font-dm-sans'>{card.recipient_name}</p>
-                <p className='md:text-sm text-[10px] xl:hidden block'>
-                  {card.recipient_email}
-                </p>
+                <div className='md:flex items-center gap-4'>
+                  <p className='text-xs font-dm-sans'>{card.recipient_name}</p>
+
+                  <p className='mt-1 md:mt-0 text-xs'>{card.recipient_email}</p>
+                </div>
                 <div className='flex items-center'>
                   {/* <OutlineEditIcon className='cursor-pointer' /> */}
                   <button
                     className='cursor-pointer'
                     onClick={() => handleDelete(index)}>
-                    <TrashOutlineIcon className='cursor-pointer ml-4' />
+                    <TrashOutlineIcon className='cursor-pointer' />
                   </button>
                 </div>
               </div>
-              <p className='md:text-sm text-[10px] hidden xl:block ml-auto'>
-                {card.recipient_email}
-              </p>
             </div>
             <div className='flex items-center md:gap-[157px] justify-between md:justify-normal'>
               {card.message && (

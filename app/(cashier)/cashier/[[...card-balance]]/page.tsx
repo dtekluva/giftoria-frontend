@@ -3,7 +3,7 @@
 import GiftCardDetailsTable from '@/components/custom/gift-card-details';
 import ApprovalHeroIcon from '@/components/icon/approval-hero-icon';
 import SendIcon from '@/components/icon/send-icon';
-import CloseIcon from '@/components/icon/close-icon';
+import WaitingApprovalIcon from '@/components/icon/waiting-approval-icon';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -160,29 +160,38 @@ function Page() {
       </div>
 
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent className='sm:max-w-[605px] relative'>
+        <DialogContent className='sm:max-w-[605px]'>
           {/* Close button */}
           <button
             type='button'
             aria-label='Close dialog'
             onClick={() => setShowSuccessModal(false)}
             className='absolute top-4 right-4 p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#990099]'>
-            <CloseIcon width={24} height={24} />
+            {/* <Close width={24} height={24} /> */}
           </button>
           <DialogHeader>
             <DialogTitle>
-              <div className='flex flex-col items-center mt-8 pb-8'>
-                <ApprovalHeroIcon />
-                <h1 className='text-2xl md:text-[34px] text-[#990099] font-semibold -mt-16'>
+              <div className='flex flex-col items-center pb-8'>
+                {approvalQuery.isPending ? (
+                  <ApprovalHeroIcon />
+                ) : (
+                  <WaitingApprovalIcon />
+                )}
+                <h1
+                  className={`text-2xl md:text-[34px] text-[#990099] font-montserrat font-semibold -mt-16 ${
+                    approvalQuery.isPending ? 'text-[#E5A300]' : ''
+                  }`}>
                   {approvalQuery.isPending
-                    ? 'Waiting'
+                    ? 'Waiting Approval'
                     : approvalQuery?.data?.data.transaction_status}
                 </h1>
-                <p className='max-w-[292px] text-center text-base font-dm-sans'>
-                  Card redemption approved for Gift Card{' '}
-                  {query.data?.card_number}. You may now proceed to complete the
-                  transaction.
-                </p>
+                {!approvalQuery.isPending && (
+                  <p className='max-w-[292px] text-center text-base font-dm-sans'>
+                    Card redemption approved for Gift Card{' '}
+                    {query.data?.card_number}. You may now proceed to complete
+                    the transaction.
+                  </p>
+                )}
               </div>
             </DialogTitle>
           </DialogHeader>

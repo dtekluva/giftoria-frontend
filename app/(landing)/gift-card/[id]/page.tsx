@@ -142,19 +142,24 @@ function GiftCardDetails() {
           <div className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] bg-gray-300'></div>
         ) : (
           <Image
-            src={query?.data?.image ?? ''}
+            src={query?.data?.image ?? 'https://placehold.co/500x300.png'}
             width={500}
             className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
             height={300}
             alt=''
           />
         )}
-        <p className='lg:leading-[40px] md:leading-[20px] leading-[18px] lg:text-xl md:text-sm text-xs max-w-[585px]'>
-          Looking for the perfect gift? Whether it&apos;s fashion, electronics,
-          home essentials, beauty products, or more, you&apos;ll find it all
-          with our exclusive gift cards! Looking for the perfect gift? Whether
-          it&apos;s fashion
-        </p>
+        <div>
+          <p className='md:mt-4 mt-3 mb-2 md:mb-3 font-bold md:text-2xl text-[#160032] text-base font-montserrat'>
+            {query.data?.brand_name}
+          </p>
+          <p className='lg:leading-[40px] md:leading-[20px] leading-[18px] lg:text-xl md:text-sm text-xs max-w-[585px]'>
+            Looking for the perfect gift? Whether it&apos;s fashion,
+            electronics, home essentials, beauty products, or more, you&apos;ll
+            find it all with our exclusive gift cards! Looking for the perfect
+            gift? Whether it&apos;s fashion
+          </p>
+        </div>
       </div>
       <Form {...form}>
         <form
@@ -377,7 +382,7 @@ function GiftCardDetails() {
                               <SelectValue placeholder='Select recipient' />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className='font-dm-sans'>
+                          <SelectContent className='font-dm-sans overflow-y-auto max-h-[400px]'>
                             {RECIPIENTS.map((recipient) => (
                               <SelectItem key={recipient} value={recipient}>
                                 {recipient}
@@ -429,9 +434,13 @@ function GiftCardDetails() {
                       <FormControl>
                         <Textarea
                           className='min-h-[74px] md:min-h-[126px] md:max-h-[126px] resize-none'
+                          maxLength={255}
                           {...field}
                         />
                       </FormControl>
+                      <p className='text-xs text-muted-foreground mt-1'>
+                        Max length is 255 characters.
+                      </p>
                       <FormMessage />
                     </FormItem>
                   )}
