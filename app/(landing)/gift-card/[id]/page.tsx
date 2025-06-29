@@ -382,7 +382,7 @@ function GiftCardDetails() {
                               <SelectValue placeholder='Select recipient' />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className='font-dm-sans'>
+                          <SelectContent className='font-dm-sans overflow-y-auto max-h-[400px]'>
                             {RECIPIENTS.map((recipient) => (
                               <SelectItem key={recipient} value={recipient}>
                                 {recipient}
@@ -434,9 +434,13 @@ function GiftCardDetails() {
                       <FormControl>
                         <Textarea
                           className='min-h-[74px] md:min-h-[126px] md:max-h-[126px] resize-none'
+                          maxLength={255}
                           {...field}
                         />
                       </FormControl>
+                      <p className='text-xs text-muted-foreground mt-1'>
+                        Max length is 255 characters.
+                      </p>
                       <FormMessage />
                     </FormItem>
                   )}
