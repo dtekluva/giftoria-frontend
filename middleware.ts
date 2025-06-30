@@ -12,9 +12,13 @@ export function middleware(req: NextRequest) {
 
   if (!accessToken && !url.pathname.startsWith('/auth')) {
     if (url.pathname.startsWith('/auth/cashier')) {
-      return NextResponse.redirect(new URL('/auth/cashier/sign-in', req.url)); // Redirect to cashier sign-in
+      const redirectUrl = new URL('/auth/cashier/sign-in', req.url);
+      redirectUrl.searchParams.set('redirect', url.pathname + url.search);
+      return NextResponse.redirect(redirectUrl);
     } else {
-      return NextResponse.redirect(new URL('/auth/sign-in', req.url)); // Redirect to sign-in
+      const redirectUrl = new URL('/auth/sign-in', req.url);
+      redirectUrl.searchParams.set('redirect', url.pathname + url.search);
+      return NextResponse.redirect(redirectUrl);
     }
   }
 
