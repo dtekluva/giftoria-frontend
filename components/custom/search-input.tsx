@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import SearchIcon from '../icon/search-icon';
-import FilterSearchIcon from '../icon/filter-search-icon';
 
 interface SearchInputProps {
   value?: string; // Optional value prop
@@ -63,9 +62,9 @@ function SearchInput({
         placeholder={placeholder}
         className='border-0 focus:border-0 focus:outline-none text-sm focus:ring-0 flex-1'
       />
-      <div className='pl-4 border-l border-[#93A3C0]'>
+      {/* <div className='pl-4 border-l border-[#93A3C0]'>
         <FilterSearchIcon />
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -16,11 +16,14 @@ import { Label } from '@/components/ui/label';
 import { PASSWORD_REQUIREMENTS } from '@/libs/schema';
 import { useLogin } from '@/services/mutations/auth.mutations';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 function SignIn() {
-  const { form, onSubmit, isLoading } = useLogin();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/';
+  const { form, onSubmit, isLoading } = useLogin(redirect);
   const router = useRouter();
+
   return (
     <div className='w-full font-dm-sans'>
       <AuthCard title='Sign In'>

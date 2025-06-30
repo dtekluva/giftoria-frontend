@@ -112,7 +112,9 @@ function CashierPage() {
         <div className='container mx-auto'>
           <div className='max-w-[1200px] grid md:gap-5 gap-4 grid-cols-[repeat(auto-fit,minmax(216px,1fr))]'>
             <div className='md:py-10 py-10 cursor-pointer hover:scale-105 transition-transform duration-300 ease-in-out items-center bg-[url(/assets/balance-card-bg.png)] text-center'>
-              <h5 className='text-sm font-dm-sans font-medium'>Total Amount</h5>
+              <h5 className='text-sm font-dm-sans font-medium'>
+                Total Redeemed Card
+              </h5>
               <p className='font-sans text-2xl font-semibold'>
                 {' '}
                 ₦{responseData?.status_count?.REDEEMED ?? 0}

@@ -306,7 +306,7 @@ export const useSendVerificationCode = () => {
   };
 };
 
-export const useLogin = () => {
+export const useLogin = (redirect?: string) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const form = useForm<LoginType>({
@@ -329,7 +329,10 @@ export const useLogin = () => {
           queryKey: ['userInfo'],
           queryFn: () => fetUserDetails(),
         });
-
+        if (redirect) {
+          router.replace(redirect);
+          return;
+        }
         if (data.data.user_type === 'MERCHANT') {
           router.push('/admin/gift-cards');
           return;

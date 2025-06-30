@@ -70,6 +70,27 @@ export function AccountDropdown() {
                 Sign Out
               </DropdownMenuItem>
             </>
+          ) : userType === 'CASHIER' ? (
+            <>
+              <DropdownMenuItem
+                onClick={() => router.push('/cashier/profile')}
+                className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => router.push('/cashier/gift-cards')}
+                className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
+                Gift Cards
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                className='text-red-500 font-dm-sans py-3 px-10 cursor-pointer text-base'>
+                Sign Out
+              </DropdownMenuItem>
+            </>
           ) : (
             <>
               <DropdownMenuLabel className='text-center md:text-xl text-base font-semibold pt-3'>
