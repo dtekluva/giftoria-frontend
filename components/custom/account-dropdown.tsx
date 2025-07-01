@@ -139,6 +139,13 @@ export function AccountDropdown() {
               className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
               Sign In
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push('/auth/cashier/sign-in');
+              }}
+              className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
+              Cashier Sign In
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
         )}
