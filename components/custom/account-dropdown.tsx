@@ -17,6 +17,7 @@ export function AccountDropdown() {
   const handleSignOut = () => {
     deleteCookie('access_token');
     deleteCookie('password');
+    deleteCookie('user_type');
     deleteCookie('refresh_token');
     localStorage.removeItem('cards');
     router.push('/auth/sign-in');

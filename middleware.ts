@@ -8,8 +8,29 @@ export function middleware(req: NextRequest) {
 
   const url = req.nextUrl.clone();
 
-  // Check if the user is trying to access a protected route without authentication
+  const publicPaths = [
+    '/',
+    '/gift-card',
+    '/card-balance',
+    '/order-summary',
+    '/my-orders',
+    '/order-details',
+  ];
 
+  // If the path is public, allow unauthenticated users, but block cashiers
+  if (
+    publicPaths.some(
+      (path) => url.pathname === path || url.pathname.startsWith(path + '/')
+    )
+  ) {
+    if (userType?.value === 'CASHIER') {
+      return NextResponse.redirect(new URL('/cashier/gift-cards', req.url));
+    }
+    // Allow everyone else (including unauthenticated)
+    return NextResponse.next();
+  }
+
+  // Check if the user is trying to access a protected route without authentication
   if (!accessToken && !url.pathname.startsWith('/auth')) {
     if (url.pathname.startsWith('/auth/cashier')) {
       const redirectUrl = new URL('/auth/cashier/sign-in', req.url);
@@ -45,21 +66,13 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url)); // Redirect non-admin users away from admin routes
   }
 
-  // Prevent CASHIER users from accessing landing pages
-  // if (
-  //   userType?.value === 'CASHIER' &&
-  //   !url.pathname.startsWith('/cashier') &&
-  //   !url.pathname.startsWith('/auth/cashier')
-  // ) {
-  //   return NextResponse.redirect(new URL('/cashier/gift-cards', req.url));
-  // }
-
   // Proceed with the request
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
+    '/',
     '/auth/sign-in',
     '/auth/cashier/sign-in',
     '/auth/cashier/:path*',
@@ -70,5 +83,6 @@ export const config = {
     '/admin/:path*',
     '/cashier/:path*',
     '/card-balance',
+    '/gift-card/:path*',
   ],
 };
