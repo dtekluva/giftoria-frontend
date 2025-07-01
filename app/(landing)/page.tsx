@@ -312,12 +312,10 @@ export default function Home() {
             {
               question:
                 'I entered the wrong recipient email. What should I do?',
-              answer:
-                'Contact us immediately at support@yourplatform.com. If the card hasn&apos;t been redeemed, we may be able to help you correct it.',
+              answer: `Contact us immediately at support@yourplatform.com. If the card hasn't been redeemed, we may be able to help you correct it.`,
             },
             {
-              question:
-                'What if the recipient doesn&apos;t receive the gift card?',
+              question: `What if the recipient doesn't receive the gift card?`,
               answer:
                 'Ask them to check their spam or promotions folder. If not found within 15 minutes, contact us with your order ID.',
             },
@@ -328,8 +326,7 @@ export default function Home() {
             },
             {
               question: 'Can I track the status of a gift card I sent?',
-              answer:
-                'Yes. You&apos;ll receive a confirmation email with status updates showing whether the card has been opened by the recipient.',
+              answer: `Yes. You'll receive a confirmation email with status updates showing whether the card has been opened by the recipient.`,
             },
           ]}
         />

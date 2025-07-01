@@ -38,8 +38,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Bank } from '@/services/api';
-import { useGetCompanyDashboardQuery } from '@/services/queries/company.queries';
+import {
+  company_keys,
+  useGetCompanyDashboardQuery,
+} from '@/services/queries/company.queries';
 import { EyeClosedIcon } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 const REQUEST_FUNDS_PAGE_SIZE = 10;
 
@@ -287,17 +291,20 @@ function RequestWithdrawalForm() {
   const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
   const [accountName, setAccountName] = useState('');
   const fetchAccountNameMutation = useFetchAccountNameMutation();
+  const queryClient = useQueryClient();
 
   // Watch for changes in account number and selected bank
   useEffect(() => {
     const account_number = form.watch('account_number');
-
     if (selectedBank && account_number && account_number.length >= 10) {
       fetchAccountNameMutation.mutateAsync(
         { account_number, bank_code: selectedBank.bank_code },
         {
           onSuccess: (res) => {
             setAccountName(res.data.account_name);
+            queryClient.invalidateQueries({
+              queryKey: company_keys.company_dashboard(),
+            });
             form.setValue('account_name', res.data.account_name);
           },
           onError: () => {

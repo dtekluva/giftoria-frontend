@@ -45,6 +45,15 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url)); // Redirect non-admin users away from admin routes
   }
 
+  // Prevent CASHIER users from accessing landing pages
+  // if (
+  //   userType?.value === 'CASHIER' &&
+  //   !url.pathname.startsWith('/cashier') &&
+  //   !url.pathname.startsWith('/auth/cashier')
+  // ) {
+  //   return NextResponse.redirect(new URL('/cashier/gift-cards', req.url));
+  // }
+
   // Proceed with the request
   return NextResponse.next();
 }
