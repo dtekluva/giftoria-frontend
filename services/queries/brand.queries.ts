@@ -15,6 +15,7 @@ import {
   fetchCategories,
   getAllBrandCards,
   getAllCardSales,
+  getBankList,
   getBrandCardById,
   getBuyerApprovalStaus,
   getCardAssignedById,
@@ -461,4 +462,12 @@ export const useFetchBrandsQuery = ({
     query,
     prefetchQuery,
   };
+};
+
+export const useGetBankListQuery = () => {
+  const query = useQuery({
+    queryKey: ['bank_list'],
+    queryFn: getBankList,
+  });
+  return { query };
 };

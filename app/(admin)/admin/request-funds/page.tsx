@@ -1,6 +1,10 @@
 'use client';
 import SearchInput from '@/components/custom/search-input';
 import Table from '@/components/custom/table';
+import BulkMoneyIcon from '@/components/icon/bulk-money-icon';
+import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
+import OutlineEyeIcon from '@/components/icon/outline-eye-icon';
+import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
@@ -14,18 +18,32 @@ import {
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
-import { useRequestWithdrawal } from '@/services/mutations/brand.mutation';
-import { useGetPayoutTransactionsQuery } from '@/services/queries/brand.queries';
-import { useState, useCallback } from 'react';
-import NextChevronRightIcon from '@/components/icon/next-chevron-right-icon';
-import PreviousChevronLeftIcon from '@/components/icon/previous-chevron-left-icon';
 import { useDebounce } from '@/hooks/use-debounce';
 import { CompanyPayOutTransaction } from '@/libs/types/brand.types';
-import BulkMoneyIcon from '@/components/icon/bulk-money-icon';
-import OutlineEyeIcon from '@/components/icon/outline-eye-icon';
+import {
+  useFetchAccountNameMutation,
+  useRequestWithdrawal,
+} from '@/services/mutations/brand.mutation';
+import {
+  useGetBankListQuery,
+  useGetPayoutTransactionsQuery,
+} from '@/services/queries/brand.queries';
+import { useCallback, useEffect, useState } from 'react';
 
-import { useGetCompanyDashboardQuery } from '@/services/queries/company.queries';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Bank } from '@/services/api';
+import {
+  company_keys,
+  useGetCompanyDashboardQuery,
+} from '@/services/queries/company.queries';
 import { EyeClosedIcon } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 const REQUEST_FUNDS_PAGE_SIZE = 10;
 
@@ -269,6 +287,38 @@ function Card({
 
 function RequestWithdrawalForm() {
   const { form, isLoading, onSubmit } = useRequestWithdrawal();
+  const { query: bankListQuery } = useGetBankListQuery();
+  const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
+  const [accountName, setAccountName] = useState('');
+  const fetchAccountNameMutation = useFetchAccountNameMutation();
+  const queryClient = useQueryClient();
+
+  // Watch for changes in account number and selected bank
+  useEffect(() => {
+    const account_number = form.watch('account_number');
+    if (selectedBank && account_number && account_number.length >= 10) {
+      fetchAccountNameMutation.mutateAsync(
+        { account_number, bank_code: selectedBank.bank_code },
+        {
+          onSuccess: (res) => {
+            setAccountName(res.data.account_name);
+            queryClient.invalidateQueries({
+              queryKey: company_keys.company_dashboard(),
+            });
+            form.setValue('account_name', res.data.account_name);
+          },
+          onError: () => {
+            setAccountName('');
+            form.setValue('account_name', '');
+          },
+        }
+      );
+    } else {
+      setAccountName('');
+      form.setValue('account_name', '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, selectedBank, form.watch('account_number')]);
 
   return (
     <div className='px-7 py-10 md:px-0 md:py-1'>
@@ -286,7 +336,13 @@ function RequestWithdrawalForm() {
       <div className='md:mt-[30px] mt-6'>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit((values) => {
+              // Prefill bank_code from selectedBank
+              if (selectedBank) {
+                values.bank_code = selectedBank.bank_code;
+              }
+              onSubmit(values);
+            })}
             className='md:space-y-7 space-y-4 font-dm-sans'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               <FormField
@@ -298,7 +354,8 @@ function RequestWithdrawalForm() {
                     <FormControl>
                       <Input
                         placeholder='Enter account number'
-                        className='h-12'
+                        className='md:h-12'
+                        maxLength={10}
                         {...field}
                       />
                     </FormControl>
@@ -307,6 +364,7 @@ function RequestWithdrawalForm() {
                 )}
               />
 
+              {/* Bank Name as Select */}
               <FormField
                 control={form.control}
                 name='bank_name'
@@ -314,17 +372,48 @@ function RequestWithdrawalForm() {
                   <FormItem>
                     <FormLabel>Bank Name</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Enter bank name'
-                        className='h-12'
-                        {...field}
-                      />
+                      {bankListQuery.isLoading ? (
+                        <div className='h-12 flex items-center px-3 border rounded bg-gray-50 text-gray-400'>
+                          Loading banks...
+                        </div>
+                      ) : bankListQuery.error ? (
+                        <div className='h-12 flex items-center px-3 border rounded bg-red-50 text-red-400'>
+                          Failed to load banks
+                        </div>
+                      ) : (
+                        <Select
+                          value={selectedBank?.bank_code || ''}
+                          onValueChange={(bank_code) => {
+                            const bank =
+                              (bankListQuery.data as Bank[] | undefined)?.find(
+                                (b: Bank) => b.bank_code === bank_code
+                              ) || null;
+                            setSelectedBank(bank);
+                            form.setValue('bank_code', bank_code);
+                            field.onChange(bank ? bank.name : '');
+                          }}>
+                          <SelectTrigger className='min-h-12 w-full'>
+                            <SelectValue placeholder='Select a bank' />
+                          </SelectTrigger>
+                          <SelectContent className='font-dm-sans overflow-y-auto max-h-[400px]'>
+                            {bankListQuery.data &&
+                              bankListQuery.data.map((bank: Bank) => (
+                                <SelectItem
+                                  key={bank.bank_code}
+                                  value={bank.bank_code}>
+                                  {bank.name}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
+              {/* Account Name (read-only) */}
               <FormField
                 control={form.control}
                 name='account_name'
@@ -333,9 +422,20 @@ function RequestWithdrawalForm() {
                     <FormLabel>Account Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Enter account name'
-                        className='h-12'
-                        {...field}
+                        placeholder='Account name will appear here'
+                        className='md:h-12'
+                        value={
+                          fetchAccountNameMutation.isPending
+                            ? 'Fetching...'
+                            : fetchAccountNameMutation.isError
+                            ? 'Could not fetch name'
+                            : accountName
+                        }
+                        readOnly
+                        tabIndex={-1}
+                        name={field.name}
+                        ref={field.ref}
+                        onBlur={field.onBlur}
                       />
                     </FormControl>
                     <FormMessage />
@@ -343,23 +443,7 @@ function RequestWithdrawalForm() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name='bank_code'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bank Code</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter bank code'
-                        className='h-12'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Bank Code is removed, but we prefill it in the submit handler */}
 
               <FormField
                 control={form.control}
@@ -371,9 +455,9 @@ function RequestWithdrawalForm() {
                       <Input
                         type='number'
                         placeholder='Enter amount'
-                        className='h-12'
+                        className='md:h-12'
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -391,7 +475,7 @@ function RequestWithdrawalForm() {
                       <Input
                         type='password'
                         placeholder='Enter your password'
-                        className='h-12'
+                        className='md:h-12'
                         {...field}
                       />
                     </FormControl>

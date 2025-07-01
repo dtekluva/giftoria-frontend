@@ -17,6 +17,7 @@ export function AccountDropdown() {
   const handleSignOut = () => {
     deleteCookie('access_token');
     deleteCookie('password');
+    deleteCookie('user_type');
     deleteCookie('refresh_token');
     localStorage.removeItem('cards');
     router.push('/auth/sign-in');
@@ -137,6 +138,13 @@ export function AccountDropdown() {
               onClick={handleSignIn}
               className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
               Sign In
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push('/auth/cashier/sign-in');
+              }}
+              className='font-dm-sans py-3 px-10 cursor-pointer text-base'>
+              Cashier Sign In
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>

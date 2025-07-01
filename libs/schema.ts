@@ -279,7 +279,7 @@ export const companyPayOutSchema = z.object({
   bank_name: z.string().min(1, { message: 'Bank name is required' }),
   account_name: z.string().min(1, { message: 'Account name is required' }),
   bank_code: z.string().min(1, { message: 'Bank code is required' }),
-  amount: z.number().min(1, { message: 'Amount is required' }),
+  amount: z.string().min(1, { message: 'Amount is required' }),
   password: z.string().min(1, { message: 'Password is required' }),
   narration: z.string().optional(),
 });
