@@ -478,7 +478,6 @@ export const getCompanyLogo = async () => {
 };
 
 export const uploadCompanyLogo = async (data: FormData) => {
-  console.log('API: uploadCompanyLogo called with data:', data);
   try {
     const response = await httpConfig.post<
       AxiosError,
@@ -502,4 +501,32 @@ export const getBuyerApprovalStaus = async (id: string) => {
   return await httpConfig.get<AxiosError, AxiosResponse<ApiBuyerApprovalStaus>>(
     `/branch/buyer_approval_status?transaction_id=${id}`
   );
+};
+
+// Update getBankList to return the correct type
+export interface Bank {
+  bank_code: string;
+  name: string;
+  bank_short_name: string;
+  logo: string;
+}
+
+export const getBankList = async () => {
+  return await httpConfig
+    .get<AxiosError, AxiosResponse<Bank[]>>('/auth/bank_details/')
+    .then((res) => res.data);
+};
+
+// Add function to fetch account name
+export const fetchAccountName = async ({
+  account_number,
+  bank_code,
+}: {
+  account_number: string;
+  bank_code: string;
+}) => {
+  return await httpConfig.post<
+    AxiosError,
+    AxiosResponse<{ account_name: string }>
+  >('/wema/fetch_account_name/', { account_number, bank_code });
 };

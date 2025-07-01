@@ -297,7 +297,7 @@ export default function Home() {
             {
               question: 'Can the recipient use the gift card instantly?',
               answer:
-                'Yes, once received, most gift cards can be used immediately based on the brand&apos;s redemption process.',
+                'Yes, once received, most gift cards can be used immediately based on the brands redemption process.',
             },
             {
               question: 'Can a gift card be used more than once?',

@@ -35,6 +35,7 @@ import {
   payViaBank,
   payViaPayStack,
   redeemedGiftCard,
+  fetchAccountName,
 } from '../api';
 import { useGetBuyerApprovalStatus } from '../queries/brand.queries';
 
@@ -303,7 +304,7 @@ export const useRequestWithdrawal = () => {
       bank_name: '',
       account_name: '',
       bank_code: '',
-      amount: 0,
+      amount: '0',
       password: '',
       narration: '',
     },
@@ -549,4 +550,11 @@ export const useDeleteBrand = () => {
     deleteBrandById,
     isLoading: mutation.isPending,
   };
+};
+
+export const useFetchAccountNameMutation = () => {
+  return useMutation({
+    mutationFn: fetchAccountName,
+    mutationKey: ['fetch-acc-name'],
+  });
 };
