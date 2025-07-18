@@ -41,6 +41,8 @@ import {
 import Image from 'next/image';
 import React, { useState } from 'react';
 import UploadDocumentIcon from '@/components/icon/upload-document-icon';
+import { useGetCompanyBranches } from '@/services/queries/company.queries';
+import { Switch } from '@/components/ui/switch';
 
 interface Brand {
   id: string;
@@ -50,15 +52,19 @@ interface Brand {
   max_amount: number | null;
   is_active: boolean;
   image?: string | null;
+  description?: string;
+  branches?: string[];
 }
 
 interface FormBrand {
   brand_name: string;
-  category: string; // Required UUID
-  min_amount?: number; // Optional, minimum 0
-  max_amount?: number; // Optional, minimum 0
+  category: string;
+  min_amount?: number;
+  max_amount?: number;
   is_active: boolean;
   image?: File | null;
+  description?: string;
+  branches?: string[];
 }
 
 interface GiftCardFormProps {
@@ -79,6 +85,18 @@ function GiftCardForm({
   const createMutation = useCreateBrand();
   const editMutation = useEditBrand(brandId || '');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [step, setStep] = useState(1);
+  const [selectedBranches, setSelectedBranches] = useState<string[]>(
+    initialData?.branches || []
+  );
+
+  // Fetch branches for step 2
+  const { query: branchesQuery } = useGetCompanyBranches({
+    search: '',
+    page: 1,
+    page_size: 100,
+  });
+  const branches = branchesQuery.data?.results || [];
 
   const { form, onSubmit, isLoading } =
     mode === 'create' ? createMutation : editMutation;
@@ -93,6 +111,8 @@ function GiftCardForm({
         max_amount: 0,
         is_active: true,
         image: null,
+        description: '',
+        branches: [],
       });
     } else if (mode === 'edit' && initialData) {
       form.reset({
@@ -102,12 +122,20 @@ function GiftCardForm({
         max_amount: initialData.max_amount ?? 0,
         is_active: initialData.is_active,
         image: initialData.image,
+        description: initialData.description || '',
+        branches: initialData.branches || [],
       });
       if (initialData.image) {
         setPreviewImage(initialData.image);
       }
+      setSelectedBranches(initialData.branches || []);
     }
   }, [mode, initialData, form]);
+
+  // Sync selectedBranches with form's branches field for validation and submission
+  React.useEffect(() => {
+    form.setValue('branches', selectedBranches, { shouldValidate: step === 2 });
+  }, [selectedBranches, form, step]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -128,20 +156,39 @@ function GiftCardForm({
     }
   };
 
-  const handleSubmit = async (data: FormBrand) => {
-    console.log('Form data before submission:', data); // Debug log
+  const handleNext = async () => {
+    // Validate step 1
+    const valid = await form.trigger([
+      'brand_name',
+      'category',
+      'description',
+      'is_active',
+      'max_amount',
+      'max_amount',
+    ]);
+    if (valid) setStep(2);
+  };
 
-    // Validate required fields
-    if (!data.brand_name || !data.category) {
-      console.error('Missing required fields:', {
-        brand_name: data.brand_name,
-        category: data.category,
-      });
-      return;
-    }
+  const handleBack = () => setStep(1);
+
+  const handleBranchToggle = (branchId: string) => {
+    setSelectedBranches((prev) =>
+      prev.includes(branchId)
+        ? prev.filter((id) => id !== branchId)
+        : [...prev, branchId]
+    );
+  };
+
+  const handleSubmit = async (data: FormBrand) => {
+    console.log(data, 'this is the date');
+    if (step === 1) return handleNext();
+
+    // Explicitly trigger validation for all fields, including branches
+    const valid = await form.trigger();
+    if (!valid) return;
 
     try {
-      await onSubmit(data as any);
+      await onSubmit({ ...data, branches: selectedBranches } as any);
       onSuccess?.();
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -154,169 +201,255 @@ function GiftCardForm({
         {mode === 'create' ? 'Create Gift Card' : 'Edit Gift Card'}
       </h2>
       <p className='text-xs md:text-base text-[#4A4A68] font-dm-sans border-b pb-4'>
-        Fill the details below to {mode === 'create' ? 'create' : 'edit'} a Gift
-        Card
+        {step === 1
+          ? `Fill the details below to ${
+              mode === 'create' ? 'create' : 'edit'
+            } a Gift Card`
+          : 'Below is a list of all your branches, toggle on the ones the gift card can be redeemed by your customers'}
       </p>
       <div className='md:mt-[30px] mt-6'>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit as any)}
             className='md:space-y-6 space-y-4 font-dm-sans'>
-            <FormField
-              control={form.control}
-              name='brand_name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Brand Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Enter brand name'
-                      className='md:h-12'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='image'
-              render={() => (
-                <FormItem>
-                  <FormLabel>Brand Image</FormLabel>
-                  <div className='flex items-center gap-4'>
-                    <label
-                      htmlFor='brand-image'
-                      className='md:px-6 px-5 flex items-center gap-4 cursor-pointer py-4 rounded-[8px] bg-secondary-transparent'>
-                      <UploadDocumentIcon />
-                      <p className='font-medium font-dm-sans text-[#323232] text-sm'>
-                        {previewImage ? 'Change image' : 'Upload brand image'}
-                      </p>
-                    </label>
-                    <input
-                      id='brand-image'
-                      type='file'
-                      accept='image/jpeg,image/png,image/jpg,image/gif,image/webp'
-                      className='hidden'
-                      onChange={handleImageChange}
-                    />
-                    {previewImage && (
-                      <div className='relative w-20 h-20'>
-                        <Image
-                          src={previewImage}
-                          alt='Brand preview'
-                          fill
-                          className='object-cover rounded-lg'
+            {step === 1 && (
+              <>
+                {/* Brand Name */}
+                <FormField
+                  control={form.control}
+                  name='brand_name'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Brand Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Enter brand name'
+                          className='md:h-12'
+                          {...field}
                         />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* Brand Image */}
+                <FormField
+                  control={form.control}
+                  name='image'
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Brand Image</FormLabel>
+                      <div className='flex items-center gap-4'>
+                        <label
+                          htmlFor='brand-image'
+                          className='md:px-6 px-5 flex items-center gap-4 cursor-pointer py-4 rounded-[8px] bg-secondary-transparent'>
+                          <UploadDocumentIcon />
+                          <p className='font-medium font-dm-sans text-[#323232] text-sm'>
+                            {previewImage
+                              ? 'Change image'
+                              : 'Upload brand image'}
+                          </p>
+                        </label>
+                        <input
+                          id='brand-image'
+                          type='file'
+                          accept='image/jpeg,image/png,image/jpg,image/gif,image/webp'
+                          className='hidden'
+                          onChange={handleImageChange}
+                        />
+                        {previewImage && (
+                          <div className='relative w-20 h-20'>
+                            <Image
+                              src={previewImage}
+                              alt='Brand preview'
+                              fill
+                              className='object-cover rounded-lg'
+                            />
+                          </div>
+                        )}
                       </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* Category */}
+                <FormField
+                  control={form.control}
+                  name='category'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className='h-12 w-full'>
+                            <SelectValue placeholder='Select category' />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {categories.map((category: Category) => (
+                            <SelectItem
+                              className='uppercase font-dm-sans'
+                              key={category.id}
+                              value={category.id}>
+                              {category.category_name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* Card Values */}
+                <div className='flex gap-2'>
+                  <FormField
+                    control={form.control}
+                    name='min_amount'
+                    render={({ field }) => (
+                      <FormItem className='flex-1'>
+                        <FormLabel>Card Value(Minimum)</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='Enter minimum amount'
+                            className='md:h-12 flex-1'
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='category'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className='h-12 w-full'>
-                        <SelectValue placeholder='Select category' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {categories.map((category: Category) => (
-                        <SelectItem
-                          className='uppercase font-dm-sans'
-                          key={category.id}
-                          value={category.id}>
-                          {category.category_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className='flex gap-2'>
-              <FormField
-                control={form.control}
-                name='min_amount'
-                render={({ field }) => (
-                  <FormItem className='flex-1'>
-                    <FormLabel>Card Value(Minimum)</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter minimum amount'
-                        className='md:h-12 flex-1'
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='max_amount'
-                render={({ field }) => (
-                  <FormItem className='flex-1'>
-                    <FormLabel>Card Value(Maximum)</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter maximum amount'
-                        className='md:h-12 flex-1'
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name='is_active'
-              render={({ field }) => (
-                <FormItem className='flex items-center space-x-0'>
-                  <FormControl>
-                    <input
-                      type='checkbox'
-                      checked={field.value}
-                      onChange={field.onChange}
-                      className='rounded border-gray-300'
-                    />
-                  </FormControl>
-                  <FormLabel className='!mt-0'>Active</FormLabel>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              type='submit'
-              className='w-full h-12 font-semibold'
-              disabled={isLoading}>
-              {isLoading
-                ? mode === 'create'
-                  ? 'Creating...'
-                  : 'Updating...'
-                : mode === 'create'
-                ? 'Create Gift Card'
-                : 'Update Gift Card'}
-            </Button>
+                  />
+                  <FormField
+                    control={form.control}
+                    name='max_amount'
+                    render={({ field }) => (
+                      <FormItem className='flex-1'>
+                        <FormLabel>Card Value(Maximum)</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='Enter maximum amount'
+                            className='md:h-12 flex-1'
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {/* Product Description */}
+                <FormField
+                  control={form.control}
+                  name='description'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Description</FormLabel>
+                      <FormControl>
+                        <textarea
+                          placeholder='Give a detailed description of your product or service'
+                          className='w-full min-h-[80px] border rounded-md p-2 font-dm-sans'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* Active Checkbox */}
+                <FormField
+                  control={form.control}
+                  name='is_active'
+                  render={({ field }) => (
+                    <FormItem className='flex items-center space-x-0'>
+                      <FormControl>
+                        <input
+                          type='checkbox'
+                          checked={field.value}
+                          onChange={field.onChange}
+                          className='rounded border-gray-300'
+                        />
+                      </FormControl>
+                      <FormLabel className='!mt-0'>Active</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type='button'
+                  className='w-full h-12 font-semibold'
+                  onClick={handleNext}
+                  disabled={isLoading}>
+                  Next
+                </Button>
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <div className='space-y-4'>
+                  {branchesQuery.isLoading ? (
+                    <div>Loading branches...</div>
+                  ) : branches.length === 0 ? (
+                    <div>No branches found.</div>
+                  ) : (
+                    <table className='w-full'>
+                      <thead>
+                        <tr className='text-left'>
+                          <th className='py-2'>S/N</th>
+                          <th className='py-2'>Branch Address</th>
+                          <th className='py-2'>Activate</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {branches.map((branch: any, idx: number) => (
+                          <tr key={branch.id} className='border-t'>
+                            <td className='py-2'>{idx + 1}</td>
+                            <td className='py-2'>{branch.branch_name}</td>
+                            <td className='py-2'>
+                              <Switch
+                                checked={selectedBranches.includes(branch.id)}
+                                onCheckedChange={() =>
+                                  handleBranchToggle(branch.id)
+                                }
+                                className='w-8 h-[1.15rem]'
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+                <div className='flex gap-2 mt-6'>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    className='flex-1 h-12'
+                    onClick={handleBack}>
+                    Back
+                  </Button>
+                  <Button
+                    type='submit'
+                    className='flex-1 h-12 font-semibold'
+                    disabled={isLoading}>
+                    {isLoading
+                      ? mode === 'create'
+                        ? 'Creating...'
+                        : 'Updating...'
+                      : mode === 'create'
+                      ? 'Create Gift Card'
+                      : 'Update Gift Card'}
+                  </Button>
+                </div>
+              </>
+            )}
           </form>
         </Form>
       </div>

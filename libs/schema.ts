@@ -282,6 +282,7 @@ export const companyPayOutSchema = z.object({
   amount: z.string().min(1, { message: 'Amount is required' }),
   password: z.string().min(1, { message: 'Password is required' }),
   narration: z.string().optional(),
+  branches: z.array(z.string()).min(1, 'Select at least one branch'),
 });
 
 export const createBrandSchema = z.object({
@@ -317,6 +318,8 @@ export const createBrandSchema = z.object({
       'Image must be a valid image file (JPG, PNG, JPEG, GIF, WEBP)'
     )
     .optional(),
+  description: z.string().min(1, ' Descripition is required'),
+  branches: z.array(z.string()).min(1, 'Select at least one branch'),
 });
 
 //TYPES
