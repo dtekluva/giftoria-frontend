@@ -39,7 +39,7 @@ import {
   useGetCategoriesQuery,
 } from '@/services/queries/brand.queries';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import UploadDocumentIcon from '@/components/icon/upload-document-icon';
 import { useGetCompanyBranches } from '@/services/queries/company.queries';
 import { Switch } from '@/components/ui/switch';
@@ -459,11 +459,58 @@ function GiftCardForm({
 
 function ManageGiftCardPage() {
   const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 4;
+
+  // useReducer for modal/sheet state
+  type ModalAction =
+    | { type: 'OPEN_CREATE_DIALOG' }
+    | { type: 'CLOSE_CREATE_DIALOG' }
+    | { type: 'OPEN_CREATE_SHEET' }
+    | { type: 'CLOSE_CREATE_SHEET' }
+    | { type: 'OPEN_EDIT_DIALOG' }
+    | { type: 'CLOSE_EDIT_DIALOG' }
+    | { type: 'OPEN_EDIT_SHEET' }
+    | { type: 'CLOSE_EDIT_SHEET' };
+  type ModalState = {
+    createDialog: boolean;
+    createSheet: boolean;
+    editDialog: boolean;
+    editSheet: boolean;
+  };
+  const initialModalState: ModalState = {
+    createDialog: false,
+    createSheet: false,
+    editDialog: false,
+    editSheet: false,
+  };
+  function modalReducer(state: ModalState, action: ModalAction): ModalState {
+    switch (action.type) {
+      case 'OPEN_CREATE_DIALOG':
+        return { ...state, createDialog: true };
+      case 'CLOSE_CREATE_DIALOG':
+        return { ...state, createDialog: false };
+      case 'OPEN_CREATE_SHEET':
+        return { ...state, createSheet: true };
+      case 'CLOSE_CREATE_SHEET':
+        return { ...state, createSheet: false };
+      case 'OPEN_EDIT_DIALOG':
+        return { ...state, editDialog: true };
+      case 'CLOSE_EDIT_DIALOG':
+        return { ...state, editDialog: false };
+      case 'OPEN_EDIT_SHEET':
+        return { ...state, editSheet: true };
+      case 'CLOSE_EDIT_SHEET':
+        return { ...state, editSheet: false };
+      default:
+        return state;
+    }
+  }
+  const [modalState, dispatchModal] = useReducer(
+    modalReducer,
+    initialModalState
+  );
 
   const { query: brandsQuery } = useFetchBrandsQuery({
     search,
@@ -476,9 +523,9 @@ function ManageGiftCardPage() {
   const handleEditClick = (brand: Brand) => {
     setSelectedBrand(brand);
     if (window.innerWidth < 768) {
-      setIsEditSheetOpen(true);
+      dispatchModal({ type: 'OPEN_EDIT_SHEET' });
     } else {
-      setIsEditDialogOpen(true);
+      dispatchModal({ type: 'OPEN_EDIT_DIALOG' });
     }
   };
 
@@ -495,30 +542,64 @@ function ManageGiftCardPage() {
   return (
     <div className='py-6'>
       <div className='flex justify-end'>
-        <Dialog>
+        <Dialog
+          open={modalState.createDialog}
+          onOpenChange={(open) =>
+            dispatchModal({
+              type: open ? 'OPEN_CREATE_DIALOG' : 'CLOSE_CREATE_DIALOG',
+            })
+          }>
           <DialogTrigger asChild className='hidden md:block'>
-            <Button className='md:h-14 md:mx-7 mx-4 ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans md:font-sans rounded-[6px] font-semibold md:mt-0'>
+            <Button
+              className='md:h-14 md:mx-7 mx-4 ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans md:font-sans rounded-[6px] font-semibold md:mt-0'
+              onClick={() => dispatchModal({ type: 'OPEN_CREATE_DIALOG' })}>
               Create Gift Card
             </Button>
           </DialogTrigger>
           <DialogContent className='sm:max-w-[620px] overflow-y-auto max-h-[90%]'>
-            <GiftCardForm mode='create' />
+            <GiftCardForm
+              mode='create'
+              onSuccess={() => {
+                dispatchModal({ type: 'CLOSE_CREATE_DIALOG' });
+                dispatchModal({ type: 'CLOSE_CREATE_SHEET' });
+              }}
+            />
           </DialogContent>
         </Dialog>
 
-        <Sheet>
+        <Sheet
+          open={modalState.createSheet}
+          onOpenChange={(open) =>
+            dispatchModal({
+              type: open ? 'OPEN_CREATE_SHEET' : 'CLOSE_CREATE_SHEET',
+            })
+          }>
           <SheetTrigger asChild className='md:hidden'>
-            <Button className='md:h-14 md:mx-7 mx-4 ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans md:font-sans rounded-[6px] font-semibold md:mt-0'>
+            <Button
+              className='md:h-14 md:mx-7 mx-4 ml-auto md:px-10 px-6 h-10 row-1 max-w-fit md:text-base text-sm font-albert-sans md:font-sans rounded-[6px] font-semibold md:mt-0'
+              onClick={() => dispatchModal({ type: 'OPEN_CREATE_SHEET' })}>
               Create Gift Card
             </Button>
           </SheetTrigger>
           <SheetContent className='max-h-full overflow-y-auto' side='bottom'>
-            <GiftCardForm mode='create' />
+            <GiftCardForm
+              mode='create'
+              onSuccess={() => {
+                dispatchModal({ type: 'CLOSE_CREATE_DIALOG' });
+                dispatchModal({ type: 'CLOSE_CREATE_SHEET' });
+              }}
+            />
           </SheetContent>
         </Sheet>
 
         {/* Edit Dialog */}
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <Dialog
+          open={modalState.editDialog}
+          onOpenChange={(open) =>
+            dispatchModal({
+              type: open ? 'OPEN_EDIT_DIALOG' : 'CLOSE_EDIT_DIALOG',
+            })
+          }>
           <DialogContent className='sm:max-w-[620px] overflow-y-auto max-h-[90%]'>
             <DialogTitle className='sr-only'>Edit Gift Card</DialogTitle>
             {selectedBrand && (
@@ -532,7 +613,13 @@ function ManageGiftCardPage() {
         </Dialog>
 
         {/* Edit Sheet */}
-        <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
+        <Sheet
+          open={modalState.editSheet}
+          onOpenChange={(open) =>
+            dispatchModal({
+              type: open ? 'OPEN_EDIT_SHEET' : 'CLOSE_EDIT_SHEET',
+            })
+          }>
           <SheetContent className='max-h-full overflow-y-auto' side='bottom'>
             <DialogTitle className='sr-only'>Edit Gift Card</DialogTitle>
             {selectedBrand && (
