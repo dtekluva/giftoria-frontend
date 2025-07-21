@@ -61,9 +61,9 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className='pt-6 flex justify-between text-sm md:pt-10 lg:container mx-auto p-[1.8745rem] text-white'>
+        <div className='pt-6 flex flex-col md:flex-row justify-between text-sm md:pt-10 lg:container mx-auto max-md:gap-6 p-[1.8745rem] text-white'>
           <div className='flex-1'>
-            <p>All rights reserved.</p>
+            <p>Copyright © 2023 Giftoria. All rights reserved</p>
           </div>
           <div className='flex justify-between flex-1'>
             <Link href={'#'}>Privacy Policy</Link>
