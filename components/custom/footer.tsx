@@ -16,7 +16,7 @@ function Footer() {
   return (
     <div className='mt-auto self-end justify-self-stretch w-full'>
       <div className='bg-primary mt-10'>
-        <div className='lg:container mx-auto p-[1.8745rem] space-y-[30px] md:space-y-0 lg:flex'>
+        <div className='lg:container mx-auto p-[1.8745rem] md:pb-[50px] space-y-[30px] md:space-y-0 lg:flex border-b-[0.8px] border-white'>
           <div>
             <div className='flex items-center gap-4'>
               {icons.map((item, index) => (
@@ -25,13 +25,13 @@ function Footer() {
                 </div>
               ))}
             </div>
-            <p className='mt-5 text-white font-bold text-sm md:text-2xl'>
-              CONTACT US
+            <p className='mt-5 text-white font-medium text-sm md:text-2xl'>
+              Contact Us
             </p>
           </div>
           <div className='lg:ml-auto lg:mr-[117px]'>
             <p className='text-base font-medium text-white lg:text-3xl'>
-              PRODUCTS
+              Product
             </p>
             <ul className='mt-4 text-white/60 font-dm-sans'>
               <li>
@@ -59,6 +59,15 @@ function Footer() {
                 Subscribe
               </button>
             </div>
+          </div>
+        </div>
+        <div className='pt-6 flex justify-between text-sm md:pt-10 lg:container mx-auto p-[1.8745rem] text-white'>
+          <div className='flex-1'>
+            <p>All rights reserved.</p>
+          </div>
+          <div className='flex justify-between flex-1'>
+            <Link href={'#'}>Privacy Policy</Link>
+            <Link href={'#'}>Terms & Conditions</Link>
           </div>
         </div>
       </div>

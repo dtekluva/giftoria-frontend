@@ -301,22 +301,16 @@ export const createBrandSchema = z.object({
     .optional(),
   is_active: z.boolean().optional(),
   image: z
-    .any()
-    .refine(
-      (file) => file instanceof File && file.size <= 1 * 1024 * 1024, // Max size 10MB
-      'Image must be a valid file and less than 10MB'
-    )
-    .refine(
-      (file) =>
-        [
-          'image/jpeg',
-          'image/png',
-          'image/jpg',
-          'image/gif',
-          'image/webp',
-        ].includes(file?.type),
-      'Image must be a valid image file (JPG, PNG, JPEG, GIF, WEBP)'
-    )
+    .union([
+      z
+        .instanceof(File)
+        .refine(
+          (file) => file.size <= 10 * 1024 * 1024,
+          'Image must be less than 10MB'
+        ),
+      z.string().url(),
+      z.null(),
+    ])
     .optional(),
   description: z.string().min(1, ' Descripition is required'),
   branches: z.array(z.string()).min(1, 'Select at least one branch'),
