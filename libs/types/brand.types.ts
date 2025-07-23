@@ -114,6 +114,13 @@ export interface AssignedCard {
 
   claimed: true;
   claimed_date: string | null;
+  redeemable_branches: [
+    {
+      id: string;
+      branch_name: string;
+      branch_address: string;
+    }
+  ];
 }
 
 export interface ApiCardSalesResponse {
