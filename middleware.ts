@@ -83,6 +83,7 @@ export const config = {
     '/admin/:path*',
     '/cashier/:path*',
     '/card-balance',
+    '/received-cards',
     '/gift-card/:path*',
   ],
 };

@@ -98,6 +98,33 @@ function Page() {
             </div>
           </div>
         </div>
+
+        <div className='mt-8'>
+          <h5 className='md:text-2xl text-xl font-semibold'>
+            Redeemable Branches
+          </h5>
+          <div className='grid md:grid-cols-2'>
+            {query.data?.redeemable_branches?.map(
+              (branch: any, index: number) => (
+                <div
+                  key={index}
+                  className='md:p-6 p-4 border border-[#E5E5E5] rounded-lg mb-4 md:mb-0'>
+                  <h6 className='font-semibold text-base mb-2'>
+                    {branch.name}
+                  </h6>
+                  <p className='text-sm text-[#4A014A]'>
+                    {branch.address}, {branch.city}, {branch.state}
+                  </p>
+                </div>
+              )
+            )}
+            {!query.data?.redeemable_branches?.length && (
+              <p className='text-sm text-[#4A014A] mt-4 font-medium font-dm-sans'>
+                No redeemable branches available.
+              </p>
+            )}
+          </div>
+        </div>
         {/* <div className='md:mt-[60px] mt-7 px-4 md:flex items-center justify-between'>
           <h3 className='font-semibold md:text-xl lg:text-2xl text-base'>
             Shopping History

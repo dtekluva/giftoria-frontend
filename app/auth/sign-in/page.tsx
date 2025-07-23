@@ -20,8 +20,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 function SignIn() {
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
-  const { form, onSubmit, isLoading } = useLogin(redirect);
+  const redirect = searchParams.get('redirect');
+  const { form, onSubmit, isLoading } = useLogin(redirect ?? '');
   const router = useRouter();
 
   return (
@@ -83,7 +83,13 @@ function SignIn() {
                 </div>
                 <Link
                   className='text-primary font-semibold'
-                  href={'/auth/forgot-password'}>
+                  href={
+                    redirect
+                      ? `/auth/forgot-password?redirect=${encodeURIComponent(
+                          redirect
+                        )}`
+                      : '/auth/forgot-password'
+                  }>
                   Reset Password
                 </Link>
               </div>
@@ -99,7 +105,13 @@ function SignIn() {
             <Button
               variant={'outline'}
               type='button'
-              onClick={() => router.push('/auth/sign-up')}
+              onClick={() =>
+                router.push(
+                  redirect
+                    ? `/auth/sign-up?redirect=${encodeURIComponent(redirect)}`
+                    : '/auth/sign-up'
+                )
+              }
               className='text-sm font-bold md:text-base md:h-[70px] h-[50px] w-full'>
               Don&apos;t have an account? Sign up
             </Button>

@@ -427,6 +427,8 @@ export const useCreateBrand = () => {
       max_amount: undefined,
       is_active: true,
       image: undefined,
+      description: '',
+      branches: [],
     },
   });
 
@@ -444,6 +446,7 @@ export const useCreateBrand = () => {
   });
 
   const onSubmit = async (data: CreateBrandType) => {
+    console.log(data, 'yjos');
     try {
       const formData = new FormData();
       formData.append('brand_name', data.brand_name);
@@ -457,6 +460,10 @@ export const useCreateBrand = () => {
       formData.append('is_active', data.is_active?.toString() ?? 'true');
       if (data.image) {
         formData.append('image', data.image);
+      }
+      formData.append('description', data.description || '');
+      if (data.branches && Array.isArray(data.branches)) {
+        data.branches.forEach((branch) => formData.append('branches', branch));
       }
 
       const res = mutation.mutateAsync(formData as any);
@@ -488,6 +495,8 @@ export const useEditBrand = (brandId: string) => {
       max_amount: undefined,
       is_active: true,
       image: undefined,
+      description: '',
+      branches: [],
     },
   });
 
@@ -504,8 +513,25 @@ export const useEditBrand = (brandId: string) => {
     },
   });
 
-  const onSubmit = async (formData: FormData) => {
+  const onSubmit = async (data: CreateBrandType) => {
     try {
+      const formData = new FormData();
+      formData.append('brand_name', data.brand_name);
+      formData.append('category', data.category);
+      if (data.min_amount !== undefined) {
+        formData.append('min_amount', data.min_amount.toString());
+      }
+      if (data.max_amount !== undefined) {
+        formData.append('max_amount', data.max_amount.toString());
+      }
+      formData.append('is_active', data.is_active?.toString() ?? 'true');
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+      formData.append('description', data.description || '');
+      if (data.branches && Array.isArray(data.branches)) {
+        data.branches.forEach((branch) => formData.append('branches', branch));
+      }
       await mutation.mutateAsync(formData);
     } catch (error) {
       console.error('Update brand error:', error);

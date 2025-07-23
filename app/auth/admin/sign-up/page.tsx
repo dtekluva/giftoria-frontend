@@ -26,11 +26,14 @@ import {
 } from '@/services/mutations/auth.mutations';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const steps = [1, 2, 3];
 
 function AdminSignUp() {
   const [step] = useQueryState('step', parseAsInteger);
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
 
   const [activeStep, setActiveStep] = React.useState(
     step && steps.includes(step) ? step : 1
@@ -54,7 +57,9 @@ function AdminSignUp() {
             </StepperItem>
           ))}
         </Stepper>
-        {activeStep == 1 && <CreateAccount setActiveStep={setActiveStep} />}
+        {activeStep == 1 && (
+          <CreateAccount setActiveStep={setActiveStep} redirect={redirect} />
+        )}
         {activeStep == 2 && <VerifyEmail setActiveStep={setActiveStep} />}
         {activeStep == 3 && <UploadDocDetails />}
       </AuthCard>
@@ -64,14 +69,19 @@ function AdminSignUp() {
 
 function CreateAccount({
   setActiveStep,
+  redirect,
 }: {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+  redirect?: string | null;
 }) {
   function handleNextStep() {
     setActiveStep((prev) => prev + 1);
   }
 
-  const { form, onSubmit } = useCreateAdminAccount(handleNextStep);
+  const { form, onSubmit } = useCreateAdminAccount(
+    handleNextStep,
+    redirect || undefined
+  );
 
   return (
     <Form {...form}>

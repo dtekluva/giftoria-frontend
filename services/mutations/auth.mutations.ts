@@ -48,9 +48,33 @@ import {
 import { user_keys } from '../queries/user.queries';
 import { useState, useEffect } from 'react';
 
+// Helper functions for managing redirect URLs
+export const saveRedirectUrl = (url?: string) => {
+  if (url) {
+    localStorageStore.setItem('redirect-url', url);
+  }
+};
+
+export const getRedirectUrl = (): string | null => {
+  return (localStorageStore.getItem('redirect-url') as string) || null;
+};
+
+export const getAndClearRedirectUrl = (): string | null => {
+  const savedUrl = localStorageStore.getItem('redirect-url') as string;
+  if (savedUrl) {
+    localStorageStore.removeItem('redirect-url');
+    return savedUrl;
+  }
+  return null;
+};
+
+export const clearRedirectUrl = () => {
+  localStorageStore.removeItem('redirect-url');
+};
+
 type ApiAuthCompanyResponse = z.infer<typeof createAdminAccountSchema>;
 
-export function useCreateAdminAccount(fn?: () => void) {
+export function useCreateAdminAccount(fn?: () => void, redirect?: string) {
   const form = useForm<ApiAuthCompanyResponse>({
     resolver: zodResolver(createAdminAccountSchema),
     defaultValues: {
@@ -61,6 +85,9 @@ export function useCreateAdminAccount(fn?: () => void) {
       promote_notification: false,
     },
   });
+
+  // Save redirect URL to localStorage if provided
+  saveRedirectUrl(redirect);
 
   async function onSubmit(data: ApiAuthCompanyResponse) {
     const res = mutation.mutateAsync(data);
@@ -181,6 +208,7 @@ export const useAdminUploadDetails = () => {
 };
 
 export const useVerifyEmail = (fn?: () => void) => {
+  const router = useRouter();
   const userEmail = localStorageStore.getItem('verify-mail') as string;
 
   const form = useForm({
@@ -216,6 +244,12 @@ export const useVerifyEmail = (fn?: () => void) => {
     mutationFn: verifyEmail,
     mutationKey: ['auth', 'verify_email'],
     onSuccess: () => {
+      // Check for saved redirect URL after email verification
+      const savedRedirectUrl = getAndClearRedirectUrl();
+      if (savedRedirectUrl) {
+        router.replace(savedRedirectUrl);
+        return;
+      }
       fn?.();
     },
   });
@@ -229,7 +263,7 @@ export const useVerifyEmail = (fn?: () => void) => {
   };
 };
 
-export const useCreateUserAccount = () => {
+export const useCreateUserAccount = (redirect?: string) => {
   const router = useRouter();
 
   const form = useForm<CreateUserAccountType>({
@@ -243,6 +277,9 @@ export const useCreateUserAccount = () => {
       promotion_notification: false,
     },
   });
+
+  // Save redirect URL to localStorage if provided
+  saveRedirectUrl(redirect);
 
   const mutation = useMutation({
     mutationFn: userSignUp,
@@ -317,6 +354,9 @@ export const useLogin = (redirect?: string) => {
     },
   });
 
+  // Save redirect URL to localStorage if provided
+  saveRedirectUrl(redirect);
+
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: async (data) => {
@@ -329,10 +369,19 @@ export const useLogin = (redirect?: string) => {
           queryKey: ['userInfo'],
           queryFn: () => fetUserDetails(),
         });
-        if (redirect) {
-          router.replace(redirect);
-          return;
+
+        // Check for saved redirect URL
+        const savedRedirectUrl = getAndClearRedirectUrl();
+        if (savedRedirectUrl || redirect) {
+          const targetUrl = savedRedirectUrl || redirect;
+          if (targetUrl) {
+            router.replace(targetUrl);
+            console.log(data, 'Login data');
+            return;
+          }
         }
+
+        console.log(data.data.user_type, 'User type');
         if (data.data.user_type === 'MERCHANT') {
           router.push('/admin/gift-cards');
           return;
@@ -344,11 +393,13 @@ export const useLogin = (redirect?: string) => {
       if (axios.isAxiosError(error)) {
         if (error?.response?.data.detail.includes('verify')) {
           localStorageStore.setItem('verify-mail', variables.email);
+          // Preserve redirect URL when going to email verification
           router.push('/auth/email-verify');
         }
         if (
           error?.response?.data.detail.includes('company details not verified')
         ) {
+          // Preserve redirect URL when going to company details verification
           router.push('/auth/admin/sign-up?step=3');
         }
       }
@@ -485,7 +536,7 @@ export const useUpdateUserProfile = () => {
   };
 };
 
-export const useCashierLogin = () => {
+export const useCashierLogin = (redirect?: string) => {
   const form = useForm<CashierLoginType>({
     resolver: zodResolver(cashierLoginSchema),
     defaultValues: {
@@ -496,6 +547,9 @@ export const useCashierLogin = () => {
 
   const router = useRouter();
 
+  // Save redirect URL to localStorage if provided
+  saveRedirectUrl(redirect);
+
   const mutation = useMutation({
     mutationFn: cashierLogin,
     onSuccess: (data: any) => {
@@ -503,6 +557,17 @@ export const useCashierLogin = () => {
         setCookie('access_token', data.data.access);
         setCookie('refresh_token', data.data.refresh);
         setCookie('user_type', data.data.user_type);
+
+        // Check for saved redirect URL
+        const savedRedirectUrl = getAndClearRedirectUrl();
+        if (savedRedirectUrl || redirect) {
+          const targetUrl = savedRedirectUrl || redirect;
+          if (targetUrl) {
+            router.replace(targetUrl);
+            return;
+          }
+        }
+
         router.push('/cashier/gift-cards');
         return;
       }
