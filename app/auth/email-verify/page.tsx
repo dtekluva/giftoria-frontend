@@ -19,7 +19,9 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 function VerifyEmail() {
-  const { form, onSubmit, mutation, userEmail } = useVerifyEmail();
+  const { form, onSubmit, mutation, userEmail } = useVerifyEmail(() => {
+    router.push('/auth/sign-in/');
+  });
   const { resendCode, isLoading: isResending } = useSendVerificationCode();
   const router = useRouter();
 
@@ -28,12 +30,6 @@ function VerifyEmail() {
   React.useEffect(() => {
     setIsClient(true);
   }, []);
-
-  React.useEffect(() => {
-    if (mutation.isSuccess) {
-      router.push('/auth/sign-in/');
-    }
-  }, [mutation.isSuccess, router]);
 
   return (
     <div className='w-full'>

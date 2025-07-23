@@ -13,9 +13,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForgotPassword } from '@/services/mutations/auth.mutations';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 function ForgotPassword() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/';
   const { form, onSubmit, isLoading } = useForgotPassword();
   const router = useRouter();
   return (
@@ -60,7 +62,13 @@ function ForgotPassword() {
               variant={'outline'}
               disabled={isLoading}
               type='button'
-              onClick={() => router.push('/auth/sign-up')}
+              onClick={() =>
+                router.push(
+                  redirect
+                    ? `/auth/sign-up?redirect=${encodeURIComponent(redirect)}`
+                    : '/auth/sign-up'
+                )
+              }
               className='text-sm font-bold md:text-base md:h-[70px] h-[50px] w-full'>
               Don&apos;t have an account? Sign up
             </Button>

@@ -12,9 +12,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useCashierLogin } from '@/services/mutations/auth.mutations';
+import { useSearchParams } from 'next/navigation';
 
 function CashierSignIn() {
-  const { form, onSubmit, isLoading } = useCashierLogin();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
+  const { form, onSubmit, isLoading } = useCashierLogin(redirect || undefined);
 
   return (
     <div className='w-full font-dm-sans'>

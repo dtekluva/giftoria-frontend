@@ -14,9 +14,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { PASSWORD_REQUIREMENTS } from '@/libs/schema';
 import { useCreateUserAccount } from '@/services/mutations/auth.mutations';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 function CreateAccount() {
-  const { form, onSubmit, isLoading } = useCreateUserAccount();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
+
+  console.log('Redirect URL:', redirect);
+  const { form, onSubmit, isLoading } = useCreateUserAccount(redirect ?? '');
+  const router = useRouter();
 
   return (
     <div className='w-full'>
@@ -160,6 +166,19 @@ function CreateAccount() {
             </Button>
           </form>
         </Form>
+        <Button
+          variant={'outline'}
+          type='button'
+          onClick={() =>
+            router.push(
+              redirect
+                ? `/auth/sign-in?redirect=${encodeURIComponent(redirect)}`
+                : '/auth/sign-in'
+            )
+          }
+          className='text-sm font-bold md:text-base md:h-[70px] h-[50px] w-full'>
+          Already have an account? Sign In
+        </Button>
       </AuthCard>
     </div>
   );
