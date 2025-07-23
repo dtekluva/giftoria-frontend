@@ -463,9 +463,7 @@ export const useCreateBrand = () => {
       }
       formData.append('description', data.description || '');
       if (data.branches && Array.isArray(data.branches)) {
-        data.branches.forEach((branch) =>
-          formData.append('branches[]', branch)
-        );
+        data.branches.forEach((branch) => formData.append('branches', branch));
       }
 
       const res = mutation.mutateAsync(formData as any);
@@ -532,9 +530,7 @@ export const useEditBrand = (brandId: string) => {
       }
       formData.append('description', data.description || '');
       if (data.branches && Array.isArray(data.branches)) {
-        data.branches.forEach((branch) =>
-          formData.append('branches[]', branch)
-        );
+        data.branches.forEach((branch) => formData.append('branches', branch));
       }
       await mutation.mutateAsync(formData);
     } catch (error) {
