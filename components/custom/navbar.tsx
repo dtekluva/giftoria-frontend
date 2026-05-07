@@ -371,7 +371,7 @@ function NavBar() {
           </div>
           <div className='flex flex-row gap-3 lg:gap-8 ml-7'>
             <button
-              className='lg:hidden text-white flex items-center'
+              className={`lg:hidden text-white flex items-center transition-opacity duration-200 ${isScrolled ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
               onClick={() => setShowMobileSearch((v) => !v)}
               aria-label='Toggle search'>
               {showMobileSearch ? (
