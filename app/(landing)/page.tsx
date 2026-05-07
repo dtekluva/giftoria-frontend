@@ -56,16 +56,27 @@ export default function Home() {
             <br />
             Simple, Flexible, and always the perfect choice
           </motion.p>
-          <motion.div className='flex justify-center' variants={fadeInUp}>
+          <motion.div className='flex flex-row justify-center gap-4 mt-8 md:mt-10 lg:mt-14' variants={fadeInUp}>
             <Button
               onClick={() => {
                 router.push('/gift-card');
               }}
-              className='w-full mt-8 md:mt-10 lg:mt-14 max-w-[9rem] md:max-w-[20rem] lg:max-w-[32rem] mx-auto 
-            h-[2.5rem] md:h-[3rem] lg:h-[4.375rem] 
-            text-sm md:text-base lg:text-xl 
+              className='h-[2.5rem] md:h-[3rem] lg:h-[4.375rem]
+            px-6 md:px-10 lg:px-14
+            text-sm md:text-base lg:text-xl
             font-semibold rounded-full'>
               Send a gift
+            </Button>
+            <Button
+              onClick={() => {
+                router.push('/card-balance');
+              }}
+              variant='outline'
+              className='h-[2.5rem] md:h-[3rem] lg:h-[4.375rem]
+            px-6 md:px-10 lg:px-14
+            text-sm md:text-base lg:text-xl
+            font-semibold rounded-full bg-transparent text-white border-white hover:bg-white hover:text-primary'>
+              Check Balance
             </Button>
           </motion.div>
         </div>
@@ -75,7 +86,7 @@ export default function Home() {
           Explore our collections of Gift cards
         </h2>
 
-        <div className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] md:px-[3.125rem] container mx-auto px-5'>
+        <div className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:px-[3.125rem] container mx-auto px-5'>
           {query.isPending &&
             Array.from({ length: 4 }).map((_, index) => (
               <div
@@ -170,7 +181,7 @@ export default function Home() {
                 Grow Your Business with Giftoria
               </h3>
               <p className='mt-6 text-xs md:text-sm lg:text-base font-dm-sans'>
-                Giftee makes gifting effortless—not just for customers but for
+                Giftoria makes gifting effortless—not just for customers but for
                 businesses too! By joining our merchant network, you unlock a
                 new revenue stream, attract more customers, and simplify gift
                 card transactions
@@ -312,7 +323,7 @@ export default function Home() {
             {
               question:
                 'I entered the wrong recipient email. What should I do?',
-              answer: `Contact us immediately at support@yourplatform.com. If the card hasn't been redeemed, we may be able to help you correct it.`,
+              answer: `Contact us immediately at support@giftoria.cc. If the card hasn't been redeemed, we may be able to help you correct it.`,
             },
             {
               question: `What if the recipient doesn't receive the gift card?`,
