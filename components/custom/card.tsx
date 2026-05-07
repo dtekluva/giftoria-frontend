@@ -21,10 +21,11 @@ export function Card({ data }: { data: ICard }) {
         alt={data.brand_name}
         onError={() => setImgSrc(FALLBACK_IMAGE)}
       />
+      <div className='absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent' />
+      <div className='absolute inset-0 bg-gradient-to-bl from-black/50 via-transparent to-transparent' />
       <div className='absolute top-3 right-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide'>
         Gift Card
       </div>
-      <div className='absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent' />
       <div className='absolute bottom-0 left-0 right-0 p-3 md:p-4'>
         <p className='text-white text-sm md:text-base font-semibold font-dm-sans drop-shadow-sm truncate'>
           {data.brand_name}
