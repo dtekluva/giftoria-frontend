@@ -12,7 +12,11 @@ export function Card({ data }: { data: ICard }) {
   return (
     <Link
       href={`/gift-card/${data.id}`}
-      className='group relative block max-w-[320px] mx-auto w-full overflow-hidden rounded-2xl cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out aspect-[3/2]'>
+      className='group relative block max-w-[320px] mx-auto w-full overflow-hidden rounded-2xl cursor-pointer aspect-[3/2]
+        shadow-[0_2px_8px_rgba(0,0,0,0.14),0_1px_3px_rgba(0,0,0,0.1)]
+        hover:shadow-[0_14px_32px_rgba(0,0,0,0.22),0_4px_10px_rgba(0,0,0,0.14)]
+        hover:-translate-y-1.5
+        transition-all duration-300 ease-out'>
       <Image
         src={imgSrc}
         fill
@@ -23,6 +27,10 @@ export function Card({ data }: { data: ICard }) {
       />
       <div className='absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent' />
       <div className='absolute inset-0 bg-gradient-to-bl from-black/50 via-transparent to-transparent' />
+
+      {/* Shimmer sweep on hover */}
+      <div className='absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12 pointer-events-none' />
+
       <div className='absolute top-3 right-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide'>
         Gift Card
       </div>
