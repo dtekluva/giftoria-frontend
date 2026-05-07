@@ -30,6 +30,30 @@ export default function Home() {
     },
   };
 
+  const springUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: 'spring', stiffness: 80, damping: 14 },
+    },
+  };
+
+  const cardStagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.08 } },
+  };
+
+  const cardSpring = {
+    hidden: { opacity: 0, y: 30, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: 'spring', stiffness: 100, damping: 16 },
+    },
+  };
+
   const { query } = useGetAllBrandCardsQuery({ search: '' });
   const router = useRouter();
 
@@ -81,30 +105,39 @@ export default function Home() {
           </motion.div>
         </div>
       </motion.section>
-      <motion.section variants={fadeInUp}>
-        <h2 className='px-4 md:px-[2.5rem] lg:px-[3.75rem] mt-6 md:mt-[2.5rem] lg:mt-[3.75rem] text-center text-base md:text-[2rem] lg:text-[2.5rem] font-semibold'>
+      <motion.section className='bg-gradient-to-b from-[#ede0ff] via-[#f5eeff] to-white' variants={fadeInUp}>
+        <motion.h2
+          className='px-4 md:px-[2.5rem] lg:px-[3.75rem] pt-6 md:pt-[2.5rem] lg:pt-[3.75rem] text-center text-base md:text-[2rem] lg:text-[2.5rem] font-semibold'
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, amount: 0.5 }}
+          variants={springUp}>
           Explore our collections of Gift cards
-        </h2>
+        </motion.h2>
 
-        <div className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:px-[3.125rem] container mx-auto px-5'>
+        <motion.div
+          className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:px-[3.125rem] container mx-auto px-5'
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, amount: 0.1 }}
+          variants={cardStagger}>
           {query.isPending &&
             Array.from({ length: 4 }).map((_, index) => (
               <div
                 key={index}
                 className='p-5 border-[0.01875rem] border-[#D9D9D9] rounded-[1.875rem] max-w-[320px] mx-auto w-full animate-pulse'>
-                {/* Image placeholder */}
                 <div className='w-full h-[140px] bg-gray-300 rounded-md'></div>
-
-                {/* Text placeholder */}
                 <div className='mt-6'>
                   <div className='h-4 bg-gray-300 rounded w-3/4 mb-2'></div>
                 </div>
               </div>
             ))}
           {query?.data?.results.map((data, index) => (
-            <Card key={index} data={data} />
+            <motion.div key={index} variants={cardSpring}>
+              <Card data={data} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
         <div className='flex justify-center mt-7 md:mt-10 px-20'>
           <Button
             onClick={() => {
@@ -120,11 +153,19 @@ export default function Home() {
       </motion.section>
       <motion.section
         className='md:mt-20 bg-primary mt-10 pt-[1.25rem] md:pt-[3.75rem]'
-        variants={fadeInUp}>
+        initial='hidden'
+        whileInView='visible'
+        viewport={{ once: true, amount: 0.2 }}
+        variants={springUp}>
         <h3 className='text-white text-xl md:text-2xl lg:text-[2.5rem] text-center font-semibold'>
           How it works
         </h3>
-        <div className='mt-7 grid lg:gap-[4rem] md:gap-4 gap-6 mx-auto md:grid-cols-3 container px-4 lg:px-8'>
+        <motion.div
+          className='mt-7 grid lg:gap-[4rem] md:gap-4 gap-6 mx-auto md:grid-cols-3 container px-4 lg:px-8'
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, amount: 0.2 }}
+          variants={cardStagger}>
           {[
             {
               icon: <LocalMailIcon />,
@@ -147,7 +188,7 @@ export default function Home() {
             <motion.div
               key={index}
               className='bg-gradient-to-r from-[#FF0066] rounded-[1.25rem] overflow-hidden to-[#D9D9D9] p-[0.05rem]'
-              variants={fadeInUp}>
+              variants={cardSpring}>
               <div className='bg-primary rounded-[1.25rem] h-full md:px-6 px-5 py-[1.875rem]'>
                 {item.icon}
                 <p className='md:text-xl lg:text-3xl font-bold text-white mt-1 font-montserrat'>
@@ -159,7 +200,7 @@ export default function Home() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
         <div className='flex justify-center mt-8 md:mt-10 px-20 pb-[1.875rem] md:pb-[3.75rem]'>
           <Button
             onClick={() => {
@@ -173,7 +214,12 @@ export default function Home() {
           </Button>
         </div>
       </motion.section>
-      <motion.section className='relative' variants={fadeInUp}>
+      <motion.section
+        className='relative'
+        initial='hidden'
+        whileInView='visible'
+        viewport={{ once: true, amount: 0.2 }}
+        variants={springUp}>
         <section className='md:flex container mx-auto gap-4'>
           <div className='md:px-4 lg:px-8 py-10 flex-1 self-center'>
             <div className='max-w-[33.875rem] px-[1.875rem] md:px-0'>
@@ -213,7 +259,10 @@ export default function Home() {
       </motion.section>
       <motion.section
         className='px-6 bg-secondary-transparent py-[3.125rem]'
-        variants={fadeInUp}>
+        initial='hidden'
+        whileInView='visible'
+        viewport={{ once: true, amount: 0.2 }}
+        variants={springUp}>
         <div className='container mx-auto space-y-7 md:space-y-0 md:flex gap-[4.0625rem] flex-wrap'>
           {[
             {
@@ -263,7 +312,12 @@ export default function Home() {
           ))}
         </div>
       </motion.section>
-      <motion.section className='container mx-auto' variants={fadeInUp}>
+      <motion.section
+        className='container mx-auto'
+        initial='hidden'
+        whileInView='visible'
+        viewport={{ once: true, amount: 0.1 }}
+        variants={springUp}>
         <h2 className='text-center py-8 lg:py-[3.75rem] px-2 text-2xl md:text-3xl lg:text-[2.5rem] font-bold'>
           Frequently Asked Questions
         </h2>
