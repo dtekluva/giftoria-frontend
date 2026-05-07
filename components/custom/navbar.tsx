@@ -414,10 +414,10 @@ function NavBar() {
       {/* Mobile expandable search + category panel */}
       {showMobileSearch && (
         <div className='lg:hidden px-4 pb-4 relative'>
-          <div className='flex gap-2 items-stretch h-11'>
+          <div className='flex gap-2'>
             {isSuccess && (
               <Select onValueChange={(val) => { handleCategoryChange(val); setShowMobileSearch(false); }}>
-                <SelectTrigger className='flex-1 h-full font-dm-sans bg-white/10 backdrop-blur-md border border-white/25 rounded-full text-white data-[placeholder]:text-white/60 hover:bg-white/20 transition-colors'>
+                <SelectTrigger className='flex-1 h-11 font-dm-sans bg-white/10 backdrop-blur-md border border-white/25 rounded-full text-white data-[placeholder]:text-white/60 hover:bg-white/20 transition-colors'>
                   <SelectValue placeholder='Category' />
                 </SelectTrigger>
                 <SelectContent className='z-[9999999999] bg-[#2a0040]/90 backdrop-blur-xl border border-white/15 text-white font-dm-sans rounded-xl shadow-2xl'>
@@ -432,7 +432,7 @@ function NavBar() {
                 </SelectContent>
               </Select>
             )}
-            <div className='flex-1 flex items-stretch h-full bg-white/10 backdrop-blur-md border border-white/25 rounded-[30px] overflow-hidden shadow-lg'>
+            <div className='flex-1 flex items-center h-11 bg-white/10 backdrop-blur-md border border-white/25 rounded-[30px] overflow-hidden shadow-lg'>
               <Input
                 autoFocus
                 value={search}
@@ -446,11 +446,11 @@ function NavBar() {
                     setShowMobileSearch(false);
                   }
                 }}
-                className='max-h-11 border-none bg-transparent text-white placeholder:text-white/60 w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
+                className='h-full border-none bg-transparent text-white placeholder:text-white/60 w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
                 placeholder='Search gift card.....'
               />
               <button
-                className='bg-white/20 hover:bg-white/30 transition-colors rounded-[30px] py-[10px] px-[17px] border-l border-white/10'
+                className='h-full flex items-center bg-white/20 hover:bg-white/30 transition-colors px-[17px] border-l border-white/10'
                 onClick={() => {
                   if (search) {
                     router.push(`/gift-card?search=${encodeURIComponent(search)}`);
