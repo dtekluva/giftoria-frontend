@@ -81,12 +81,12 @@ export default function Home() {
           </motion.div>
         </div>
       </motion.section>
-      <motion.section variants={fadeInUp}>
-        <h2 className='px-4 md:px-[2.5rem] lg:px-[3.75rem] mt-6 md:mt-[2.5rem] lg:mt-[3.75rem] text-center text-base md:text-[2rem] lg:text-[2.5rem] font-semibold'>
+      <motion.section className='bg-gradient-to-b from-[#1a0030] to-[#2e0050] py-10 md:py-16' variants={fadeInUp}>
+        <h2 className='px-4 md:px-[2.5rem] lg:px-[3.75rem] text-center text-base md:text-[2rem] lg:text-[2.5rem] font-semibold text-white'>
           Explore our collections of Gift cards
         </h2>
 
-        <div className='grid md:mt-10 mt-3 gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:px-[3.125rem] container mx-auto px-5'>
+        <div className='grid md:mt-10 mt-6 gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:px-[3.125rem] container mx-auto px-5'>
           {query.isPending &&
             Array.from({ length: 4 }).map((_, index) => (
               <div
