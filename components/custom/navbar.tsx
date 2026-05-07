@@ -287,7 +287,7 @@ function NavBar() {
             {isScrolled && isSuccess && (
               <>
                 <Select onValueChange={handleCategoryChange}>
-                  <SelectTrigger className='md:min-w-[175px] md:min-h-11 max-h-11 min-w-[130px] text-white font-dm-sans bg-white/10 backdrop-blur-md border border-white/25 rounded-full h-full hover:bg-white/20 transition-colors'>
+                  <SelectTrigger className='md:min-w-[175px] md:min-h-11 max-h-11 min-w-[130px] font-dm-sans bg-white/10 backdrop-blur-md border border-white/25 rounded-full h-full hover:bg-white/20 transition-colors text-white data-[placeholder]:text-white/60'>
                     <SelectValue placeholder='Category' />
                   </SelectTrigger>
                   <SelectContent className='z-[9999999999] bg-[#2a0040]/90 backdrop-blur-xl border border-white/15 text-white text-base font-dm-sans rounded-xl shadow-2xl'>
