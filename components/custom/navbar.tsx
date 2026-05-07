@@ -41,6 +41,7 @@ function NavBar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   const { query } = useSearchAllBrands({ search: debouncedSearch });
   const suggestions = query.data?.results || [];
@@ -105,6 +106,11 @@ function NavBar() {
     });
     return () => unsubscribe();
   }, [scrollY]);
+
+  // Close mobile search on navigation
+  useEffect(() => {
+    setShowMobileSearch(false);
+  }, [pathname]);
 
   // Add debounce effect
   useEffect(() => {
@@ -285,7 +291,7 @@ function NavBar() {
           </ul>
           <div className='flex items-center gap-11 lg:ml-[111px] ml-auto'>
             {isScrolled && isSuccess && (
-              <>
+              <div className='hidden lg:block'>
                 <Select onValueChange={handleCategoryChange}>
                   <SelectTrigger className='md:min-w-[175px] md:min-h-11 max-h-11 min-w-[130px] font-dm-sans bg-white/10 backdrop-blur-md border border-white/25 rounded-full h-full hover:bg-white/20 transition-colors text-white data-[placeholder]:text-white/60'>
                     <SelectValue placeholder='Category' />
@@ -301,7 +307,7 @@ function NavBar() {
                     ))}
                   </SelectContent>
                 </Select>
-              </>
+              </div>
             )}
             <div className='hidden relative lg:flex flex-1 grow items-stretch bg-white/10 backdrop-blur-md border border-white/25 rounded-[30px] overflow-hidden min-w-[278px] shadow-lg'>
               <Input
@@ -364,6 +370,18 @@ function NavBar() {
             )}
           </div>
           <div className='flex flex-row gap-3 lg:gap-8 ml-7'>
+            <button
+              className='lg:hidden text-white flex items-center'
+              onClick={() => setShowMobileSearch((v) => !v)}
+              aria-label='Toggle search'>
+              {showMobileSearch ? (
+                <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                  <path d='M18 6 6 18' /><path d='m6 6 12 12' />
+                </svg>
+              ) : (
+                <SearchIcon size={20} />
+              )}
+            </button>
             <div className='flex flex-row gap-3 items-end'>
               {!access_token && (
                 <Link
@@ -392,6 +410,85 @@ function NavBar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile expandable search + category panel */}
+      {showMobileSearch && (
+        <div className='lg:hidden px-4 pb-4 relative'>
+          <div className='flex gap-2'>
+            {isSuccess && (
+              <Select onValueChange={(val) => { handleCategoryChange(val); setShowMobileSearch(false); }}>
+                <SelectTrigger className='min-w-[120px] max-h-11 font-dm-sans bg-white/10 backdrop-blur-md border border-white/25 rounded-full text-white data-[placeholder]:text-white/60 hover:bg-white/20 transition-colors'>
+                  <SelectValue placeholder='Category' />
+                </SelectTrigger>
+                <SelectContent className='z-[9999999999] bg-[#2a0040]/90 backdrop-blur-xl border border-white/15 text-white font-dm-sans rounded-xl shadow-2xl'>
+                  {categories.map((category: Category) => (
+                    <SelectItem
+                      key={category.id}
+                      className='uppercase font-dm-sans text-white focus:bg-white/10 focus:text-white'
+                      value={category.category_name}>
+                      {category.category_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            <div className='flex-1 flex items-stretch bg-white/10 backdrop-blur-md border border-white/25 rounded-[30px] overflow-hidden shadow-lg'>
+              <Input
+                autoFocus
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setShowSuggestions(true); }}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && search) {
+                    router.push(`/gift-card?search=${encodeURIComponent(search)}`);
+                    setShowSuggestions(false);
+                    setShowMobileSearch(false);
+                  }
+                }}
+                className='max-h-11 border-none bg-transparent text-white placeholder:text-white/60 w-full focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0'
+                placeholder='Search gift card.....'
+              />
+              <button
+                className='bg-white/20 hover:bg-white/30 transition-colors rounded-[30px] py-[10px] px-[17px] border-l border-white/10'
+                onClick={() => {
+                  if (search) {
+                    router.push(`/gift-card?search=${encodeURIComponent(search)}`);
+                    setShowMobileSearch(false);
+                  }
+                }}>
+                <SearchIcon className='text-white' />
+              </button>
+            </div>
+          </div>
+          {showSuggestions && search && (
+            <div className='absolute left-4 right-4 top-full mt-1 z-[9999999] bg-[#2a0040]/90 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl max-h-60 overflow-y-auto'>
+              {suggestions.length > 0 ? (
+                suggestions.map((brand: ICard) => (
+                  <div
+                    key={brand.id}
+                    className='px-4 py-2 cursor-pointer hover:bg-white/10 transition-colors duration-200 flex items-center border-b border-white/10 last:border-b-0'
+                    onMouseDown={() => {
+                      router.push(`/gift-card/${brand.id}`);
+                      setShowSuggestions(false);
+                      setSearch(brand.brand_name);
+                      setShowMobileSearch(false);
+                    }}>
+                    {brand.image && (
+                      <Image src={brand.image} width={40} height={40} alt={brand.brand_name} className='w-10 h-10 mr-2 rounded' />
+                    )}
+                    <div className='font-semibold text-white'>{brand.brand_name}</div>
+                  </div>
+                ))
+              ) : (
+                <div className='px-4 py-3 text-white/60 text-sm text-center'>
+                  No gift cards found for &quot;{search}&quot;
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </motion.div>
   );
 }
