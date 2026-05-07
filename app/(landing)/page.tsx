@@ -40,7 +40,7 @@ export default function Home() {
         variants={fadeInUp}>
         <div className='bg-[#160032]/70 flex flex-col pt-20 md:pt-32 px-4 md:px-10 md:pb-[10.25rem] pb-20'>
           <motion.div
-            className='lg:hidden flex bg-white z-50 rounded-full overflow-hidden max-w-[70%] mx-auto w-full'
+            className='lg:hidden flex z-50 max-w-[70%] mx-auto w-full'
             variants={fadeInUp}>
             <GiftCardSearchBar />
           </motion.div>

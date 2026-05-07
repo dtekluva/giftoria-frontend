@@ -38,7 +38,7 @@ export function GiftCardSearchBar({ onSelect }: GiftCardSearchBarProps) {
 
   return (
     <div ref={containerRef} className='relative w-full'>
-      <div className='flex relative items-stretch bg-white rounded-[30px] overflow-hidden w-full shadow-sm border border-gray-200'>
+      <div className='flex relative items-stretch bg-white/10 backdrop-blur-md border border-white/25 rounded-[30px] overflow-hidden w-full shadow-lg'>
         <Input
           ref={inputRef}
           value={search}
@@ -47,12 +47,12 @@ export function GiftCardSearchBar({ onSelect }: GiftCardSearchBarProps) {
             setShowSuggestions(true);
           }}
           onFocus={() => setShowSuggestions(true)}
-          className='max-h-11 border-none focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-12'
+          className='max-h-11 border-none bg-transparent text-white placeholder:text-white/60 focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-12'
           placeholder='Search gift card.....'
         />
 
         <button
-          className='bg-[#990099] rounded-[30px] py-[10px] px-[17px] ml-auto hover:bg-[#800080] transition-colors duration-200'
+          className='bg-white/20 hover:bg-white/30 transition-colors rounded-[30px] py-[10px] px-[17px] ml-auto border-l border-white/10'
           onClick={() => {
             if (search) {
               router.push(`/gift-card?search=${encodeURIComponent(search)}`);
