@@ -62,25 +62,26 @@ export default function Home() {
       <motion.section
         className='relative md:bg-[url(/assets/hero-desktop-bg.png)] bg-[url(/assets/hero-mobile-bg.png)] bg-cover bg-no-repeat bg-center -mt-20'
         variants={fadeInUp}>
-        <div className='bg-[#160032]/70 flex flex-col pt-20 md:pt-32 px-4 md:px-10 md:pb-[10.25rem] pb-20'>
+        <div className='bg-[#160032]/70 w-full'>
+          <div className='flex flex-col pt-20 md:pt-32 px-4 md:px-10 md:pb-[10.25rem] pb-20 container mx-auto'>
           <motion.div
             className='lg:hidden flex z-50 max-w-[70%] mx-auto w-full'
             variants={fadeInUp}>
             <GiftCardSearchBar />
           </motion.div>
           <motion.h1
-            className='mt-8 md:mt-14 text-white text-center text-2xl md:text-4xl lg:text-6xl font-semibold'
+            className='mt-8 md:mt-14 text-white text-center lg:text-left text-2xl md:text-4xl lg:text-6xl font-semibold lg:max-w-[55%]'
             variants={fadeInUp}>
             Gifting done with style
           </motion.h1>
           <motion.p
-            className='mt-2 md:mt-6 lg:mt-8 text-white text-center text-xs md:text-xl lg:text-2xl leading-5 md:leading-8 lg:leading-10 font-semibold font-dm-sans'
+            className='mt-2 md:mt-6 lg:mt-8 text-white text-center lg:text-left text-xs md:text-xl lg:text-2xl leading-5 md:leading-8 lg:leading-10 font-semibold font-dm-sans lg:max-w-[50%]'
             variants={fadeInUp}>
-            Give a gift that let them pick what they truly love.
+            Give a gift that lets them pick what they truly love.
             <br />
-            Simple, Flexible, and always the perfect choice
+            Simple, flexible, and always the perfect choice.
           </motion.p>
-          <motion.div className='flex flex-row justify-center gap-4 mt-8 md:mt-10 lg:mt-14' variants={fadeInUp}>
+          <motion.div className='flex flex-row justify-center lg:justify-start gap-4 mt-8 md:mt-10 lg:mt-14' variants={fadeInUp}>
             <Button
               onClick={() => {
                 router.push('/gift-card');
@@ -103,6 +104,7 @@ export default function Home() {
               Check Balance
             </Button>
           </motion.div>
+          </div>
         </div>
       </motion.section>
       <motion.section className='bg-gradient-to-b from-[#ede0ff] via-[#f5eeff] to-white' variants={fadeInUp}>

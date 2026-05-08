@@ -31,7 +31,7 @@ export function Card({ data }: { data: ICard }) {
       {/* Shimmer sweep on hover */}
       <div className='absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12 pointer-events-none' />
 
-      <div className='absolute top-3 right-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide'>
+      <div className='absolute top-3 right-3 bg-gradient-to-r from-[#c9a84c] to-[#f0d060] text-[#3b1f00] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm'>
         Gift Card
       </div>
       <div className='absolute bottom-0 left-0 right-0 p-3 md:p-4'>
