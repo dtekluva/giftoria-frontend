@@ -35,7 +35,7 @@ export function Card({ data }: { data: ICard }) {
         Gift Card
       </div>
       <div className='absolute bottom-0 left-0 right-0 p-3 md:p-4'>
-        <p className='text-white text-sm md:text-base font-semibold font-dm-sans drop-shadow-sm truncate'>
+        <p className='text-white text-[10px] md:text-xs font-montserrat uppercase tracking-widest drop-shadow-md truncate'>
           {data.brand_name}
         </p>
       </div>
