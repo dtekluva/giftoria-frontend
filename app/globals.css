@@ -132,8 +132,25 @@
 }
 
 .custom-dash {
-  border-top-width: 2px; /* Adjust thickness */
+  border-top-width: 2px;
   border-style: dashed;
-  border-color: var(--muted); /* Use your Tailwind color variable */
-  border-spacing: 8px; /* Adjust the spacing between dashes */
+  border-color: var(--muted);
+  border-spacing: 8px;
+}
+
+@keyframes card-glow {
+  0%, 100% {
+    opacity: 0.45;
+    background-position: 0% 50%;
+  }
+  50% {
+    opacity: 0.75;
+    background-position: 100% 50%;
+  }
+}
+
+.animate-card-glow {
+  background: linear-gradient(270deg, #7c3aed, #ec4899, #c9a84c, #f0d060, #ec4899, #7c3aed);
+  background-size: 400% 400%;
+  animation: card-glow 4s ease infinite;
 }

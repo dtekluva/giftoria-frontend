@@ -145,7 +145,9 @@ function GiftCardDetails() {
         {query.isPending ? (
           <div className='relative w-full aspect-[3/2] lg:max-w-[500px] rounded-2xl bg-gray-200 animate-pulse shadow-[0_2px_8px_rgba(0,0,0,0.14)]' />
         ) : (
-          <div className='group relative w-full aspect-[3/2] lg:max-w-[500px] overflow-hidden rounded-2xl
+          <div className='relative w-full lg:max-w-[500px]'>
+            <div className='animate-card-glow absolute -inset-[8px] rounded-[20px] blur-xl pointer-events-none' />
+          <div className='group relative w-full aspect-[3/2] overflow-hidden rounded-2xl
             shadow-[0_2px_8px_rgba(0,0,0,0.14),0_1px_3px_rgba(0,0,0,0.1)]
             hover:shadow-[0_14px_32px_rgba(0,0,0,0.22),0_4px_10px_rgba(0,0,0,0.14)]
             hover:-translate-y-1.5 transition-all duration-300 ease-out'>
@@ -168,6 +170,7 @@ function GiftCardDetails() {
                 {query?.data?.brand_name}
               </p>
             </div>
+          </div>
           </div>
         )}
         <div>
