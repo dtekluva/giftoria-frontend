@@ -30,6 +30,8 @@ import { getCookie } from 'cookies-next/client';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+const FALLBACK_IMAGE = 'https://placehold.co/500x300.png?text=Gift+Card';
 import { toast } from 'sonner';
 
 const OCCASIONS = [
@@ -76,6 +78,7 @@ function GiftCardDetails() {
   const { form, onSubmit, saveItemToLocalStorage } = useByCardsMutation();
   const { generateMessage } = useGetAIMessage();
   const [isGeneratingMessage, setIsGeneratingMessage] = useState(false);
+  const [imgSrc, setImgSrc] = useState(FALLBACK_IMAGE);
 
   const cardId = usePathname()?.split('/').pop();
   const { query } = useGetBrandCardByIdQuery(cardId ?? '');
@@ -83,6 +86,7 @@ function GiftCardDetails() {
 
   useEffect(() => {
     form.setValue('image', query?.data?.image ?? '');
+    if (query?.data?.image) setImgSrc(query.data.image);
   }, [query?.data?.image, form]);
 
   const handleGenerateMessage = async () => {
@@ -139,15 +143,32 @@ function GiftCardDetails() {
     <div className='mx-auto lg:container md:px-14 px-4 py-3 md:py-7'>
       <div className='border rounded-[10px] md:p-10 p-3 md:rounded-[20px] md:grid grid-cols-2 gap-[60px] font-dm-sans items-center space-y-4 md:space-y-0'>
         {query.isPending ? (
-          <div className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px] bg-gray-300'></div>
+          <div className='relative w-full aspect-[3/2] lg:max-w-[500px] rounded-2xl bg-gray-200 animate-pulse shadow-[0_2px_8px_rgba(0,0,0,0.14)]' />
         ) : (
-          <Image
-            src={query?.data?.image ?? 'https://placehold.co/500x300.png'}
-            width={500}
-            className='w-full h-full aspect-[1.7] lg:max-w-[500px] max-h-[200px] md:max-h-[300px]'
-            height={300}
-            alt=''
-          />
+          <div className='group relative w-full aspect-[3/2] lg:max-w-[500px] overflow-hidden rounded-2xl
+            shadow-[0_2px_8px_rgba(0,0,0,0.14),0_1px_3px_rgba(0,0,0,0.1)]
+            hover:shadow-[0_14px_32px_rgba(0,0,0,0.22),0_4px_10px_rgba(0,0,0,0.14)]
+            hover:-translate-y-1.5 transition-all duration-300 ease-out'>
+            <Image
+              src={imgSrc}
+              fill
+              sizes='(max-width: 768px) 100vw, 50vw'
+              className='object-cover transition-transform duration-500 group-hover:scale-105'
+              alt={query?.data?.brand_name ?? ''}
+              onError={() => setImgSrc(FALLBACK_IMAGE)}
+            />
+            <div className='absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent' />
+            <div className='absolute inset-0 bg-gradient-to-bl from-black/50 via-transparent to-transparent' />
+            <div className='absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12 pointer-events-none' />
+            <div className='absolute top-3 right-3 bg-gradient-to-r from-[#c9a84c] to-[#f0d060] text-[#3b1f00] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm'>
+              Gift Card
+            </div>
+            <div className='absolute bottom-0 left-0 right-0 p-3 md:p-4'>
+              <p className='text-white text-sm md:text-base font-semibold font-dm-sans drop-shadow-sm truncate'>
+                {query?.data?.brand_name}
+              </p>
+            </div>
+          </div>
         )}
         <div>
           <p className='md:mt-4 mt-3 mb-2 md:mb-3 font-bold md:text-2xl text-[#160032] text-base font-montserrat'>
