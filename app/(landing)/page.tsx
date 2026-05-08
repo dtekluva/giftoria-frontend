@@ -70,16 +70,14 @@ export default function Home() {
             <GiftCardSearchBar />
           </motion.div>
           <motion.h1
-            className='mt-8 md:mt-14 text-white text-center lg:text-left text-2xl md:text-4xl lg:text-6xl font-semibold lg:max-w-[55%]'
+            className='mt-8 md:mt-14 text-white text-center lg:text-left text-3xl md:text-4xl lg:text-6xl font-semibold lg:max-w-[55%]'
             variants={fadeInUp}>
             Gifting done with style
           </motion.h1>
           <motion.p
-            className='mt-2 md:mt-6 lg:mt-8 text-white text-center lg:text-left text-xs md:text-xl lg:text-2xl leading-5 md:leading-8 lg:leading-10 font-semibold font-dm-sans lg:max-w-[50%]'
+            className='mt-2 md:mt-6 lg:mt-8 text-white text-center lg:text-left text-sm md:text-xl lg:text-2xl leading-6 md:leading-8 lg:leading-10 font-semibold font-dm-sans lg:max-w-[50%]'
             variants={fadeInUp}>
-            Give a gift that lets them pick what they truly love.
-            <br />
-            Simple, flexible, and always the perfect choice.
+            Send a gift card they&apos;ll actually use — from the brands they love.
           </motion.p>
           <motion.div className='flex flex-row justify-center lg:justify-start gap-4 mt-8 md:mt-10 lg:mt-14' variants={fadeInUp}>
             <Button
