@@ -9,6 +9,7 @@ import { useByAllCardsMutation } from '@/services/mutations/brand.mutation';
 import { BankTransferModal } from '@/components/custom/bank-transfer-modal';
 import BankTransferIcon from '@/components/icon/bank-transfer-icon';
 import PayStackIcon from '@/components/icon/paystack-icon';
+import { uploadKycDocuments } from '@/services/api';
 import { getCookie } from 'cookies-next/client';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -83,11 +84,31 @@ function OrderSummary() {
   const router = useRouter();
 
   // Simulate payment success callback
+  const [uploadingKyc, setUploadingKyc] = useState(false);
+
   const handlePayment = async () => {
     if (!access_token) {
       toast.error('Please sign in to continue');
       router.push('/auth/sign-in');
       return;
+    }
+
+    if (!idFile || !selfieFile) {
+      toast.error('Please upload your ID and selfie to continue');
+      return;
+    }
+
+    try {
+      setUploadingKyc(true);
+      const formData = new FormData();
+      formData.append('id_document', idFile);
+      formData.append('selfie', selfieFile);
+      await uploadKycDocuments(formData);
+    } catch {
+      toast.error('Failed to upload verification documents. Please try again.');
+      return;
+    } finally {
+      setUploadingKyc(false);
     }
 
     await buyAllCard();
@@ -340,9 +361,9 @@ function OrderSummary() {
             )}
             <Button
               onClick={handlePayment}
-              disabled={!idFile || !selfieFile}
+              disabled={!idFile || !selfieFile || uploadingKyc}
               className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px] disabled:opacity-50 disabled:cursor-not-allowed'>
-              Proceed to payment
+              {uploadingKyc ? 'Uploading documents…' : 'Proceed to payment'}
             </Button>
           </div>
           <BankTransferModal

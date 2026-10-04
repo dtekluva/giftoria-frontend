@@ -518,6 +518,10 @@ export const getBankList = async () => {
 };
 
 // Add function to fetch account name
+export const uploadKycDocuments = async (data: FormData) => {
+  return await httpConfig.post('/auth/upload_kyc_document/', data);
+};
+
 export const fetchAccountName = async ({
   account_number,
   bank_code,
