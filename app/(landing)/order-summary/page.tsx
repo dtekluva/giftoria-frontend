@@ -12,7 +12,7 @@ import PayStackIcon from '@/components/icon/paystack-icon';
 import { getCookie } from 'cookies-next/client';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 const paymentService = [
@@ -46,6 +46,10 @@ function OrderSummary() {
     mutation,
   } = useByAllCardsMutation(selectedPayment);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [idFile, setIdFile] = useState<File | null>(null);
+  const [selfieFile, setSelfieFile] = useState<File | null>(null);
+  const idInputRef = useRef<HTMLInputElement>(null);
+  const selfieInputRef = useRef<HTMLInputElement>(null);
 
   const referenceId = useSearchParams()?.get('reference');
 
@@ -181,6 +185,120 @@ function OrderSummary() {
       </div>
       {((cards?.cards.length ?? 0) > 0 || referenceId) && (
         <>
+          {/* KYC Verification */}
+          <div className='pt-[30px] md:pt-10'>
+            <h2 className='font-bold lg:text-2xl md:text-xl text-base'>
+              Identity Verification
+            </h2>
+            <p className='mt-1 text-xs md:text-sm text-gray-500'>
+              Required before payment. Upload clear, well-lit photos.
+            </p>
+
+            {/* Disclaimer banner */}
+            <div className='mt-4 flex gap-3 items-start bg-amber-50 border border-amber-200 rounded-xl p-4'>
+              <div className='mt-0.5 shrink-0 w-5 h-5 rounded-full bg-amber-400 flex items-center justify-center'>
+                <span className='text-white text-[10px] font-bold leading-none'>!</span>
+              </div>
+              <p className='text-xs md:text-sm text-amber-800 leading-relaxed'>
+                <span className='font-semibold'>Important:</span> You may only fund using your own bank account or card. Payments from third-party accounts or cards will be declined and your order may be cancelled.
+              </p>
+            </div>
+
+            <div className='mt-6 grid grid-cols-1 md:grid-cols-2 gap-4'>
+              {/* ID Upload */}
+              <div
+                onClick={() => idInputRef.current?.click()}
+                className={`cursor-pointer rounded-xl border-2 border-dashed p-5 flex flex-col items-center gap-3 transition-all duration-200 select-none
+                  ${idFile ? 'border-green-400 bg-green-50' : 'border-[#E2E6EE] hover:border-primary/60 bg-gray-50/50'}`}>
+                <input
+                  ref={idInputRef}
+                  type='file'
+                  accept='image/*,.pdf'
+                  className='hidden'
+                  onChange={(e) => setIdFile(e.target.files?.[0] ?? null)}
+                />
+                {idFile ? (
+                  <>
+                    <div className='w-10 h-10 rounded-full bg-green-100 flex items-center justify-center'>
+                      <svg className='w-5 h-5 text-green-600' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2.5}>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                      </svg>
+                    </div>
+                    <div className='text-center'>
+                      <p className='text-xs font-semibold text-green-700'>ID Uploaded</p>
+                      <p className='text-[10px] text-green-600 mt-0.5 max-w-[180px] truncate'>{idFile.name}</p>
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setIdFile(null); if (idInputRef.current) idInputRef.current.value = ''; }}
+                      className='text-[10px] text-gray-400 hover:text-red-400 transition-colors'>
+                      Remove
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center'>
+                      <svg className='w-5 h-5 text-primary' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={1.8}>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0' />
+                      </svg>
+                    </div>
+                    <div className='text-center'>
+                      <p className='text-xs font-semibold text-gray-700'>Government-issued ID</p>
+                      <p className='text-[10px] text-gray-400 mt-0.5'>Passport, NIN slip, Driver&apos;s licence</p>
+                      <p className='text-[10px] text-primary mt-2 font-medium'>Tap to upload</p>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Selfie Upload */}
+              <div
+                onClick={() => selfieInputRef.current?.click()}
+                className={`cursor-pointer rounded-xl border-2 border-dashed p-5 flex flex-col items-center gap-3 transition-all duration-200 select-none
+                  ${selfieFile ? 'border-green-400 bg-green-50' : 'border-[#E2E6EE] hover:border-primary/60 bg-gray-50/50'}`}>
+                <input
+                  ref={selfieInputRef}
+                  type='file'
+                  accept='image/*'
+                  capture='user'
+                  className='hidden'
+                  onChange={(e) => setSelfieFile(e.target.files?.[0] ?? null)}
+                />
+                {selfieFile ? (
+                  <>
+                    <div className='w-10 h-10 rounded-full bg-green-100 flex items-center justify-center'>
+                      <svg className='w-5 h-5 text-green-600' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2.5}>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                      </svg>
+                    </div>
+                    <div className='text-center'>
+                      <p className='text-xs font-semibold text-green-700'>Selfie Uploaded</p>
+                      <p className='text-[10px] text-green-600 mt-0.5 max-w-[180px] truncate'>{selfieFile.name}</p>
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelfieFile(null); if (selfieInputRef.current) selfieInputRef.current.value = ''; }}
+                      className='text-[10px] text-gray-400 hover:text-red-400 transition-colors'>
+                      Remove
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center'>
+                      <svg className='w-5 h-5 text-primary' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={1.8}>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z' />
+                        <path strokeLinecap='round' strokeLinejoin='round' d='M15 13a3 3 0 11-6 0 3 3 0 016 0z' />
+                      </svg>
+                    </div>
+                    <div className='text-center'>
+                      <p className='text-xs font-semibold text-gray-700'>Selfie / Live photo</p>
+                      <p className='text-[10px] text-gray-400 mt-0.5'>A clear photo of your face</p>
+                      <p className='text-[10px] text-primary mt-2 font-medium'>Tap to upload</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div>
             <h2 className='font-bold lg:text-2xl md:text-xl text-base pt-[30px] md:pt-10'>
               Choose payment Method
@@ -214,10 +332,16 @@ function OrderSummary() {
               ))}
             </RadioGroup>
           </div>
-          <div className='flex justify-center mt-7 md:mt-10 px-4'>
+          <div className='flex flex-col items-center mt-7 md:mt-10 px-4 gap-2'>
+            {(!idFile || !selfieFile) && (
+              <p className='text-xs text-amber-600 font-medium'>
+                Upload your ID and selfie above to continue
+              </p>
+            )}
             <Button
               onClick={handlePayment}
-              className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px]'>
+              disabled={!idFile || !selfieFile}
+              className='md:text-xl text-xs font-semibold w-full lg:h-[70px] md:h-[50px] h-10 max-w-[540px] disabled:opacity-50 disabled:cursor-not-allowed'>
               Proceed to payment
             </Button>
           </div>
